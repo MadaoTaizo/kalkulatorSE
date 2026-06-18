@@ -2,9 +2,10 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>SE2026 Otomatis - Sensus Ekonomi 2026</title>
     <style>
+        /* ========== RESET & BASE ========== */
         * {
             margin: 0;
             padding: 0;
@@ -13,185 +14,146 @@
 
         :root {
             --primary: #0b3b5e;
-            --secondary: #1a6b8a;
-            --accent: #ffc107;
-            --success: #0f7b3a;
-            --danger: #b22234;
-            --bg: #f0f4f8;
+            --primary-light: #1a6b8a;
+            --primary-dark: #072a42;
+            --secondary: #1a8a5a;
+            --accent: #d4a017;
+            --bg: #eef3f7;
             --card-bg: #ffffff;
             --text: #1a2a3a;
             --text-muted: #5e7a93;
-            --border: #e2e8f0;
+            --border: #dce4ed;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --transition: 0.25s ease;
         }
 
         html {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
+            font-size: 16px;
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: var(--bg);
-            padding: 12px;
             color: var(--text);
-            line-height: 1.5;
+            padding: 12px;
             min-height: 100vh;
+            line-height: 1.5;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1280px;
             margin: 0 auto;
-            width: 100%;
         }
 
-        /* Mobile-first improvements */
-        @media (min-width: 768px) {
-            body {
-                padding: 20px;
-            }
-        }
-
+        /* ========== HEADER ========== */
         .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 16px;
+            padding: 18px 22px;
+            border-radius: var(--radius);
+            margin-bottom: 18px;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            gap: 10px;
+            box-shadow: 0 6px 24px rgba(11, 59, 94, 0.25);
         }
 
-        @media (min-width: 768px) {
-            .header {
-                padding: 25px 30px;
-                margin-bottom: 25px;
-                border-radius: 16px;
-            }
-        }
-
-        .header h1 {
-            font-size: 18px;
+        .header-left h1 {
+            font-size: clamp(18px, 4vw, 26px);
             font-weight: 700;
-            letter-spacing: 0.5px;
-            line-height: 1.2;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        @media (min-width: 768px) {
-            .header h1 {
-                font-size: 26px;
-            }
+        .header-left .subtitle {
+            font-size: clamp(11px, 2vw, 14px);
+            opacity: 0.85;
+            margin-top: 2px;
         }
 
-        .header .badge {
-            background: var(--accent);
-            color: var(--text);
-            padding: 6px 14px;
+        .header-badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 12px;
+            font-size: clamp(11px, 1.8vw, 14px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        @media (min-width: 768px) {
-            .header .badge {
-                padding: 8px 18px;
-                font-size: 14px;
-            }
+        .header-badge .icon {
+            font-size: 16px;
         }
 
-        .header .subtitle {
-            font-size: 12px;
-            opacity: 0.85;
-            margin-top: 4px;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .header .subtitle {
-                font-size: 14px;
-            }
-        }
-
+        /* ========== GRID ========== */
         .grid-2 {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
         }
 
-        @media (min-width: 768px) {
+        @media (max-width: 992px) {
             .grid-2 {
-                grid-template-columns: 1fr 1fr;
-                gap: 24px;
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
         }
 
+        /* ========== CARD ========== */
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
             border: 1px solid var(--border);
-            transition: 0.2s;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .card {
-                padding: 22px 26px;
-                border-radius: 14px;
-                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-            }
+            transition: var(--transition);
         }
 
         .card:hover {
-            border-color: #b0c4d9;
+            border-color: #c0cedc;
         }
 
         .card-title {
-            font-size: 16px;
+            font-size: clamp(16px, 2.5vw, 20px);
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 14px;
-            padding-bottom: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
             border-bottom: 2px solid #e8edf3;
             display: flex;
-            align-items: center;
-            gap: 10px;
             flex-wrap: wrap;
-        }
-
-        @media (min-width: 768px) {
-            .card-title {
-                font-size: 18px;
-                margin-bottom: 18px;
-                padding-bottom: 10px;
-            }
+            align-items: center;
+            gap: 8px;
         }
 
         .card-title small {
             font-weight: 400;
             font-size: 12px;
-            color: #5e7a93;
+            color: var(--text-muted);
             margin-left: auto;
-        }
-
-        @media (min-width: 768px) {
-            .card-title small {
-                font-size: 13px;
-            }
         }
 
         .card-title .badge-count {
             background: #e8edf3;
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 20px;
             font-size: 11px;
-            color: #2d4a62;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
+        /* ========== FORM ========== */
         .form-group {
             display: flex;
             flex-direction: column;
@@ -201,63 +163,50 @@
 
         .form-group label {
             font-weight: 600;
-            font-size: 13px;
-            color: #1e3b4f;
+            font-size: clamp(12px, 1.6vw, 14px);
+            color: var(--text);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .form-group label span {
             font-weight: 400;
-            color: #6b8ba0;
+            color: var(--text-muted);
             font-size: 11px;
         }
 
         .form-group input,
         .form-group select {
-            padding: 10px 12px;
-            border: 1.5px solid #d0dce8;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: clamp(14px, 1.8vw, 16px);
             background: #fafcfe;
-            transition: 0.2s;
+            transition: var(--transition);
             width: 100%;
             -webkit-appearance: none;
             appearance: none;
-        }
-
-        @media (min-width: 768px) {
-            .form-group {
-                margin-bottom: 14px;
-            }
-            .form-group label {
-                font-size: 14px;
-            }
-            .form-group label span {
-                font-size: 12px;
-            }
-            .form-group input,
-            .form-group select {
-                padding: 10px 14px;
-                border-radius: 10px;
-                font-size: 15px;
-            }
+            font-family: inherit;
         }
 
         .form-group input:focus,
         .form-group select:focus {
-            border-color: var(--secondary);
+            border-color: var(--primary-light);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 107, 138, 0.15);
+            box-shadow: 0 0 0 3px rgba(26, 107, 138, 0.12);
             background: white;
         }
 
-        /* Touch-friendly improvements */
-        .form-group input,
-        .form-group select,
-        .btn {
-            min-height: 44px;
+        .form-group input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .form-group input[type="number"]::-webkit-outer-spin-button,
+        .form-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .input-prefix {
@@ -266,398 +215,95 @@
 
         .input-prefix .prefix {
             position: absolute;
-            left: 12px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
             font-weight: 700;
-            color: var(--secondary);
-            font-size: 14px;
+            color: var(--primary-light);
+            font-size: clamp(13px, 1.6vw, 15px);
             pointer-events: none;
         }
 
         .input-prefix input {
-            padding-left: 32px;
-        }
-
-        @media (min-width: 768px) {
-            .input-prefix .prefix {
-                left: 14px;
-                font-size: 15px;
-            }
-            .input-prefix input {
-                padding-left: 38px;
-            }
+            padding-left: 36px;
         }
 
         .form-row {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        @media (min-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 14px;
-            }
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         .form-row-4 {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr;
             gap: 8px;
         }
 
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
             .form-row-4 {
-                grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr;
-                gap: 10px;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
             }
         }
 
+        @media (max-width: 480px) {
+            .form-row-4 {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+        }
+
+        /* ========== HPP DISPLAY ========== */
         .hpp-display {
-            background: #e8f0fe;
-            padding: 10px 14px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #e8f0fe, #dce8f5);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
             font-weight: 700;
             color: var(--primary);
             text-align: center;
-            font-size: 16px;
+            font-size: clamp(16px, 2.5vw, 20px);
             margin-top: 4px;
-            word-break: break-word;
-        }
-
-        @media (min-width: 768px) {
-            .hpp-display {
-                padding: 12px 16px;
-                border-radius: 10px;
-                font-size: 18px;
-            }
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .hpp-display small {
             font-weight: 400;
             font-size: 12px;
-            color: #4e7188;
+            color: var(--text-muted);
         }
 
-        .result-table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 0 -16px;
-            padding: 0 16px;
-        }
-
-        @media (min-width: 768px) {
-            .result-table-wrapper {
-                margin: 0;
-                padding: 0;
-            }
-        }
-
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            min-width: 280px;
-        }
-
-        @media (min-width: 768px) {
-            .result-table {
-                font-size: 14px;
-            }
-        }
-
-        .result-table td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #edf2f7;
-        }
-
-        @media (min-width: 768px) {
-            .result-table td {
-                padding: 9px 6px;
-            }
-        }
-
-        .result-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .result-table .label {
-            color: #2d4a62;
-            font-weight: 500;
-        }
-
-        .result-table .value {
-            text-align: right;
-            font-weight: 600;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            word-break: break-word;
-        }
-
-        @media (min-width: 768px) {
-            .result-table .value {
-                font-size: 15px;
-            }
-        }
-
-        .result-table .total {
-            font-weight: 800;
-            color: var(--primary);
-            font-size: 15px;
-        }
-
-        @media (min-width: 768px) {
-            .result-table .total {
-                font-size: 16px;
-            }
-        }
-
-        .result-table .profit {
-            color: var(--success);
-        }
-
-        .result-table .loss {
-            color: var(--danger);
-        }
-
-        .highlight-row {
-            background: #f2f9fc;
-            border-radius: 8px;
-        }
-
-        .highlight-row td {
-            padding: 10px 6px;
-            border-bottom: 2px solid #b8d4e8;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 12px;
-                margin-top: 10px;
-            }
-        }
-
-        .dash-item {
-            background: #f7faff;
-            border-radius: 10px;
-            padding: 10px 12px;
-            text-align: center;
-            border: 1px solid #e2ecf5;
-        }
-
-        @media (min-width: 768px) {
-            .dash-item {
-                padding: 12px 14px;
-                border-radius: 12px;
-            }
-        }
-
-        .dash-item .dash-label {
+        .auto-fill-notice {
             font-size: 10px;
-            color: #4e7188;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        @media (min-width: 768px) {
-            .dash-item .dash-label {
-                font-size: 11px;
-            }
-        }
-
-        .dash-item .dash-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 2px;
-            font-family: 'Courier New', monospace;
-        }
-
-        @media (min-width: 768px) {
-            .dash-item .dash-value {
-                font-size: 18px;
-                margin-top: 4px;
-            }
-        }
-
-        .dash-item .dash-value.green {
             color: #0f7b3a;
+            background: #d4edda;
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
         }
 
-        .dash-item .dash-value.gold {
-            color: #b8860b;
-        }
-
-        .dash-item .dash-value.blue {
-            color: #1a6b8a;
-        }
-
-        .dash-item .dash-value.red {
-            color: #b22234;
-        }
-
-        .dash-item.primary {
-            background: #e3edf6;
-            border-color: #aec8dd;
-        }
-
-        .dash-item.success {
-            background: #e6f5ed;
-            border-color: #8bc4a8;
-        }
-
-        .dash-item.warning {
-            background: #fef5e6;
-            border-color: #e8c88a;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 14px;
-            flex-wrap: wrap;
-        }
-
-        @media (min-width: 768px) {
-            .btn-group {
-                gap: 12px;
-                margin-top: 18px;
-            }
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-            flex: 1;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        @media (min-width: 768px) {
-            .btn {
-                padding: 10px 24px;
-                font-size: 14px;
-                border-radius: 10px;
-                flex: none;
-            }
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1a5a7a;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #1a9a4a;
-        }
-
-        .btn-warning {
-            background: #d4a017;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #b8890f;
-        }
-
-        @media print {
-            body {
-                background: white;
-                padding: 10px;
-            }
-            .card {
-                box-shadow: none;
-                border: 1px solid #ccc;
-                break-inside: avoid;
-            }
-            .btn-group {
-                display: none;
-            }
-            .header {
-                background: #0b3b5e !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .dash-item {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .hpp-display {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .highlight-row {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-        }
-
-        .divider {
-            border: none;
-            border-top: 2px dashed #dce6ef;
-            margin: 16px 0;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #5e7e97;
-            font-size: 13px;
-        }
-
-        .info-box {
-            background: #f4f8fc;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border-left: 4px solid #1a6b8a;
-            font-size: 13px;
-            color: #2d4a62;
-            margin-top: 12px;
-        }
-
+        /* ========== COST ITEMS ========== */
         .cost-item {
             background: #f8fafc;
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             padding: 12px 14px;
             margin-bottom: 10px;
             border: 1px solid #e8edf3;
             position: relative;
-            transition: 0.2s;
+            transition: var(--transition);
         }
 
         .cost-item:hover {
-            border-color: #b0c8dc;
+            border-color: #c0cedc;
             background: #f5f8fc;
         }
 
@@ -671,13 +317,16 @@
             font-size: 18px;
             cursor: pointer;
             font-weight: 700;
-            opacity: 0.5;
-            transition: 0.2s;
+            opacity: 0.4;
+            transition: var(--transition);
+            padding: 4px 6px;
+            border-radius: 6px;
+            line-height: 1;
         }
 
         .cost-item .remove-btn:hover {
             opacity: 1;
-            transform: scale(1.1);
+            background: rgba(178, 34, 52, 0.08);
         }
 
         .cost-item .cost-header {
@@ -685,90 +334,70 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .cost-item .cost-header .cost-name {
             font-weight: 600;
-            font-size: 14px;
-            color: #1e3b4f;
+            font-size: clamp(13px, 1.6vw, 15px);
+            color: var(--text);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
+            min-width: 100px;
         }
 
         .cost-item .cost-header .cost-name .edit-icon {
             font-size: 12px;
-            color: #6b8ba0;
-            opacity: 0.6;
+            color: var(--text-muted);
+            opacity: 0.5;
         }
 
         .cost-item .cost-header .cost-total {
             font-weight: 700;
-            color: #0b3b5e;
+            color: var(--primary);
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: clamp(12px, 1.4vw, 14px);
+            white-space: nowrap;
         }
 
-        .add-cost-btn {
-            width: 100%;
-            padding: 10px;
-            border: 2px dashed #b0c8dc;
-            border-radius: 10px;
-            background: transparent;
-            color: #1a6b8a;
+        .editable-name-input {
             font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 4px;
+            font-size: clamp(13px, 1.6vw, 15px);
+            color: var(--text);
+            border: 1.5px dashed transparent;
+            background: transparent;
+            padding: 2px 6px;
+            border-radius: 6px;
+            width: 100%;
+            transition: var(--transition);
+            font-family: inherit;
+            min-width: 60px;
         }
 
-        .add-cost-btn:hover {
-            background: #e8f0f8;
-            border-color: #1a6b8a;
+        .editable-name-input:hover {
+            border-color: #b0c8dc;
+            background: white;
         }
 
-        .section-label {
-            font-weight: 700;
-            color: #0b3b5e;
-            font-size: 15px;
-            margin: 16px 0 10px 0;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e8edf3;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .section-label .sub {
-            font-weight: 400;
-            font-size: 12px;
-            color: #5e7a93;
-        }
-
-        .total-cost-summary {
-            background: #e3edf6;
-            padding: 10px 16px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            font-weight: 700;
-            color: #0b3b5e;
-            margin-top: 8px;
-        }
-
-        .total-cost-summary .amount {
-            font-family: 'Courier New', monospace;
+        .editable-name-input:focus {
+            border-color: var(--primary-light);
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 107, 138, 0.10);
         }
 
         .frequency-badge {
             display: inline-block;
-            font-size: 11px;
+            font-size: 10px;
             padding: 2px 10px;
             border-radius: 20px;
             background: #d4e4f0;
             color: #1a4a6a;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .frequency-badge.mingguan {
@@ -781,170 +410,489 @@
             color: #6a5a1a;
         }
 
-        .form-group select.freq-select {
-            font-size: 13px;
-            padding: 8px 10px;
-        }
-
-        .text-muted {
-            color: #6b8ba0;
-            font-size: 12px;
-        }
-
-        .mt-1 {
-            margin-top: 6px;
-        }
-
-        .editable-name-input {
+        .recom-badge {
+            display: inline-block;
+            font-size: 9px;
+            background: #d4edda;
+            color: #155724;
+            padding: 1px 10px;
+            border-radius: 20px;
             font-weight: 600;
-            font-size: 14px;
-            color: #1e3b4f;
-            border: 1.5px dashed transparent;
-            background: transparent;
-            padding: 4px 8px;
-            border-radius: 6px;
-            width: 100%;
-            transition: 0.2s;
+            white-space: nowrap;
         }
 
-        .editable-name-input:hover {
-            border-color: #b0c8dc;
-            background: white;
+        .cost-item .form-group {
+            margin-bottom: 0;
         }
 
-        .editable-name-input:focus {
-            border-color: #1a6b8a;
-            background: white;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 107, 138, 0.12);
-        }
-
-        .name-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex: 1;
-        }
-
-        .name-wrapper .edit-icon {
-            font-size: 13px;
-            color: #8aacc0;
-            opacity: 0.5;
-        }
-
-        .name-wrapper:hover .edit-icon {
-            opacity: 1;
-        }
-
-        .cost-item .form-group label .edit-hint {
-            font-weight: 400;
-            color: #8aacc0;
+        .cost-item .form-group label {
             font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
         }
 
-        .non-cost-header {
+        .cost-item .form-group input,
+        .cost-item .form-group select {
+            font-size: 13px;
+            padding: 7px 10px;
+        }
+
+        .cost-item .form-group .input-prefix input {
+            padding-left: 32px;
+        }
+
+        .cost-item .form-group .input-prefix .prefix {
+            font-size: 12px;
+            left: 10px;
+        }
+
+        .cost-item .cost-sub-info {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ========== BUTTONS ========== */
+        .add-cost-btn {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #b0c8dc;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 2px;
+            font-family: inherit;
+        }
+
+        .add-cost-btn:hover {
+            background: #e8f0f8;
+            border-color: var(--primary-light);
+        }
+
+        .add-cost-btn:active {
+            transform: scale(0.98);
+        }
+
+        .total-cost-summary {
+            background: linear-gradient(135deg, #e3edf6, #d4e2ef);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 8px;
+            flex-wrap: wrap;
+            gap: 4px;
+            font-size: clamp(13px, 1.6vw, 15px);
+        }
+
+        .total-cost-summary .amount {
+            font-family: 'Courier New', monospace;
+        }
+
+        .section-label {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: clamp(14px, 2vw, 17px);
+            margin: 16px 0 10px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e8edf3;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
-        .non-cost-header .cost-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #1e3b4f;
+        .section-label .sub {
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn-group {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
         }
 
-        .non-cost-header .cost-total {
-            font-weight: 700;
-            color: #0b3b5e;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-        }
-
-        .recom-badge {
-            display: inline-block;
-            font-size: 10px;
-            background: #d4edda;
-            color: #155724;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-weight: 500;
-            margin-left: 6px;
-        }
-
-        .btn-sm {
-            padding: 4px 12px;
-            font-size: 11px;
-            border-radius: 20px;
+        .btn {
+            padding: 10px 20px;
             border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: clamp(12px, 1.4vw, 14px);
             cursor: pointer;
-            transition: 0.2s;
+            transition: var(--transition);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex: 1 1 auto;
+            min-width: 80px;
         }
 
-        .btn-outline-sm {
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(11, 59, 94, 0.3);
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0f6e48;
+            box-shadow: 0 4px 12px rgba(26, 138, 90, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #b8890f;
+            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+        }
+
+        .btn-outline {
             background: transparent;
-            border: 1px solid #b0c8dc;
-            color: #1a4a66;
+            border: 2px solid var(--border);
+            color: var(--text-muted);
         }
 
-        .btn-outline-sm:hover {
-            background: #e8f0f8;
+        .btn-outline:hover {
+            background: #e8edf3;
+            border-color: #b0c8dc;
         }
 
-        .auto-fill-notice {
-            font-size: 11px;
-            color: #0f7b3a;
-            background: #d4edda;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        /* Additional mobile optimizations */
         @media (max-width: 480px) {
-            .header {
-                padding: 14px 16px;
+            .btn {
+                flex: 1 1 100%;
+                padding: 12px;
             }
-            .header h1 {
-                font-size: 16px;
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #f4f8fc;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary-light);
+            font-size: 12px;
+            color: var(--text);
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--primary);
+        }
+
+        /* ========== RESULT TABLE ========== */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(12px, 1.4vw, 14px);
+        }
+
+        .result-table td {
+            padding: 8px 4px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .result-table .label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .result-table .value {
+            text-align: right;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(13px, 1.5vw, 15px);
+        }
+
+        .result-table .total {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: clamp(14px, 1.6vw, 16px);
+        }
+
+        .result-table .profit {
+            color: #0f7b3a;
+        }
+
+        .result-table .loss {
+            color: #b22234;
+        }
+
+        .highlight-row {
+            background: #f2f9fc;
+        }
+
+        .highlight-row td {
+            padding: 10px 4px;
+            border-bottom: 2px solid #b8d4e8;
+        }
+
+        .highlight-row .label {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ========== DASHBOARD ========== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+        }
+
+        .dash-item {
+            background: #f7faff;
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid #e2ecf5;
+            transition: var(--transition);
+        }
+
+        .dash-item:hover {
+            border-color: #b0c8dc;
+        }
+
+        .dash-item .dash-label {
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dash-item .dash-value {
+            font-size: clamp(15px, 2vw, 20px);
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dash-item .dash-value.green {
+            color: #0f7b3a;
+        }
+        .dash-item .dash-value.gold {
+            color: #b8860b;
+        }
+        .dash-item .dash-value.blue {
+            color: var(--primary-light);
+        }
+        .dash-item .dash-value.red {
+            color: #b22234;
+        }
+
+        .dash-item.primary {
+            background: #e3edf6;
+            border-color: #aec8dd;
+        }
+        .dash-item.success {
+            background: #e6f5ed;
+            border-color: #8bc4a8;
+        }
+        .dash-item.warning {
+            background: #fef5e6;
+            border-color: #e8c88a;
+        }
+
+        /* ========== DETAIL RINCIAN ========== */
+        .detail-box {
+            margin-top: 14px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-radius: var(--radius-sm);
+            border: 1px solid #e8edf3;
+        }
+
+        .detail-box .detail-title {
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .detail-box .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 3px 0;
+            border-bottom: 1px dashed #edf2f7;
+            gap: 8px;
+        }
+
+        .detail-box .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-box .detail-row .label {
+            color: var(--text-muted);
+        }
+
+        .detail-box .detail-row .value {
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+        }
+
+        .detail-box .detail-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 4px;
+            padding-top: 6px;
+            border-top: 2px solid #dce4ed;
+            color: var(--primary);
+        }
+
+        .detail-box .detail-total .value {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ========== DIVIDER ========== */
+        .divider {
+            border: none;
+            border-top: 2px dashed #dce6ef;
+            margin: 14px 0;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-muted);
+            font-size: 11px;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e8edf3;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b0c8dc;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 8px;
+                font-size: 11px;
             }
             .card {
-                padding: 14px;
+                box-shadow: none;
+                border: 1px solid #ccc;
+                break-inside: avoid;
+                padding: 12px 14px;
             }
-            .btn {
-                padding: 14px 16px;
-                font-size: 14px;
+            .btn-group,
+            .add-cost-btn,
+            .cost-item .remove-btn {
+                display: none !important;
             }
-            .form-group input,
-            .form-group select {
-                font-size: 16px;
+            .header {
+                background: var(--primary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 12px 16px;
+            }
+            .dash-item,
+            .hpp-display,
+            .highlight-row,
+            .total-cost-summary {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .grid-2 {
+                gap: 12px;
+            }
+            .cost-item {
+                border: 1px solid #ddd;
+                background: #f9f9f9;
+            }
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .detail-box {
+                border: 1px solid #ddd;
+                background: #f9f9f9;
             }
         }
 
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
+        /* ========== UTILITY ========== */
+        .text-muted {
+            color: var(--text-muted);
         }
-
-        /* Better text selection */
-        * {
-            -webkit-user-select: none;
-            user-select: none;
+        .mt-1 {
+            margin-top: 6px;
         }
-
-        input, select, textarea {
-            -webkit-user-select: text;
-            user-select: text;
+        .mb-1 {
+            margin-bottom: 6px;
         }
-
-        /* Prevent pull-to-refresh on mobile */
-        body {
-            overscroll-behavior: contain;
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .gap-1 {
+            gap: 4px;
+        }
+        .gap-2 {
+            gap: 8px;
         }
     </style>
 </head>
@@ -952,27 +900,31 @@
 
 <div class="container" id="app">
 
-    <div class="header">
-        <div>
-            <h1>📋 SE2026 Otomatis</h1>
-            <div class="subtitle">Sensus Ekonomi 2026 — Pilih jenis usaha, biaya rekomendasi auto isi!</div>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-left">
+            <h1>📋 SE2026</h1>
+            <div class="subtitle">Sensus Ekonomi 2026 — Isi 7 angka, semua otomatis</div>
         </div>
-        <div class="badge">✓ Siap BPS</div>
-    </div>
+        <div class="header-badge">
+            <span class="icon">✅</span> Siap BPS
+        </div>
+    </header>
 
+    <!-- ===== MAIN GRID ===== -->
     <div class="grid-2">
 
-        <!-- KIRI: INPUT -->
+        <!-- ===== LEFT: INPUT ===== -->
         <div class="card">
             <div class="card-title">
                 📝 Input Data Usaha
                 <small>isi hanya kolom ini</small>
-                <span class="badge-count">{{ Object.keys(dataHPP).length }} jenis usaha</span>
+                <span class="badge-count">{{ Object.keys(dataHPP).length }} jenis</span>
             </div>
 
-            <!-- Pilih Jenis Usaha -->
+            <!-- Jenis Usaha -->
             <div class="form-group">
-                <label>Jenis Usaha <span>HPP & biaya rekomendasi auto isi</span></label>
+                <label>Jenis Usaha <span>HPP & biaya auto isi</span></label>
                 <select id="jenisUsaha" @change="onJenisUsahaChange" v-model="jenisUsahaTerpilih">
                     <optgroup label="🏪 Perdagangan">
                         <option v-for="(hpp, nama) in filterByCategory('dagang')" :key="nama" :value="nama">{{ nama }}</option>
@@ -988,19 +940,19 @@
                     </optgroup>
                 </select>
                 <div class="hpp-display">
-                    HPP: {{ hppTerpilih }}%
+                    <span>HPP: {{ hppTerpilih }}%</span>
                     <small>— {{ getKategori(jenisUsahaTerpilih) }}</small>
-                    <span class="auto-fill-notice" style="margin-left:10px;">✅ Biaya rekomendasi auto isi</span>
+                    <span class="auto-fill-notice">✅ Rekomendasi auto</span>
                 </div>
             </div>
 
             <!-- Penjualan & Hari Buka -->
             <div class="form-row">
                 <div class="form-group">
-                    <label>Penjualan Harian <span>rata-rata omzet/hari</span></label>
+                    <label>Penjualan Harian <span>omzet/hari</span></label>
                     <div class="input-prefix">
                         <span class="prefix">Rp</span>
-                        <input type="text" v-model="inputDisplay.penjualanHarian" @input="onInput('penjualanHarian', $event)" />
+                        <input type="text" v-model="inputDisplay.penjualanHarian" @input="onInput('penjualanHarian', $event)" placeholder="0" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -1012,114 +964,108 @@
             <!-- Belanja Barang & Biaya Pembungkus -->
             <div class="form-row">
                 <div class="form-group">
-                    <label>Belanja Barang / Hari <span>modal stok harian</span></label>
+                    <label>Belanja Barang / Hari <span>modal stok</span></label>
                     <div class="input-prefix">
                         <span class="prefix">Rp</span>
-                        <input type="text" v-model="inputDisplay.belanjaBarang" @input="onInput('belanjaBarang', $event)" />
+                        <input type="text" v-model="inputDisplay.belanjaBarang" @input="onInput('belanjaBarang', $event)" placeholder="0" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Biaya Pembungkus / Bulan</label>
                     <div class="input-prefix">
                         <span class="prefix">Rp</span>
-                        <input type="text" v-model="inputDisplay.biayaPembungkus" @input="onInput('biayaPembungkus', $event)" />
+                        <input type="text" v-model="inputDisplay.biayaPembungkus" @input="onInput('biayaPembungkus', $event)" placeholder="0" />
                     </div>
                 </div>
             </div>
 
             <hr class="divider" />
 
-            <!-- ========== BIAYA OPERASIONAL ========== -->
+            <!-- ===== BIAYA OPERASIONAL ===== -->
             <div class="section-label">
                 ⚡ Biaya Operasional
-                <span class="sub">✏️ klik nama biaya untuk mengedit</span>
+                <span class="sub">✏️ klik nama untuk edit</span>
             </div>
 
             <div v-for="(item, index) in biayaOperasional" :key="'op-' + item._uid" class="cost-item">
-                <button class="remove-btn" @click="removeBiayaOperasional(index)" v-if="biayaOperasional.length > 1">✕</button>
+                <button class="remove-btn" @click="removeBiayaOperasional(index)" v-if="biayaOperasional.length > 1" aria-label="Hapus biaya">✕</button>
 
                 <div class="cost-header">
                     <div class="cost-name">
                         <span class="edit-icon">✏️</span>
-                        <input type="text" v-model="item.nama" @input="hitung" class="editable-name-input" placeholder="Ketik nama biaya..." />
+                        <input type="text" v-model="item.nama" @input="hitung" class="editable-name-input" placeholder="Nama biaya..." />
                         <span class="frequency-badge" :class="item.frekuensiJenis">
-                            {{ item.frekuensiJenis === 'mingguan' ? '📅 Mingguan' : '📆 Bulanan' }}
+                            {{ item.frekuensiJenis === 'mingguan' ? '📅 Minggu' : '📆 Bulan' }}
                         </span>
-                        <span v-if="item.isRekomendasi" class="recom-badge">⭐ Rekomendasi</span>
+                        <span v-if="item.isRekomendasi" class="recom-badge">⭐ Rekom</span>
                     </div>
-                    <span class="cost-total">{{ formatRupiah(hitungBiayaOperasionalItem(item)) }}/tahun</span>
+                    <span class="cost-total">{{ formatRupiah(hitungBiayaOperasionalItem(item)) }}</span>
                 </div>
 
                 <div class="form-row-4">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size:12px;">
-                            Nama Biaya
-                            <span class="edit-hint">✏️ editable</span>
-                        </label>
-                        <input type="text" v-model="item.nama" @input="hitung" style="font-size:13px; padding:8px 10px; font-weight:600; color:#1e3b4f;" placeholder="Nama biaya..." />
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" v-model="item.nama" @input="hitung" placeholder="Nama biaya..." />
                     </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size:12px;">Nilai (Rp)</label>
+                    <div class="form-group">
+                        <label>Nilai (Rp)</label>
                         <div class="input-prefix">
-                            <span class="prefix" style="font-size:13px;">Rp</span>
-                            <input type="text" v-model="item.displayNilai" @input="onCostInput(item, $event)" style="font-size:13px; padding:8px 10px; padding-left:34px;" />
+                            <span class="prefix">Rp</span>
+                            <input type="text" v-model="item.displayNilai" @input="onCostInput(item, $event)" placeholder="0" />
                         </div>
                     </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size:12px;">Frekuensi</label>
-                        <input type="number" v-model="item.frekuensi" @input="hitung" min="0" step="0.5" style="font-size:13px; padding:8px 10px;" />
+                    <div class="form-group">
+                        <label>Frekuensi</label>
+                        <input type="number" v-model="item.frekuensi" @input="hitung" min="0" step="0.5" placeholder="1" />
                     </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size:12px;">Per</label>
-                        <select v-model="item.frekuensiJenis" @change="hitung" class="freq-select" style="font-size:13px; padding:8px 10px;">
-                            <option value="bulanan">Bulanan</option>
-                            <option value="mingguan">Mingguan</option>
+                    <div class="form-group">
+                        <label>Per</label>
+                        <select v-model="item.frekuensiJenis" @change="hitung" class="freq-select">
+                            <option value="bulanan">Bulan</option>
+                            <option value="mingguan">Minggu</option>
                         </select>
                     </div>
                 </div>
-                <div style="font-size:11px; color:#6b8ba0; margin-top:4px;">
-                    Total per tahun: {{ item.frekuensi }} × {{ item.frekuensiJenis === 'mingguan' ? '4 (minggu)' : '1' }} × 12 bulan
+                <div class="cost-sub-info">
+                    Total: {{ item.frekuensi }} × {{ item.frekuensiJenis === 'mingguan' ? '4 minggu' : '1 bulan' }} × 12
                 </div>
             </div>
 
             <button class="add-cost-btn" @click="addBiayaOperasional">+ Tambah Biaya Operasional</button>
 
             <div class="total-cost-summary">
-                <span>Total Biaya Operasional / Tahun</span>
+                <span>Total Operasional / Tahun</span>
                 <span class="amount">{{ formatRupiah(totalBiayaOperasionalTahunan) }}</span>
             </div>
 
-            <!-- ========== BIAYA NON OPERASIONAL ========== -->
-            <div class="section-label" style="margin-top:20px;">
+            <!-- ===== BIAYA NON OPERASIONAL ===== -->
+            <div class="section-label" style="margin-top:18px;">
                 🏦 Biaya Non Operasional
-                <span class="sub">✏️ klik nama biaya untuk mengedit</span>
+                <span class="sub">✏️ klik nama untuk edit</span>
             </div>
 
             <div v-for="(item, index) in biayaNonOperasional" :key="'non-' + item._uid" class="cost-item">
-                <button class="remove-btn" @click="removeBiayaNonOperasional(index)" v-if="biayaNonOperasional.length > 1">✕</button>
+                <button class="remove-btn" @click="removeBiayaNonOperasional(index)" v-if="biayaNonOperasional.length > 1" aria-label="Hapus biaya">✕</button>
 
-                <div class="non-cost-header">
+                <div class="cost-header">
                     <div class="cost-name">
                         <span class="edit-icon">✏️</span>
-                        <input type="text" v-model="item.nama" @input="hitung" class="editable-name-input" placeholder="Ketik nama biaya..." />
-                        <span v-if="item.isRekomendasi" class="recom-badge">⭐ Rekomendasi</span>
+                        <input type="text" v-model="item.nama" @input="hitung" class="editable-name-input" placeholder="Nama biaya..." />
+                        <span v-if="item.isRekomendasi" class="recom-badge">⭐ Rekom</span>
                     </div>
-                    <span class="cost-total">{{ formatRupiah(item.nilai * 12) }}/tahun</span>
+                    <span class="cost-total">{{ formatRupiah(item.nilai * 12) }}</span>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size:12px;">
-                            Nama Biaya
-                            <span class="edit-hint">✏️ editable</span>
-                        </label>
-                        <input type="text" v-model="item.nama" @input="hitung" style="font-size:13px; padding:8px 10px; font-weight:600; color:#1e3b4f;" placeholder="Nama biaya..." />
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" v-model="item.nama" @input="hitung" placeholder="Nama biaya..." />
                     </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size:12px;">Nilai / Bulan (Rp)</label>
+                    <div class="form-group">
+                        <label>Nilai / Bulan (Rp)</label>
                         <div class="input-prefix">
-                            <span class="prefix" style="font-size:13px;">Rp</span>
-                            <input type="text" v-model="item.displayNilai" @input="onNonCostInput(item, $event)" style="font-size:13px; padding:8px 10px; padding-left:34px;" />
+                            <span class="prefix">Rp</span>
+                            <input type="text" v-model="item.displayNilai" @input="onNonCostInput(item, $event)" placeholder="0" />
                         </div>
                     </div>
                 </div>
@@ -1128,36 +1074,33 @@
             <button class="add-cost-btn" @click="addBiayaNonOperasional">+ Tambah Biaya Non Operasional</button>
 
             <div class="total-cost-summary">
-                <span>Total Biaya Non Operasional / Tahun</span>
+                <span>Total Non Operasional / Tahun</span>
                 <span class="amount">{{ formatRupiah(totalBiayaNonOperasionalTahunan) }}</span>
             </div>
 
-            <!-- Tombol -->
+            <!-- ===== BUTTONS ===== -->
             <div class="btn-group">
                 <button class="btn btn-primary" @click="resetInput">↺ Reset</button>
-                <button class="btn btn-warning" @click="applyRecommendations">⟳ Muat Ulang Rekomendasi</button>
-                <button class="btn btn-success" @click="printDashboard">🖨 Cetak Dashboard</button>
+                <button class="btn btn-warning" @click="applyRecommendations">⟳ Muat Ulang</button>
+                <button class="btn btn-success" @click="printDashboard">🖨 Cetak</button>
             </div>
 
             <div class="info-box">
-                <strong>💡 Rekomendasi Biaya Otomatis!</strong>
-                <span style="display:block; font-size:12px; margin-top:4px;">
-                    Saat memilih jenis usaha, biaya operasional dan non operasional <strong>otomatis terisi</strong> dengan rekomendasi yang sesuai.
-                    Anda tetap bisa <strong>mengedit</strong>, <strong>menambah</strong>, atau <strong>menghapus</strong> item biaya sesuai kebutuhan.
-                </span>
+                <strong>💡 Rekomendasi biaya otomatis!</strong><br />
+                Pilih jenis usaha → biaya operasional & non operasional terisi. Anda bisa <strong>edit, tambah, atau hapus</strong> sesuai kebutuhan.
             </div>
         </div>
 
-        <!-- KANAN: HASIL SE2026 -->
+        <!-- ===== RIGHT: HASIL ===== -->
         <div class="card">
             <div class="card-title">
-                📊 Hasil Sensus Ekonomi 2026
+                📊 Hasil SE2026
                 <small>nomor 26 – 29</small>
             </div>
 
             <table class="result-table">
                 <tr>
-                    <td class="label">27.a Nilai Penjualan Barang & Jasa</td>
+                    <td class="label">27.a Penjualan Barang & Jasa</td>
                     <td class="value">{{ formatRupiah(hasil.penjualanTahunan) }}</td>
                 </tr>
                 <tr>
@@ -1165,17 +1108,17 @@
                     <td class="value">{{ formatRupiah(hasil.pendapatanLain) }}</td>
                 </tr>
                 <tr style="border-bottom:2px solid #d0dce8;">
-                    <td class="label" style="font-weight:700;">27.c Total Nilai Penjualan</td>
+                    <td class="label" style="font-weight:700;">27.c Total Penjualan</td>
                     <td class="value total">{{ formatRupiah(hasil.totalPenjualan) }}</td>
                 </tr>
 
-                <tr><td colspan="2" style="padding:6px 0;"></td></tr>
+                <tr><td colspan="2" style="padding:4px 0;"></td></tr>
                 <tr>
                     <td class="label">26.b Biaya Produksi</td>
                     <td class="value">{{ formatRupiah(hasil.biayaProduksi) }}</td>
                 </tr>
                 <tr>
-                    <td class="label">26.c Biaya Barang Terjual (HPP)</td>
+                    <td class="label">26.c HPP (Barang Terjual)</td>
                     <td class="value">{{ formatRupiah(hasil.hpp) }}</td>
                 </tr>
                 <tr>
@@ -1191,40 +1134,41 @@
                     <td class="value total">{{ formatRupiah(hasil.totalPengeluaran) }}</td>
                 </tr>
 
-                <tr><td colspan="2" style="padding:6px 0;"></td></tr>
+                <tr><td colspan="2" style="padding:4px 0;"></td></tr>
                 <tr class="highlight-row">
-                    <td class="label" style="font-weight:700; font-size:15px;">📈 Estimasi Laba Kotor</td>
-                    <td class="value profit" style="font-size:17px;">{{ formatRupiah(hasil.labaKotor) }}</td>
+                    <td class="label">📈 Estimasi Laba Kotor</td>
+                    <td class="value profit" style="font-size:clamp(15px,2vw,18px);">{{ formatRupiah(hasil.labaKotor) }}</td>
                 </tr>
                 <tr class="highlight-row">
-                    <td class="label" style="font-weight:700; font-size:15px;">💰 Estimasi Laba Bersih / Tahun</td>
-                    <td class="value profit" style="font-size:18px;">{{ formatRupiah(hasil.labaBersihTahunan) }}</td>
+                    <td class="label">💰 Laba Bersih / Tahun</td>
+                    <td class="value profit" style="font-size:clamp(16px,2.2vw,20px);">{{ formatRupiah(hasil.labaBersihTahunan) }}</td>
                 </tr>
                 <tr>
-                    <td class="label" style="font-weight:600;">Estimasi Laba Bersih / Bulan</td>
+                    <td class="label" style="font-weight:600;">Laba Bersih / Bulan</td>
                     <td class="value profit">{{ formatRupiah(hasil.labaBersihBulanan) }}</td>
                 </tr>
                 <tr>
-                    <td class="label" style="font-weight:600;">Estimasi Laba Bersih / Hari</td>
+                    <td class="label" style="font-weight:600;">Laba Bersih / Hari</td>
                     <td class="value profit">{{ formatRupiah(hasil.labaBersihHarian) }}</td>
                 </tr>
             </table>
 
             <hr class="divider" />
 
-            <!-- DASHBOARD -->
-            <div style="margin-top:6px;">
-                <div style="font-weight:700; color:#0b3b5e; margin-bottom:10px; display:flex; justify-content:space-between; flex-wrap:wrap;">
-                    <span>📌 Ringkasan Dashboard — Siap Tunjukkan ke BPS</span>
-                    <span style="font-weight:400; font-size:12px; color:#4e7188;">{{ jenisUsahaTerpilih }} • HPP {{ hppTerpilih }}%</span>
+            <!-- ===== DASHBOARD ===== -->
+            <div>
+                <div class="flex-between" style="margin-bottom:8px;">
+                    <span style="font-weight:700; color:var(--primary); font-size:clamp(13px,1.6vw,16px);">📌 Dashboard — Siap BPS</span>
+                    <span style="font-weight:400; font-size:10px; color:var(--text-muted);">{{ jenisUsahaTerpilih }} • HPP {{ hppTerpilih }}%</span>
                 </div>
+
                 <div class="dashboard-grid">
                     <div class="dash-item primary">
                         <div class="dash-label">Jenis Usaha</div>
-                        <div class="dash-value" style="font-size:14px;">{{ jenisUsahaTerpilih }}</div>
+                        <div class="dash-value" style="font-size:clamp(11px,1.2vw,14px);">{{ jenisUsahaTerpilih }}</div>
                     </div>
                     <div class="dash-item">
-                        <div class="dash-label">Omzet Tahunan</div>
+                        <div class="dash-label">Omzet / Thn</div>
                         <div class="dash-value blue">{{ formatRupiahSingkat(hasil.totalPenjualan) }}</div>
                     </div>
                     <div class="dash-item">
@@ -1244,49 +1188,51 @@
                         <div class="dash-value gold">{{ formatRupiahSingkat(hasil.labaBersihBulanan) }}</div>
                     </div>
                     <div class="dash-item">
-                        <div class="dash-label">Rasio Laba/Omzet</div>
-                        <div class="dash-value" style="font-size:16px; color:#1a6b8a;">{{ hasil.rasioLaba }}%</div>
+                        <div class="dash-label">Rasio Laba</div>
+                        <div class="dash-value" style="font-size:clamp(14px,1.6vw,18px); color:var(--primary-light);">{{ hasil.rasioLaba }}%</div>
                     </div>
                     <div class="dash-item warning">
-                        <div class="dash-label">Estimasi Pajak (0.5%)</div>
-                        <div class="dash-value" style="font-size:14px; color:#8a6d0b;">{{ formatRupiahSingkat(hasil.pajakEstimasi) }}</div>
+                        <div class="dash-label">Pajak (0.5%)</div>
+                        <div class="dash-value" style="font-size:clamp(12px,1.4vw,16px); color:#8a6d0b;">{{ formatRupiahSingkat(hasil.pajakEstimasi) }}</div>
                     </div>
                 </div>
 
-                <!-- Detail Biaya Operasional -->
-                <div style="margin-top:16px; padding:12px 16px; background:#f8fafc; border-radius:10px; border:1px solid #e8edf3;">
-                    <div style="font-weight:600; font-size:13px; color:#1e3b4f; margin-bottom:6px;">📋 Rincian Biaya Operasional</div>
-                    <div v-for="item in biayaOperasional" :key="'rincian-op-' + item._uid" style="display:flex; justify-content:space-between; font-size:13px; padding:2px 0; border-bottom:1px dashed #e8edf3;">
-                        <span>{{ item.nama }} <span style="font-size:11px; color:#6b8ba0;">({{ item.frekuensi }}x/{{ item.frekuensiJenis }})</span> <span v-if="item.isRekomendasi" style="font-size:10px; color:#155724; background:#d4edda; padding:1px 8px; border-radius:10px;">⭐</span></span>
-                        <span>{{ formatRupiah(hitungBiayaOperasionalItem(item)) }}/tahun</span>
+                <!-- Detail Operasional -->
+                <div class="detail-box">
+                    <div class="detail-title">📋 Rincian Biaya Operasional</div>
+                    <div v-for="item in biayaOperasional" :key="'rincian-op-' + item._uid" class="detail-row">
+                        <span class="label">{{ item.nama }} <span style="font-size:10px;color:var(--text-muted);">({{ item.frekuensi }}x/{{ item.frekuensiJenis }})</span> <span v-if="item.isRekomendasi" style="font-size:9px;color:#155724;">⭐</span></span>
+                        <span class="value">{{ formatRupiah(hitungBiayaOperasionalItem(item)) }}</span>
                     </div>
-                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px; margin-top:4px; color:#0b3b5e;">
+                    <div class="detail-total">
                         <span>Total Operasional</span>
-                        <span>{{ formatRupiah(totalBiayaOperasionalTahunan) }}</span>
+                        <span class="value">{{ formatRupiah(totalBiayaOperasionalTahunan) }}</span>
                     </div>
                 </div>
 
-                <!-- Detail Biaya Non Operasional -->
-                <div style="margin-top:10px; padding:12px 16px; background:#f8fafc; border-radius:10px; border:1px solid #e8edf3;">
-                    <div style="font-weight:600; font-size:13px; color:#1e3b4f; margin-bottom:6px;">📋 Rincian Biaya Non Operasional</div>
-                    <div v-for="item in biayaNonOperasional" :key="'rincian-non-' + item._uid" style="display:flex; justify-content:space-between; font-size:13px; padding:2px 0; border-bottom:1px dashed #e8edf3;">
-                        <span>{{ item.nama }} <span v-if="item.isRekomendasi" style="font-size:10px; color:#155724; background:#d4edda; padding:1px 8px; border-radius:10px;">⭐</span></span>
-                        <span>{{ formatRupiah(item.nilai * 12) }}/tahun</span>
+                <!-- Detail Non Operasional -->
+                <div class="detail-box" style="margin-top:10px;">
+                    <div class="detail-title">📋 Rincian Biaya Non Operasional</div>
+                    <div v-for="item in biayaNonOperasional" :key="'rincian-non-' + item._uid" class="detail-row">
+                        <span class="label">{{ item.nama }} <span v-if="item.isRekomendasi" style="font-size:9px;color:#155724;">⭐</span></span>
+                        <span class="value">{{ formatRupiah(item.nilai * 12) }}</span>
                     </div>
-                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px; margin-top:4px; color:#0b3b5e;">
+                    <div class="detail-total">
                         <span>Total Non Operasional</span>
-                        <span>{{ formatRupiah(totalBiayaNonOperasionalTahunan) }}</span>
+                        <span class="value">{{ formatRupiah(totalBiayaNonOperasionalTahunan) }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ===== FOOTER ===== -->
     <div class="footer">
-        Template SE2026 Otomatis • Rekomendasi biaya otomatis per jenis usaha • Sensus Ekonomi 2026
+        SE2026 Otomatis • Rekomendasi biaya per jenis usaha • Sensus Ekonomi 2026
     </div>
 </div>
 
+<!-- ===== VUE JS ===== -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js">
 </script>
 <script>
@@ -1385,451 +1331,282 @@
                 'Jasa Pendidikan (Les/Bimbel)': { hpp: 10, kategori: 'jasa' }
             },
 
-            // ========== REKOMENDASI BIAYA PER JENIS USAHA ==========
+            // ===== REKOMENDASI BIAYA =====
             rekomendasiBiaya: {
-                // ---------- PERDAGANGAN ----------
                 'Warung': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 100000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Iuran Kebersihan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet', nilai: 200000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1,
+                            jenis: 'bulanan' }, { nama: 'Gas', nilai: 100000, frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Iuran Kebersihan',
+                        nilai: 30000 }]
                 },
                 'Sembako': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Transportasi', nilai: 100000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Iuran Kebersihan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Transportasi', nilai: 100000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Iuran Kebersihan',
+                        nilai: 30000 }]
                 },
                 'Toko Kelontong': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 350000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 350000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Grosir': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Gudang', nilai: 800000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Transportasi', nilai: 200000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 100000 },
-                        { nama: 'Pajak', nilai: 200000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Gudang', nilai: 800000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Transportasi', nilai: 200000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 100000 }, { nama: 'Pajak', nilai: 200000 }]
                 },
                 'Konter Pulsa': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 250000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 300000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 30000 }]
                 },
                 'Agen Pulsa & PPOB': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 350000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 350000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 30000 }]
                 },
                 'Aksesoris HP': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Toko Pakaian': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Toko Elektronik': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 600000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 75000 },
-                        { nama: 'Asuransi', nilai: 150000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 600000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 75000 }, { nama: 'Asuransi', nilai: 150000 }]
                 },
                 'Toko Furniture': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 700000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 75000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 700000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 75000 }]
                 },
-
-                // ---------- INDUSTRI/MANUFAKTUR ----------
                 'Pembuatan Dandang': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 800000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 500000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Bahan Bakar', nilai: 300000, frekuensi: 1, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 75000 },
-                        { nama: 'Perawatan Mesin', nilai: 200000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 800000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 500000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 200000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 600000, frekuensi: 1,
+                            jenis: 'bulanan' }, { nama: 'Bahan Bakar', nilai: 300000, frekuensi: 1,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 75000 }, { nama: 'Perawatan Mesin',
+                        nilai: 200000 }]
                 },
                 'Pembuatan Loyang Keripik': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 400000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Mesin', nilai: 150000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 400000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 150000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Mesin',
+                        nilai: 150000 }]
                 },
                 'Pembuatan Alat Dapur (Panci/Wajan)': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 700000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 450000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 550000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Mesin', nilai: 150000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 700000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 450000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 150000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 550000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Mesin',
+                        nilai: 150000 }]
                 },
                 'Kerajinan Logam': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 300000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 300000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Pembuatan Perabot Kayu': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Bahan Bakar', nilai: 200000, frekuensi: 1, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Mesin', nilai: 100000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat',
+                            nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Bahan Bakar', nilai: 200000,
+                            frekuensi: 1, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Mesin',
+                        nilai: 100000 }]
                 },
                 'Mebel / Furnitur': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 450000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Bahan Bakar', nilai: 200000, frekuensi: 1, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 75000 },
-                        { nama: 'Perawatan Mesin', nilai: 100000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 450000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat',
+                            nilai: 600000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Bahan Bakar', nilai: 200000,
+                            frekuensi: 1, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 75000 }, { nama: 'Perawatan Mesin',
+                        nilai: 100000 }]
                 },
                 'Pembuatan Keripik (Makanan Ringan)': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 600000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Minyak Goreng', nilai: 300000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 600000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 200000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1,
+                            jenis: 'bulanan' }, { nama: 'Minyak Goreng', nilai: 300000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Pembuatan Tahu/Tempe': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 500000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 350000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 500000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 300000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 350000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Konveksi / Garmen': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Perawatan Mesin', nilai: 150000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat',
+                            nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Perawatan Mesin', nilai: 150000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Percetakan': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 700000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Tinta', nilai: 300000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 75000 },
-                        { nama: 'Perawatan Mesin', nilai: 200000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 700000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 600000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Tinta', nilai: 300000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 75000 }, { nama: 'Perawatan Mesin',
+                        nilai: 200000 }]
                 },
                 'Sablon / Screen Printing': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 450000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Bahan Kimia', nilai: 200000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 450000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat',
+                            nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Bahan Kimia', nilai: 200000,
+                            frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
-
-                // ---------- KULINER ----------
                 'Warung Makan': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 350000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 500000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 150000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Iuran Kebersihan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 350000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 500000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 200000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1,
+                            jenis: 'bulanan' }, { nama: 'Internet', nilai: 150000, frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Iuran Kebersihan',
+                        nilai: 30000 }]
                 },
                 'Kedai Kopi': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 450000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 450000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet', nilai: 200000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Restoran': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 700000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 800000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 100000 },
-                        { nama: 'Iuran Kebersihan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 700000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 250000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 800000, frekuensi: 1,
+                            jenis: 'bulanan' }, { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 100000 }, { nama: 'Iuran Kebersihan',
+                        nilai: 50000 }]
                 },
                 'Katering': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 600000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 75000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 600000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 200000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 75000 }]
                 },
                 'Bakso/Mie Ayam': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 400000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Air', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 400000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Air', nilai: 150000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Gorengan / Cireng': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 350000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Minyak Goreng', nilai: 200000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Sewa Tempat', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 350000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Minyak Goreng', nilai: 200000,
+                            frekuensi: 2, jenis: 'mingguan' }, { nama: 'Sewa Tempat', nilai: 300000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 30000 }]
                 },
                 'Toko Kue': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 350000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 300000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 350000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 300000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
-
-                // ---------- JASA ----------
                 'Fotokopi': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Tinta & Kertas', nilai: 300000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Mesin', nilai: 150000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Tinta & Kertas', nilai: 300000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Mesin',
+                        nilai: 150000 }]
                 },
                 'Laundry': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Deterjen & Pewangi', nilai: 250000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Mesin', nilai: 150000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Deterjen & Pewangi', nilai: 250000,
+                            frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Mesin',
+                        nilai: 150000 }]
                 },
                 'Bengkel': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Oli & Bahan Habis', nilai: 300000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Alat', nilai: 100000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 100000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Oli & Bahan Habis', nilai: 300000,
+                            frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Alat',
+                        nilai: 100000 }]
                 },
                 'Salon/Kecantikan': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Produk Kecantikan', nilai: 400000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Produk Kecantikan', nilai: 400000,
+                            frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Jasa Servis Elektronik': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 350000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sparepart', nilai: 300000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Alat', nilai: 100000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 350000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat',
+                            nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sparepart', nilai: 300000,
+                            frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Alat',
+                        nilai: 100000 }]
                 },
                 'Jasa Cuci Motor/Mobil': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Shampo & Wax', nilai: 200000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Shampo & Wax', nilai: 200000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Jasa Las': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Gas', nilai: 300000, frekuensi: 2, jenis: 'mingguan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Kawat Las', nilai: 250000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 },
-                        { nama: 'Perawatan Alat', nilai: 100000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Gas',
+                            nilai: 300000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Sewa Tempat', nilai: 500000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Kawat Las', nilai: 250000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }, { nama: 'Perawatan Alat',
+                        nilai: 100000 }]
                 },
                 'Jasa Jahit': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Benang & Aksesoris', nilai: 150000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 30000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat',
+                            nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Benang & Aksesoris',
+                            nilai: 150000, frekuensi: 2, jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 30000 }]
                 },
                 'Jasa Foto Copy & Print': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 400000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Tinta & Kertas', nilai: 350000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 400000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 200000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 400000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Tinta & Kertas', nilai: 350000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 },
                 'Jasa Penginapan (Homestay)': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Air', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 800000, frekuensi: 1, jenis: 'bulanan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 100000 },
-                        { nama: 'Pajak', nilai: 150000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 600000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
+                            nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet', nilai: 200000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 800000, frekuensi: 1,
+                            jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 100000 }, { nama: 'Pajak', nilai: 150000 }]
                 },
                 'Jasa Pendidikan (Les/Bimbel)': {
-                    operasional: [
-                        { nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Internet', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
-                        { nama: 'Alat Tulis', nilai: 100000, frekuensi: 2, jenis: 'mingguan' }
-                    ],
-                    nonOperasional: [
-                        { nama: 'Iuran Keamanan', nilai: 50000 }
-                    ]
+                    operasional: [{ nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
+                            nilai: 250000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 500000,
+                            frekuensi: 1, jenis: 'bulanan' }, { nama: 'Alat Tulis', nilai: 100000, frekuensi: 2,
+                            jenis: 'mingguan' }],
+                    nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
                 }
             },
 
@@ -1883,12 +1660,8 @@
             getKategori(nama) {
                 const data = this.dataHPP[nama];
                 if (!data) return '❓';
-                const map = {
-                    'dagang': '🏪 Perdagangan',
-                    'industri': '🏭 Industri',
-                    'kuliner': '☕ Kuliner',
-                    'jasa': '🔧 Jasa'
-                };
+                const map = { 'dagang': '🏪 Perdagangan', 'industri': '🏭 Industri', 'kuliner': '☕ Kuliner',
+                    'jasa': '🔧 Jasa' };
                 return map[data.kategori] || data.kategori;
             },
             onJenisUsahaChange() {
@@ -1900,7 +1673,6 @@
                 const rekom = this.rekomendasiBiaya[jenis];
 
                 if (rekom) {
-                    // Apply Operasional
                     const newOps = rekom.operasional.map(item => ({
                         _uid: this.uidCounter++,
                         nama: item.nama,
@@ -1912,7 +1684,6 @@
                     }));
                     this.biayaOperasional = newOps;
 
-                    // Apply Non Operasional
                     const newNon = rekom.nonOperasional.map(item => ({
                         _uid: this.uidCounter++,
                         nama: item.nama,
@@ -1922,21 +1693,19 @@
                     }));
                     this.biayaNonOperasional = newNon;
                 } else {
-                    // Default jika tidak ada rekomendasi
                     this.biayaOperasional = [
                         { _uid: this.uidCounter++, nama: 'Listrik', nilai: 300000, frekuensi: 1, frekuensiJenis: 'bulanan',
                             displayNilai: '300.000', isRekomendasi: true },
                         { _uid: this.uidCounter++, nama: 'Air', nilai: 150000, frekuensi: 1, frekuensiJenis: 'bulanan',
                             displayNilai: '150.000', isRekomendasi: true },
-                        { _uid: this.uidCounter++, nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, frekuensiJenis: 'bulanan',
-                            displayNilai: '500.000', isRekomendasi: true }
+                        { _uid: this.uidCounter++, nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1,
+                            frekuensiJenis: 'bulanan', displayNilai: '500.000', isRekomendasi: true }
                     ];
                     this.biayaNonOperasional = [
                         { _uid: this.uidCounter++, nama: 'Iuran Keamanan', nilai: 50000, displayNilai: '50.000',
                             isRekomendasi: true }
                     ];
                 }
-
                 this.hitung();
             },
             hitungBiayaOperasionalItem(item) {
