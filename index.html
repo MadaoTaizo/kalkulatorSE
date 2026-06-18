@@ -96,6 +96,65 @@
             font-size: 16px;
         }
 
+        .header-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: clamp(11px, 1.5vw, 13px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+
+        /* ========== RESPONSIVE NAV ========== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .header-nav {
+                width: 100%;
+                justify-content: center;
+            }
+            .nav-btn {
+                flex: 1;
+                text-align: center;
+                padding: 8px 12px;
+            }
+            .header-badge {
+                align-self: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-nav {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .nav-btn {
+                width: 100%;
+            }
+        }
+
         /* ========== GRID ========== */
         .grid-2 {
             display: grid;
@@ -209,6 +268,13 @@
             margin: 0;
         }
 
+        .form-group input:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+            border-color: #ced4da;
+        }
+
         .input-prefix {
             position: relative;
         }
@@ -234,6 +300,12 @@
             gap: 12px;
         }
 
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 0.8fr;
+            gap: 10px;
+        }
+
         .form-row-4 {
             display: grid;
             grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr;
@@ -242,6 +314,10 @@
 
         @media (max-width: 768px) {
             .form-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .form-row-3 {
                 grid-template-columns: 1fr;
                 gap: 8px;
             }
@@ -410,6 +486,11 @@
             color: #6a5a1a;
         }
 
+        .frequency-badge.harian {
+            background: #f0d4d4;
+            color: #6a1a1a;
+        }
+
         .recom-badge {
             display: inline-block;
             font-size: 9px;
@@ -419,6 +500,23 @@
             border-radius: 20px;
             font-weight: 600;
             white-space: nowrap;
+        }
+
+        .btn-recom {
+            background: #e7f5ff;
+            border: 1px solid #74b9ff;
+            color: #0984e3;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-recom:hover {
+            background: #74b9ff;
+            color: white;
         }
 
         .cost-item .form-group {
@@ -515,6 +613,10 @@
             color: var(--text-muted);
         }
 
+        .section-label.section-margin-top {
+            margin-top: 18px;
+        }
+
         .btn-group {
             display: flex;
             gap: 10px;
@@ -592,6 +694,45 @@
             .btn-group {
                 flex-direction: column;
             }
+            .form-row,
+            .form-row-3,
+            .form-row-4 {
+                gap: 6px;
+            }
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hpp-display {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .belanja-info {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .periode-info {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .detail-box .detail-row {
+                flex-direction: column;
+                gap: 2px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-row-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         /* ========== INFO BOX ========== */
@@ -622,6 +763,16 @@
             border-bottom: 1px solid #edf2f7;
         }
 
+        .result-table tr.space-row td {
+            padding: 6px 0;
+            border-bottom: none;
+        }
+
+        .result-table tr.group-total td {
+            border-bottom: 2px solid var(--primary);
+            padding-top: 10px;
+        }
+
         .result-table tr:last-child td {
             border-bottom: none;
         }
@@ -629,6 +780,11 @@
         .result-table .label {
             color: var(--text-muted);
             font-weight: 500;
+        }
+
+        .result-table .label-bold {
+            font-weight: 700;
+            color: var(--text);
         }
 
         .result-table .value {
@@ -644,12 +800,25 @@
             font-size: clamp(14px, 1.6vw, 16px);
         }
 
+        .result-table .profit-lg {
+            font-size: clamp(15px, 2vw, 18px);
+        }
+
+        .result-table .profit-xl {
+            font-size: clamp(16px, 2.2vw, 20px);
+        }
+
         .result-table .profit {
             color: #0f7b3a;
         }
 
         .result-table .loss {
             color: #b22234;
+        }
+
+        .result-table .label-bold {
+            font-weight: 600;
+            color: var(--text);
         }
 
         .highlight-row {
@@ -672,6 +841,12 @@
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 10px;
             margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 480px) {
@@ -736,6 +911,52 @@
             border-color: #e8c88a;
         }
 
+        .dash-item.profit-highlight {
+            background: #d4f0e4;
+            border-color: #6ab894;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .dashboard-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: clamp(13px, 1.6vw, 16px);
+        }
+
+        .dashboard-subtitle {
+            font-weight: 400;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Dashboard Value Sizes */
+        .dash-value-sm {
+            font-size: clamp(11px, 1.2vw, 14px);
+        }
+
+        .dash-value.ratio-value {
+            font-size: clamp(14px, 1.6vw, 18px);
+            color: var(--primary-light);
+        }
+
+        .dash-value.tax-value {
+            font-size: clamp(12px, 1.4vw, 16px);
+            color: #8a6d0b;
+        }
+
+        .dash-value.loss {
+            color: #b22234;
+        }
+
         /* ========== DETAIL RINCIAN ========== */
         .detail-box {
             margin-top: 14px;
@@ -743,6 +964,20 @@
             background: #f8fafc;
             border-radius: var(--radius-sm);
             border: 1px solid #e8edf3;
+        }
+
+        .detail-box.detail-mt {
+            margin-top: 10px;
+        }
+
+        .detail-box .detail-row .label .star-icon {
+            font-size: 9px;
+            color: #155724;
+        }
+
+        .detail-box .detail-row .label .freq-info {
+            font-size: 10px;
+            color: var(--text-muted);
         }
 
         .detail-box .detail-title {
@@ -824,6 +1059,84 @@
             background: var(--primary-light);
         }
 
+        /* ========== RESPONSIVE UTILITIES ========== */
+        .container {
+            padding: 8px;
+        }
+
+        @media (min-width: 769px) {
+            .container {
+                padding: 12px;
+            }
+        }
+
+        /* ========== TABLE RESPONSIVE ========== */
+        .result-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 400px) {
+            .result-table {
+                font-size: 11px;
+            }
+            .result-table td {
+                padding: 6px 2px;
+            }
+            .result-table .value {
+                font-size: 12px;
+            }
+        }
+
+        /* ========== CARD RESPONSIVE ========== */
+        @media (max-width: 400px) {
+            .card {
+                padding: 12px 14px;
+            }
+            .card-title {
+                font-size: 14px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .card-title small {
+                margin-left: 0;
+            }
+            .section-label {
+                font-size: 13px;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .header .subtitle {
+                font-size: 11px;
+            }
+        }
+
+        /* ========== INPUT RESPONSIVE ========== */
+        @media (max-width: 400px) {
+            .form-group input,
+            .form-group select {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            .input-prefix input {
+                padding-left: 30px;
+            }
+            .input-prefix .prefix {
+                left: 10px;
+                font-size: 13px;
+            }
+            .cost-item {
+                padding: 10px 12px;
+            }
+            .cost-item .form-group input,
+            .cost-item .form-group select {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+        }
+
         /* ========== PRINT ========== */
         @media print {
             body {
@@ -839,7 +1152,8 @@
             }
             .btn-group,
             .add-cost-btn,
-            .cost-item .remove-btn {
+            .cost-item .remove-btn,
+            .header-nav {
                 display: none !important;
             }
             .header {
@@ -854,6 +1168,12 @@
             .total-cost-summary {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+            }
+            .grid-2 {
+                display: block !important;
+            }
+            .grid-2 > .card {
+                margin-bottom: 12px;
             }
             .grid-2 {
                 gap: 12px;
@@ -894,6 +1214,98 @@
         .gap-2 {
             gap: 8px;
         }
+
+        .period-badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .period-badge.harian {
+            background: #f0d4d4;
+            color: #6a1a1a;
+        }
+
+        .period-badge.mingguan {
+            background: #d4f0e4;
+            color: #1a6a4a;
+        }
+
+        .period-badge.bulanan {
+            background: #f0e8d4;
+            color: #6a5a1a;
+        }
+
+        .belanja-info {
+            background: #f0f7ff;
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            margin: 4px 0 12px 0;
+            border-left: 4px solid var(--primary-light);
+            font-size: 12px;
+            color: var(--text);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .belanja-section {
+            margin-top: 4px;
+        }
+
+        .belanja-section-mt8 {
+            margin-top: 8px;
+        }
+
+        .belanja-info .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .belanja-info .text {
+            line-height: 1.5;
+        }
+
+        .belanja-info .text strong {
+            color: var(--primary);
+        }
+
+        .belanja-info .text .highlight {
+            background: #d4edda;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #155724;
+            font-size: 11px;
+        }
+
+        .label-desc {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        .periode-info {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: -6px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .periode-info .calc-result {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -906,12 +1318,18 @@
             <h1>📋 SE2026</h1>
             <div class="subtitle">Sensus Ekonomi 2026 — Isi 7 angka, semua otomatis</div>
         </div>
+        <div class="header-nav">
+            <button class="nav-btn" :class="{active: currentView === 'se2026'}" @click="currentView = 'se2026'">🏢 SE2026</button>
+            <button class="nav-btn" :class="{active: currentView === 'gaji'}" @click="currentView = 'gaji'">💰 Gaji Buruh</button>
+            <button class="nav-btn" :class="{active: currentView === 'keluarga'}" @click="currentView = 'keluarga'">👨‍👩‍👧‍👦 Keluarga</button>
+        </div>
         <div class="header-badge">
             <span class="icon">✅</span> Siap BPS
         </div>
     </header>
 
-    <!-- ===== MAIN GRID ===== -->
+    <!-- ===== MAIN GRID: SE2026 ===== -->
+    <div class="grid-2" v-show="currentView === 'se2026'">
     <div class="grid-2">
 
         <!-- ===== LEFT: INPUT ===== -->
@@ -952,7 +1370,7 @@
                     <label>Penjualan Harian <span>omzet/hari</span></label>
                     <div class="input-prefix">
                         <span class="prefix">Rp</span>
-                        <input type="text" v-model="inputDisplay.penjualanHarian" @input="onInput('penjualanHarian', $event)" placeholder="0" />
+                        <input type="text" v-model="inputDisplay.penjualanHarian" @input="onInput('penjualanHarian', $event)" placeholder="0" :disabled="input.caraPenjualan !== 'langsung'" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -961,21 +1379,125 @@
                 </div>
             </div>
 
-            <!-- Belanja Barang & Biaya Pembungkus -->
-            <div class="form-row">
+            <!-- Cara Menghitung Penjualan -->
+            <div class="form-group">
+                <label>Cara Menghitung Penjualan</label>
+                <select v-model="input.caraPenjualan" @change="hitung" class="freq-select">
+                    <option value="langsung"> Langsung (input manual)</option>
+                    <option value="hitung"> Jumlah Terjual × Harga Jual</option>
+                    <option value="modalMarkup"> Modal + Markup (%)</option>
+                </select>
+            </div>
+
+            <!-- Flexible Sales Input -->
+            <div v-if="input.caraPenjualan === 'hitung'" class="form-row-3">
                 <div class="form-group">
-                    <label>Belanja Barang / Hari <span>modal stok</span></label>
+                    <label>Jumlah Terjual <span>unit/hari</span></label>
+                    <input type="number" v-model="input.jumlahTerjual" @input="hitung" min="0" />
+                </div>
+                <div class="form-group">
+                    <label>Harga Jual per Unit <span>Rp</span></label>
                     <div class="input-prefix">
                         <span class="prefix">Rp</span>
-                        <input type="text" v-model="inputDisplay.belanjaBarang" @input="onInput('belanjaBarang', $event)" placeholder="0" />
+                        <input type="text" v-model="inputDisplay.hargaJual" @input="onInput('hargaJual', $event)" placeholder="0" />
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="input.caraPenjualan === 'modalMarkup'" class="form-row-3">
+                <div class="form-group">
+                    <label>Modal per Unit <span>Rp</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">Rp</span>
+                        <input type="text" v-model="inputDisplay.modal" @input="onInput('modal', $event)" placeholder="0" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Biaya Pembungkus / Bulan</label>
-                    <div class="input-prefix">
-                        <span class="prefix">Rp</span>
-                        <input type="text" v-model="inputDisplay.biayaPembungkus" @input="onInput('biayaPembungkus', $event)" placeholder="0" />
+                    <label>Markup <span>%</span></label>
+                    <input type="number" v-model="input.markupPersen" @input="hitung" min="0" max="500" />
+                </div>
+            </div>
+
+            <!-- ===== BELANJA BARANG dengan INFO DINAMIS ===== -->
+            <div class="belanja-section">
+                <div class="belanja-info">
+                    <span class="icon">{{ infoBelanja.icon }}</span>
+                    <div class="text">
+                        <strong>{{ infoBelanja.judul }}</strong><br />
+                        {{ infoBelanja.deskripsi }}
+                        <span class="highlight">{{ infoBelanja.label }}</span>
                     </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>{{ infoBelanja.inputLabel }} <span>nilai</span></label>
+                        <div class="input-prefix">
+                            <span class="prefix">Rp</span>
+                            <input type="text" v-model="inputDisplay.belanjaBarang" @input="onInput('belanjaBarang', $event)" :placeholder="infoBelanja.placeholder" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Periode</label>
+                        <select v-model="input.periodeBelanja" @change="hitung" class="freq-select">
+                            <option value="harian">Harian</option>
+                            <option value="mingguan">Mingguan</option>
+                            <option value="bulanan">Bulanan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Frekuensi</label>
+                        <input type="number" v-model="input.frekuensiBelanja" @input="hitung" min="1" step="1" placeholder="1" />
+                    </div>
+                </div>
+
+                <div class="periode-info">
+                    <span class="period-badge" :class="input.periodeBelanja">
+                        {{ input.periodeBelanja === 'harian' ? '📅 Harian' : input.periodeBelanja === 'mingguan' ? '📅 Mingguan' : '📅 Bulanan' }}
+                    </span>
+                    × {{ input.frekuensiBelanja || 0 }}
+                    <span v-if="input.periodeBelanja === 'harian'">× {{ input.hariBuka || 30 }} hari</span>
+                    <span v-else-if="input.periodeBelanja === 'mingguan'">× 4 minggu</span>
+                    <span v-else>× 1 bulan</span>
+                    × 12 bulan
+                    <span class="calc-result">= {{ formatRupiah(hitungBelanjaTahunan()) }}/tahun</span>
+                </div>
+            </div>
+
+            <!-- ===== BIAYA PEMBUNGKUS ===== -->
+            <div class="belanja-section-mt8">
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Biaya Pembungkus <span>nilai</span></label>
+                        <div class="input-prefix">
+                            <span class="prefix">Rp</span>
+                            <input type="text" v-model="inputDisplay.biayaPembungkus" @input="onInput('biayaPembungkus', $event)" placeholder="0" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Periode</label>
+                        <select v-model="input.periodePembungkus" @change="hitung" class="freq-select">
+                            <option value="harian">Harian</option>
+                            <option value="mingguan">Mingguan</option>
+                            <option value="bulanan">Bulanan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Frekuensi</label>
+                        <input type="number" v-model="input.frekuensiPembungkus" @input="hitung" min="1" step="1" placeholder="1" />
+                    </div>
+                </div>
+
+                <div class="periode-info">
+                    <span class="period-badge" :class="input.periodePembungkus">
+                        {{ input.periodePembungkus === 'harian' ? '📅 Harian' : input.periodePembungkus === 'mingguan' ? '📅 Mingguan' : '📅 Bulanan' }}
+                    </span>
+                    × {{ input.frekuensiPembungkus || 0 }}
+                    <span v-if="input.periodePembungkus === 'harian'">× {{ input.hariBuka || 30 }} hari</span>
+                    <span v-else-if="input.periodePembungkus === 'mingguan'">× 4 minggu</span>
+                    <span v-else>× 1 bulan</span>
+                    × 12 bulan
+                    <span class="calc-result">= {{ formatRupiah(hitungPembungkusTahunan()) }}/tahun</span>
                 </div>
             </div>
 
@@ -983,8 +1505,9 @@
 
             <!-- ===== BIAYA OPERASIONAL ===== -->
             <div class="section-label">
-                ⚡ Biaya Operasional
+                <span>⚡ Biaya Operasional</span>
                 <span class="sub">✏️ klik nama untuk edit</span>
+                <button class="btn-recom" @click="rekomendasiOperasional">⭐ Rekomendasi</button>
             </div>
 
             <div v-for="(item, index) in biayaOperasional" :key="'op-' + item._uid" class="cost-item">
@@ -995,7 +1518,7 @@
                         <span class="edit-icon">✏️</span>
                         <input type="text" v-model="item.nama" @input="hitung" class="editable-name-input" placeholder="Nama biaya..." />
                         <span class="frequency-badge" :class="item.frekuensiJenis">
-                            {{ item.frekuensiJenis === 'mingguan' ? '📅 Minggu' : '📆 Bulan' }}
+                            {{ item.frekuensiJenis === 'mingguan' ? '📅 Minggu' : item.frekuensiJenis === 'harian' ? '📅 Harian' : '📆 Bulan' }}
                         </span>
                         <span v-if="item.isRekomendasi" class="recom-badge">⭐ Rekom</span>
                     </div>
@@ -1023,11 +1546,12 @@
                         <select v-model="item.frekuensiJenis" @change="hitung" class="freq-select">
                             <option value="bulanan">Bulan</option>
                             <option value="mingguan">Minggu</option>
+                            <option value="harian">Hari</option>
                         </select>
                     </div>
                 </div>
                 <div class="cost-sub-info">
-                    Total: {{ item.frekuensi }} × {{ item.frekuensiJenis === 'mingguan' ? '4 minggu' : '1 bulan' }} × 12
+                    Total: {{ item.frekuensi }} × {{ item.frekuensiJenis === 'mingguan' ? '4 minggu' : item.frekuensiJenis === 'harian' ? '30 hari' : '1 bulan' }} × 12
                 </div>
             </div>
 
@@ -1039,9 +1563,10 @@
             </div>
 
             <!-- ===== BIAYA NON OPERASIONAL ===== -->
-            <div class="section-label" style="margin-top:18px;">
-                🏦 Biaya Non Operasional
+            <div class="section-label section-margin-top">
+                <span>🏦 Biaya Non Operasional</span>
                 <span class="sub">✏️ klik nama untuk edit</span>
+                <button class="btn-recom" @click="rekomendasiNonOperasional">⭐ Rekomendasi</button>
             </div>
 
             <div v-for="(item, index) in biayaNonOperasional" :key="'non-' + item._uid" class="cost-item">
@@ -1100,19 +1625,19 @@
 
             <table class="result-table">
                 <tr>
-                    <td class="label">27.a Penjualan Barang & Jasa</td>
+                    <td class="label">27.a Penjualan Barang &amp; Jasa</td>
                     <td class="value">{{ formatRupiah(hasil.penjualanTahunan) }}</td>
                 </tr>
                 <tr>
                     <td class="label">27.b Pendapatan Lainnya</td>
                     <td class="value">{{ formatRupiah(hasil.pendapatanLain) }}</td>
                 </tr>
-                <tr style="border-bottom:2px solid #d0dce8;">
-                    <td class="label" style="font-weight:700;">27.c Total Penjualan</td>
+                <tr class="group-total">
+                    <td class="label-bold">27.c Total Penjualan</td>
                     <td class="value total">{{ formatRupiah(hasil.totalPenjualan) }}</td>
                 </tr>
 
-                <tr><td colspan="2" style="padding:4px 0;"></td></tr>
+                <tr class="space-row"><td colspan="2"></td></tr>
                 <tr>
                     <td class="label">26.b Biaya Produksi</td>
                     <td class="value">{{ formatRupiah(hasil.biayaProduksi) }}</td>
@@ -1129,27 +1654,27 @@
                     <td class="label">26.e Biaya Non Operasional</td>
                     <td class="value">{{ formatRupiah(hasil.biayaNonOperasionalTahunan) }}</td>
                 </tr>
-                <tr style="border-bottom:2px solid #d0dce8;">
-                    <td class="label" style="font-weight:700;">26.f Total Pengeluaran</td>
+                <tr class="group-total">
+                    <td class="label-bold">26.f Total Pengeluaran</td>
                     <td class="value total">{{ formatRupiah(hasil.totalPengeluaran) }}</td>
                 </tr>
 
-                <tr><td colspan="2" style="padding:4px 0;"></td></tr>
+                <tr class="space-row"><td colspan="2"></td></tr>
                 <tr class="highlight-row">
                     <td class="label">📈 Estimasi Laba Kotor</td>
-                    <td class="value profit" style="font-size:clamp(15px,2vw,18px);">{{ formatRupiah(hasil.labaKotor) }}</td>
+                    <td class="value profit profit-lg" :class="{'loss': hasil.labaKotor < 0}">{{ formatRupiah(hasil.labaKotor) }}</td>
                 </tr>
                 <tr class="highlight-row">
                     <td class="label">💰 Laba Bersih / Tahun</td>
-                    <td class="value profit" style="font-size:clamp(16px,2.2vw,20px);">{{ formatRupiah(hasil.labaBersihTahunan) }}</td>
+                    <td class="value profit profit-xl" :class="{'loss': hasil.labaBersihTahunan < 0}">{{ formatRupiah(hasil.labaBersihTahunan) }}</td>
                 </tr>
                 <tr>
-                    <td class="label" style="font-weight:600;">Laba Bersih / Bulan</td>
-                    <td class="value profit">{{ formatRupiah(hasil.labaBersihBulanan) }}</td>
+                    <td class="label-bold">Laba Bersih / Bulan</td>
+                    <td class="value profit" :class="{'loss': hasil.labaBersihBulanan < 0}">{{ formatRupiah(hasil.labaBersihBulanan) }}</td>
                 </tr>
                 <tr>
-                    <td class="label" style="font-weight:600;">Laba Bersih / Hari</td>
-                    <td class="value profit">{{ formatRupiah(hasil.labaBersihHarian) }}</td>
+                    <td class="label-bold">Laba Bersih / Hari</td>
+                    <td class="value profit" :class="{'loss': hasil.labaBersihHarian < 0}">{{ formatRupiah(hasil.labaBersihHarian) }}</td>
                 </tr>
             </table>
 
@@ -1157,15 +1682,15 @@
 
             <!-- ===== DASHBOARD ===== -->
             <div>
-                <div class="flex-between" style="margin-bottom:8px;">
-                    <span style="font-weight:700; color:var(--primary); font-size:clamp(13px,1.6vw,16px);">📌 Dashboard — Siap BPS</span>
-                    <span style="font-weight:400; font-size:10px; color:var(--text-muted);">{{ jenisUsahaTerpilih }} • HPP {{ hppTerpilih }}%</span>
+                <div class="dashboard-header">
+                    <span class="dashboard-title">📌 Dashboard — Siap BPS</span>
+                    <span class="dashboard-subtitle">{{ jenisUsahaTerpilih }} • HPP {{ hppTerpilih }}%</span>
                 </div>
 
                 <div class="dashboard-grid">
                     <div class="dash-item primary">
                         <div class="dash-label">Jenis Usaha</div>
-                        <div class="dash-value" style="font-size:clamp(11px,1.2vw,14px);">{{ jenisUsahaTerpilih }}</div>
+                        <div class="dash-value dash-value-sm">{{ jenisUsahaTerpilih }}</div>
                     </div>
                     <div class="dash-item">
                         <div class="dash-label">Omzet / Thn</div>
@@ -1177,23 +1702,23 @@
                     </div>
                     <div class="dash-item success">
                         <div class="dash-label">Laba Kotor</div>
-                        <div class="dash-value green">{{ formatRupiahSingkat(hasil.labaKotor) }}</div>
+                        <div class="dash-value green" :class="{'loss': hasil.labaKotor < 0}">{{ formatRupiahSingkat(hasil.labaKotor) }}</div>
                     </div>
-                    <div class="dash-item success" style="background:#d4f0e4; border-color:#6ab894;">
+                    <div class="dash-item success profit-highlight">
                         <div class="dash-label">Laba Bersih / Thn</div>
-                        <div class="dash-value green">{{ formatRupiahSingkat(hasil.labaBersihTahunan) }}</div>
+                        <div class="dash-value green" :class="{'loss': hasil.labaBersihTahunan < 0}">{{ formatRupiahSingkat(hasil.labaBersihTahunan) }}</div>
                     </div>
                     <div class="dash-item warning">
                         <div class="dash-label">Laba Bersih / Bln</div>
-                        <div class="dash-value gold">{{ formatRupiahSingkat(hasil.labaBersihBulanan) }}</div>
+                        <div class="dash-value gold" :class="{'loss': hasil.labaBersihBulanan < 0}">{{ formatRupiahSingkat(hasil.labaBersihBulanan) }}</div>
                     </div>
                     <div class="dash-item">
                         <div class="dash-label">Rasio Laba</div>
-                        <div class="dash-value" style="font-size:clamp(14px,1.6vw,18px); color:var(--primary-light);">{{ hasil.rasioLaba }}%</div>
+                        <div class="dash-value ratio-value">{{ hasil.rasioLaba }}%</div>
                     </div>
                     <div class="dash-item warning">
                         <div class="dash-label">Pajak (0.5%)</div>
-                        <div class="dash-value" style="font-size:clamp(12px,1.4vw,16px); color:#8a6d0b;">{{ formatRupiahSingkat(hasil.pajakEstimasi) }}</div>
+                        <div class="dash-value tax-value">{{ formatRupiahSingkat(hasil.pajakEstimasi) }}</div>
                     </div>
                 </div>
 
@@ -1201,7 +1726,7 @@
                 <div class="detail-box">
                     <div class="detail-title">📋 Rincian Biaya Operasional</div>
                     <div v-for="item in biayaOperasional" :key="'rincian-op-' + item._uid" class="detail-row">
-                        <span class="label">{{ item.nama }} <span style="font-size:10px;color:var(--text-muted);">({{ item.frekuensi }}x/{{ item.frekuensiJenis }})</span> <span v-if="item.isRekomendasi" style="font-size:9px;color:#155724;">⭐</span></span>
+                        <span class="label">{{ item.nama }} <span class="freq-info">({{ item.frekuensi }}x/{{ item.frekuensiJenis }})</span> <span v-if="item.isRekomendasi" class="star-icon">⭐</span></span>
                         <span class="value">{{ formatRupiah(hitungBiayaOperasionalItem(item)) }}</span>
                     </div>
                     <div class="detail-total">
@@ -1211,10 +1736,10 @@
                 </div>
 
                 <!-- Detail Non Operasional -->
-                <div class="detail-box" style="margin-top:10px;">
+                <div class="detail-box detail-mt">
                     <div class="detail-title">📋 Rincian Biaya Non Operasional</div>
                     <div v-for="item in biayaNonOperasional" :key="'rincian-non-' + item._uid" class="detail-row">
-                        <span class="label">{{ item.nama }} <span v-if="item.isRekomendasi" style="font-size:9px;color:#155724;">⭐</span></span>
+                        <span class="label">{{ item.nama }} <span v-if="item.isRekomendasi" class="star-icon">⭐</span></span>
                         <span class="value">{{ formatRupiah(item.nilai * 12) }}</span>
                     </div>
                     <div class="detail-total">
@@ -1226,9 +1751,350 @@
         </div>
     </div>
 
+    </div>
+
+    <!-- ===== GAJI BURUH HARIAN ===== -->
+    <div class="grid-2" v-show="currentView === 'gaji'">
+        <div class="card">
+            <div class="card-title">
+                💰 Kalkulator Gaji Buruh Harian Lepas
+                <small>perhitungan otomatis</small>
+            </div>
+
+            <div class="form-group">
+                <label>Hari Kerja / Bulan</label>
+                <input type="number" v-model="hariKerja" @input="hitungGaji" min="1" max="31" />
+            </div>
+
+            <div class="section-label">
+                💵 Komponen Gaji Harian
+            </div>
+
+            <div class="form-group">
+                <label>Gaji per Hari <span>upah harian</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayGaji.gaji_perhari" @input="onInputGaji('gaji_perhari', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tunjangan <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayGaji.tunjangan" @input="onInputGaji('tunjangan', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Uang Makan <span>per hari</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayGaji.uangMakan" @input="onInputGaji('uangMakan', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Honor <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayGaji.honor" @input="onInputGaji('honor', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Lembur per Jam <span>tarif per jam</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayGaji.lembur_perjam" @input="onInputGaji('lembur_perjam', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Jam Lembur <span>per bulan</span></label>
+                <input type="number" v-model="displayGaji.jamLembur" @input="onInputGaji('jamLembur', $event)" min="0" />
+            </div>
+
+            <div class="form-group">
+                <label>Lain-Lain <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayGaji.lain_lain" @input="onInputGaji('lain_lain', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" @click="resetGaji">↺ Reset</button>
+                <button class="btn btn-success" @click="printDashboard">🖨 Cetak</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                📊 Hasil Perhitungan Gaji
+                <small>{{ hariKerja }} hari kerja/bulan</small>
+            </div>
+
+            <table class="result-table">
+                <tr>
+                    <td class="label">Gaji per Hari</td>
+                    <td class="value">{{ formatRupiah(hasilGaji.totalHarian) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Tunjangan / Bulan</td>
+                    <td class="value">{{ formatRupiah(hasilGaji.totalTunjangan) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Uang Makan / Bulan</td>
+                    <td class="value">{{ formatRupiah(hasilGaji.totalUangMakan) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Honor / Bulan</td>
+                    <td class="value">{{ formatRupiah(hasilGaji.totalHonor) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Lembur / Bulan</td>
+                    <td class="value">{{ formatRupiah(hasilGaji.totalLembur) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Lain-Lain / Bulan</td>
+                    <td class="value">{{ formatRupiah(hasilGaji.totalLain) }}</td>
+                </tr>
+                <tr class="group-total">
+                    <td class="label-bold">Total per Bulan</td>
+                    <td class="value total">{{ formatRupiah(hasilGaji.totalPerBulan) }}</td>
+                </tr>
+                <tr class="group-total">
+                    <td class="label-bold">Total per Tahun</td>
+                    <td class="value total">{{ formatRupiah(hasilGaji.totalPerTahun) }}</td>
+                </tr>
+            </table>
+
+            <hr class="divider" />
+
+            <div class="dashboard-grid">
+                <div class="dash-item primary">
+                    <div class="dash-label">Gaji per Hari</div>
+                    <div class="dash-value">{{ formatRupiahSingkat(hasilGaji.totalHarian) }}</div>
+                </div>
+                <div class="dash-item success">
+                    <div class="dash-label">Total per Bulan</div>
+                    <div class="dash-value green">{{ formatRupiahSingkat(hasilGaji.totalPerBulan) }}</div>
+                </div>
+                <div class="dash-item warning">
+                    <div class="dash-label">Total per Tahun</div>
+                    <div class="dash-value gold">{{ formatRupiahSingkat(hasilGaji.totalPerTahun) }}</div>
+                </div>
+                <div class="dash-item">
+                    <div class="dash-label">Rata-rata/Hari</div>
+                    <div class="dash-value blue">{{ formatRupiahSingkat(hasilGaji.totalPerBulan / hariKerja) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== KELUARGA EXPENSES ===== -->
+    <div class="grid-2" v-show="currentView === 'keluarga'">
+        <div class="card">
+            <div class="card-title">
+                🍚 Kalkulator Pengeluaran Keluarga
+                <small>perhitungan otomatis</small>
+            </div>
+
+            <!-- Pengeluaran Makan -->
+            <div class="section-label">🍽️ Pengeluaran Makan</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Makan per Hari <span>per orang</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">Rp</span>
+                        <input type="text" v-model="displayKeluarga.makanPerHari" @input="onInputKeluarga('makanPerHari', $event)" placeholder="0" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah Keluarga <span>orang</span></label>
+                    <input type="number" v-model="inputKeluarga.jumlahKeluarga" @input="hitungKeluarga" min="1" max="20" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Kali Makan <span>per hari</span></label>
+                <select v-model="inputKeluarga.kaliMakan" @change="hitungKeluarga" class="freq-select">
+                    <option value="2">2x (Siang - Malam)</option>
+                    <option value="3">3x (Pagi - Siang - Malam)</option>
+                    <option value="4">4x (+ Snack)</option>
+                    <option value="5">5x (+ Snack + Minum)</option>
+                </select>
+            </div>
+
+            <div class="total-cost-summary">
+                <span>Total Makan / Minggu</span>
+                <span class="amount">{{ formatRupiah(hasilKeluarga.totalMakanMinggu) }}</span>
+            </div>
+
+            <!-- Biaya Keluarga Bulanan -->
+            <div class="section-label section-margin-top">🏠 Biaya Keluarga Bulanan</div>
+
+            <div class="form-group">
+                <label>Listrik <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.listrik" @input="onInputKeluarga('listrik', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Air <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.air" @input="onInputKeluarga('air', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Internet/HP <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.internet" @input="onInputKeluarga('internet', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Transportasi <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.transportasi" @input="onInputKeluarga('transportasi', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Pendidikan <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.pendidikan" @input="onInputKeluarga('pendidikan', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Kesehatan <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.kesehatan" @input="onInputKeluarga('kesehatan', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Lain-Lain <span>bulanan</span></label>
+                <div class="input-prefix">
+                    <span class="prefix">Rp</span>
+                    <input type="text" v-model="displayKeluarga.lainLain" @input="onInputKeluarga('lainLain', $event)" placeholder="0" />
+                </div>
+            </div>
+
+            <button class="btn-recom" @click="rekomendasiKeluarga" style="margin-bottom:12px;">⭐ Rekomendasi</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                📊 Hasil Pengeluaran Keluarga
+                <small>{{ inputKeluarga.jumlahKeluarga }} keluarga</small>
+            </div>
+
+            <table class="result-table">
+                <tr>
+                    <td class="label">Total Makan / Minggu</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.totalMakanMinggu) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Total Makan / Bulan</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.totalMakanBulan) }}</td>
+                </tr>
+                <tr class="group-total">
+                    <td class="label-bold">Total Makan / Tahun</td>
+                    <td class="value total">{{ formatRupiah(hasilKeluarga.totalMakanTahun) }}</td>
+                </tr>
+
+                <tr class="space-row"><td colspan="2"></td></tr>
+                <tr>
+                    <td class="label">⚡ Listrik</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.listrik) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">💧 Air</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.air) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">📱 Internet/HP</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.internet) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">🚌 Transportasi</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.transportasi) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">📚 Pendidikan</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.pendidikan) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">🏥 Kesehatan</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.kesehatan) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">📦 Lain-Lain</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.lainLain) }}</td>
+                </tr>
+                <tr class="group-total">
+                    <td class="label-bold">Total Bulanan</td>
+                    <td class="value total">{{ formatRupiah(hasilKeluarga.totalBulanan) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Total / Tahun (×12)</td>
+                    <td class="value">{{ formatRupiah(hasilKeluarga.totalBulananTahun) }}</td>
+                </tr>
+
+                <tr class="space-row"><td colspan="2"></td></tr>
+                <tr class="highlight-row">
+                    <td class="label">📈 Total / Bulan</td>
+                    <td class="value profit profit-lg">{{ formatRupiah(hasilKeluarga.totalBulanPlusMakan) }}</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td class="label">💰 Total / Tahun</td>
+                    <td class="value profit profit-xl">{{ formatRupiah(hasilKeluarga.totalTahun) }}</td>
+                </tr>
+            </table>
+
+            <hr class="divider" />
+
+            <div class="dashboard-grid">
+                <div class="dash-item primary">
+                    <div class="dash-label">Keluarga</div>
+                    <div class="dash-value">{{ inputKeluarga.jumlahKeluarga }} orang</div>
+                </div>
+                <div class="dash-item">
+                    <div class="dash-label">Makan / Hari</div>
+                    <div class="dash-value">{{ inputKeluarga.kaliMakan }}x</div>
+                </div>
+                <div class="dash-item warning">
+                    <div class="dash-label">Total / Bulan</div>
+                    <div class="dash-value gold">{{ formatRupiahSingkat(hasilKeluarga.totalBulanPlusMakan) }}</div>
+                </div>
+                <div class="dash-item success">
+                    <div class="dash-label">Total / Tahun</div>
+                    <div class="dash-value green">{{ formatRupiahSingkat(hasilKeluarga.totalTahun) }}</div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" @click="resetKeluarga">↺ Reset</button>
+                <button class="btn btn-success" @click="printDashboard">🖨 Cetak</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== FOOTER ===== -->
     <div class="footer">
-        SE2026 Otomatis • Rekomendasi biaya per jenis usaha • Sensus Ekonomi 2026
+        SE2026 Otomatis • Rekomendasi biaya per jenis usaha • Sensus Ekonomi 2026 • Kalkulator Gaji Buruh
     </div>
 </div>
 
@@ -1243,6 +2109,7 @@
                 'Warung': { hpp: 85, kategori: 'dagang' },
                 'Sembako': { hpp: 85, kategori: 'dagang' },
                 'Toko Kelontong': { hpp: 80, kategori: 'dagang' },
+                'Pedagang Keliling': { hpp: 75, kategori: 'dagang' },
                 'Grosir': { hpp: 82, kategori: 'dagang' },
                 'Toko Bahan Bangunan': { hpp: 75, kategori: 'dagang' },
                 'Agen Pulsa & PPOB': { hpp: 4, kategori: 'dagang' },
@@ -1331,7 +2198,6 @@
                 'Jasa Pendidikan (Les/Bimbel)': { hpp: 10, kategori: 'jasa' }
             },
 
-            // ===== REKOMENDASI BIAYA =====
             rekomendasiBiaya: {
                 'Warung': {
                     operasional: [{ nama: 'Listrik', nilai: 300000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Air',
@@ -1354,6 +2220,12 @@
                             nilai: 150000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Sewa Tempat', nilai: 350000,
                             frekuensi: 1, jenis: 'bulanan' }],
                     nonOperasional: [{ nama: 'Iuran Keamanan', nilai: 50000 }]
+                },
+                'Pedagang Keliling': {
+                    operasional: [{ nama: 'Listrik', nilai: 100000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Transportasi',
+                            nilai: 150000, frekuensi: 2, jenis: 'mingguan' }, { nama: 'Bahan Baku',
+                            nilai: 500000, frekuensi: 1, jenis: 'bulanan' }],
+                    nonOperasional: [{ nama: 'Iuran Tempat', nilai: 25000 }]
                 },
                 'Grosir': {
                     operasional: [{ nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' }, { nama: 'Internet',
@@ -1614,12 +2486,24 @@
                 penjualanHarian: 1500000,
                 hariBuka: 30,
                 belanjaBarang: 1200000,
-                biayaPembungkus: 100000
+                periodeBelanja: 'harian',
+                frekuensiBelanja: 1,
+                biayaPembungkus: 100000,
+                periodePembungkus: 'bulanan',
+                frekuensiPembungkus: 1,
+                // Flexible sales calculation
+                caraPenjualan: 'langsung', // langsung | hitung | modalMarkup
+                jumlahTerjual: 100,
+                hargaJual: 15000,
+                modal: 10000,
+                markupPersen: 50
             },
             inputDisplay: {
                 penjualanHarian: '1.500.000',
                 belanjaBarang: '1.200.000',
-                biayaPembungkus: '100.000'
+                biayaPembungkus: '100.000',
+                hargaJual: '15.000',
+                modal: '10.000'
             },
             biayaOperasional: [],
             biayaNonOperasional: [],
@@ -1641,11 +2525,141 @@
             },
             hppTerpilih: 85,
             jenisUsahaTerpilih: 'Warung',
-            uidCounter: 0
+            uidCounter: 0,
+            currentView: 'se2026',
+            // Gaji Buruh Daily
+            inputGaji: {
+                gaji_perhari: 100000,
+                tunjangan: 0,
+                uangMakan: 25000,
+                honor: 0,
+                lembur_perjam: 15000,
+                jamLembur: 0,
+                lain_lain: 0
+            },
+            displayGaji: {
+                gaji_perhari: '100.000',
+                tunjangan: '0',
+                uangMakan: '25.000',
+                honor: '0',
+                lembur_perjam: '15.000',
+                jamLembur: '0',
+                lain_lain: '0'
+            },
+            hariKerja: 25,
+            hasilGaji: {
+                totalHarian: 0,
+                totalTunjangan: 0,
+                totalUangMakan: 0,
+                totalHonor: 0,
+                totalLembur: 0,
+                totalLain: 0,
+                totalPerBulan: 0,
+                totalPerTahun: 0
+            },
+            inputKeluarga: {
+                makanPerHari: 25000,
+                jumlahKeluarga: 4,
+                kaliMakan: 3,
+                listrik: 300000,
+                air: 100000,
+                internet: 150000,
+                transportasi: 300000,
+                pendidikan: 200000,
+                kesehatan: 150000,
+                lainLain: 200000
+            },
+            displayKeluarga: {
+                makanPerHari: '25.000',
+                listrik: '300.000',
+                air: '100.000',
+                internet: '150.000',
+                transportasi: '300.000',
+                pendidikan: '200.000',
+                kesehatan: '150.000',
+                lainLain: '200.000'
+            },
+            hasilKeluarga: {
+                totalMakanMinggu: 0,
+                totalMakanBulan: 0,
+                totalMakanTahun: 0,
+                listrik: 0,
+                air: 0,
+                internet: 0,
+                transportasi: 0,
+                pendidikan: 0,
+                kesehatan: 0,
+                lainLain: 0,
+                totalBulanan: 0,
+                totalBulanPlusMakan: 0,
+                totalTahun: 0
+            }
+        },
+        computed: {
+            infoBelanja() {
+                const kategori = this.getKategori(this.jenisUsahaTerpilih);
+                const map = {
+                    '🏪 Perdagangan': {
+                        icon: '📦',
+                        judul: 'Belanja Barang Dagangan',
+                        deskripsi: 'Biaya untuk membeli barang dagangan yang akan dijual kembali (restock).',
+                        label: 'Restock Barang',
+                        inputLabel: 'Belanja Restock',
+                        placeholder: '0'
+                    },
+                    '🏭 Industri': {
+                        icon: '🏗️',
+                        judul: 'Belanja Bahan Baku Industri',
+                        deskripsi: 'Biaya untuk membeli bahan baku produksi (logam, kayu, plastik, dll).',
+                        label: 'Bahan Baku',
+                        inputLabel: 'Belanja Bahan Baku',
+                        placeholder: '0'
+                    },
+                    '☕ Kuliner': {
+                        icon: '🍳',
+                        judul: 'Belanja Bahan Baku Kuliner',
+                        deskripsi: 'Biaya untuk membeli bahan makanan, bumbu, dan bahan baku masakan.',
+                        label: 'Bahan Makanan',
+                        inputLabel: 'Belanja Bahan Makanan',
+                        placeholder: '0'
+                    },
+                    '🔧 Jasa': {
+                        icon: '🛠️',
+                        judul: 'Belanja Pendukung Jasa',
+                        deskripsi: 'Biaya untuk membeli bahan habis pakai, sparepart, atau peralatan pendukung jasa.',
+                        label: 'Bahan Habis Pakai',
+                        inputLabel: 'Belanja Operasional Jasa',
+                        placeholder: '0'
+                    }
+                };
+                return map[kategori] || {
+                    icon: '📦',
+                    judul: 'Belanja Barang',
+                    deskripsi: 'Biaya untuk membeli barang dagangan atau bahan baku.',
+                    label: 'Biaya Belanja',
+                    inputLabel: 'Belanja',
+                    placeholder: '0'
+                };
+            },
+            totalBiayaOperasionalTahunan() {
+                let total = 0;
+                for (const item of this.biayaOperasional) {
+                    total += this.hitungBiayaOperasionalItem(item);
+                }
+                return total;
+            },
+            totalBiayaNonOperasionalTahunan() {
+                let total = 0;
+                for (const item of this.biayaNonOperasional) {
+                    total += (item.nilai || 0) * 12;
+                }
+                return total;
+            }
         },
         mounted() {
             this.applyRecommendations();
             this.hitung();
+            this.hitungGaji();
         },
         methods: {
             filterByCategory(kategori) {
@@ -1667,6 +2681,7 @@
             onJenisUsahaChange() {
                 this.updateHPP();
                 this.applyRecommendations();
+                this.hitung();
             },
             applyRecommendations() {
                 const jenis = this.jenisUsahaTerpilih;
@@ -1708,14 +2723,101 @@
                 }
                 this.hitung();
             },
+            rekomendasiOperasional() {
+                const jenis = this.jenisUsahaTerpilih;
+                const rekom = this.rekomendasiBiaya[jenis];
+                if (rekom && rekom.operasional) {
+                    const newOps = rekom.operasional.map(item => ({
+                        _uid: this.uidCounter++,
+                        nama: item.nama,
+                        nilai: item.nilai,
+                        frekuensi: item.frekuensi || 1,
+                        frekuensiJenis: item.jenis || 'bulanan',
+                        displayNilai: (item.nilai || 0).toLocaleString('id-ID'),
+                        isRekomendasi: true
+                    }));
+                    this.biayaOperasional = newOps;
+                } else {
+                    this.biayaOperasional = [
+                        { _uid: this.uidCounter++, nama: 'Listrik', nilai: 300000, frekuensi: 1, frekuensiJenis: 'bulanan',
+                            displayNilai: '300.000', isRekomendasi: true },
+                        { _uid: this.uidCounter++, nama: 'Air', nilai: 150000, frekuensi: 1, frekuensiJenis: 'bulanan',
+                            displayNilai: '150.000', isRekomendasi: true },
+                        { _uid: this.uidCounter++, nama: 'Sewa Tempat', nilai: 500000, frekuensi: 1, frekuensiJenis: 'bulanan',
+                            displayNilai: '500.000', isRekomendasi: true }
+                    ];
+                }
+                this.hitung();
+            },
+            rekomendasiNonOperasional() {
+                const jenis = this.jenisUsahaTerpilih;
+                const rekom = this.rekomendasiBiaya[jenis];
+                if (rekom && rekom.nonOperasional) {
+                    const newNon = rekom.nonOperasional.map(item => ({
+                        _uid: this.uidCounter++,
+                        nama: item.nama,
+                        nilai: item.nilai || 0,
+                        displayNilai: (item.nilai || 0).toLocaleString('id-ID'),
+                        isRekomendasi: true
+                    }));
+                    this.biayaNonOperasional = newNon;
+                } else {
+                    this.biayaNonOperasional = [
+                        { _uid: this.uidCounter++, nama: 'Iuran Keamanan', nilai: 50000, displayNilai: '50.000',
+                            isRekomendasi: true }
+                    ];
+                }
+                this.hitung();
+            },
             hitungBiayaOperasionalItem(item) {
                 const nilai = item.nilai || 0;
                 const frekuensi = item.frekuensi || 0;
-                if (item.frekuensiJenis === 'mingguan') {
+                if (item.frekuensiJenis === 'harian') {
+                    return nilai * frekuensi * 30 * 12;
+                } else if (item.frekuensiJenis === 'mingguan') {
                     return nilai * frekuensi * 4 * 12;
                 } else {
                     return nilai * frekuensi * 12;
                 }
+            },
+            // ===== PERBAIKAN: Belanja tidak selalu dikali hari buka =====
+            hitungBelanjaPeriode() {
+                const p = this.input;
+                const nilai = p.belanjaBarang || 0;
+                const frekuensi = p.frekuensiBelanja || 0;
+
+                if (p.periodeBelanja === 'harian') {
+                    // Harian: dikalikan dengan hari buka
+                    return nilai * frekuensi * (p.hariBuka || 30);
+                } else if (p.periodeBelanja === 'mingguan') {
+                    // Mingguan: dikalikan 4 minggu (tidak peduli hari buka)
+                    return nilai * frekuensi * 4;
+                } else {
+                    // Bulanan: dikalikan 1 bulan (tidak peduli hari buka)
+                    return nilai * frekuensi * 1;
+                }
+            },
+            hitungBelanjaTahunan() {
+                return this.hitungBelanjaPeriode() * 12;
+            },
+            hitungPembungkusPeriode() {
+                const p = this.input;
+                const nilai = p.biayaPembungkus || 0;
+                const frekuensi = p.frekuensiPembungkus || 0;
+
+                if (p.periodePembungkus === 'harian') {
+                    return nilai * frekuensi * (p.hariBuka || 30);
+                } else if (p.periodePembungkus === 'mingguan') {
+                    return nilai * frekuensi * 4;
+                } else {
+                    return nilai * frekuensi * 1;
+                }
+            },
+            hitungPembungkusTahunan() {
+                return this.hitungPembungkusPeriode() * 12;
+            },
+            hitungBiayaProduksi() {
+                return (this.hitungBelanjaPeriode() + this.hitungPembungkusPeriode()) * 12;
             },
             addBiayaOperasional() {
                 this.biayaOperasional.push({
@@ -1783,11 +2885,20 @@
                 const p = this.input;
                 const hpp = this.hppTerpilih / 100;
 
-                const penjualanTahunan = p.penjualanHarian * p.hariBuka * 12;
+                let penjualanHarian = 0;
+                if (p.caraPenjualan === 'langsung') {
+                    penjualanHarian = p.penjualanHarian;
+                } else if (p.caraPenjualan === 'hitung') {
+                    penjualanHarian = (p.jumlahTerjual || 0) * (p.hargaJual || 0);
+                } else if (p.caraPenjualan === 'modalMarkup') {
+                    const hargaJual = (p.modal || 0) * (1 + (p.markupPersen || 0) / 100);
+                    penjualanHarian = (p.jumlahTerjual || 0) * hargaJual;
+                }
+                const penjualanTahunan = penjualanHarian * p.hariBuka * 12;
                 const pendapatanLain = 0;
                 const totalPenjualan = penjualanTahunan + pendapatanLain;
 
-                const biayaProduksi = (p.belanjaBarang * p.hariBuka + p.biayaPembungkus) * 12;
+                const biayaProduksi = this.hitungBiayaProduksi();
                 const hppValue = penjualanTahunan * hpp;
 
                 let totalBiayaOperasional = 0;
@@ -1831,7 +2942,11 @@
                     penjualanHarian: 0,
                     hariBuka: 30,
                     belanjaBarang: 0,
-                    biayaPembungkus: 0
+                    periodeBelanja: 'harian',
+                    frekuensiBelanja: 1,
+                    biayaPembungkus: 0,
+                    periodePembungkus: 'bulanan',
+                    frekuensiPembungkus: 1
                 };
                 this.inputDisplay = {
                     penjualanHarian: '0',
@@ -1854,22 +2969,151 @@
             },
             printDashboard() {
                 window.print();
-            }
-        },
-        computed: {
-            totalBiayaOperasionalTahunan() {
-                let total = 0;
-                for (const item of this.biayaOperasional) {
-                    total += this.hitungBiayaOperasionalItem(item);
-                }
-                return total;
             },
-            totalBiayaNonOperasionalTahunan() {
-                let total = 0;
-                for (const item of this.biayaNonOperasional) {
-                    total += (item.nilai || 0) * 12;
-                }
-                return total;
+            onInputGaji(field, event) {
+                let raw = event.target.value.replace(/[^0-9]/g, '');
+                if (raw === '') raw = '0';
+                const num = parseInt(raw, 10);
+                this.inputGaji[field] = num;
+                this.displayGaji[field] = num.toLocaleString('id-ID');
+                this.hitungGaji();
+            },
+            hitungGaji() {
+                const p = this.inputGaji;
+                const hk = this.hariKerja || 1;
+
+                const totalHarian = p.gaji_perhari || 0;
+                const totalTunjangan = p.tunjangan || 0;
+                const totalUangMakan = (p.uangMakan || 0) * hk;
+                const totalHonor = p.honor || 0;
+                const totalLembur = (p.lembur_perjam || 0) * (p.jamLembur || 0);
+                const totalLain = p.lain_lain || 0;
+
+                const totalPerBulan = totalHarian * hk + totalTunjangan + totalUangMakan + totalHonor + totalLembur + totalLain;
+                const totalPerTahun = totalPerBulan * 12;
+
+                this.hasilGaji = {
+                    totalHarian,
+                    totalTunjangan,
+                    totalUangMakan,
+                    totalHonor,
+                    totalLembur,
+                    totalLain,
+                    totalPerBulan,
+                    totalPerTahun
+                };
+            },
+            resetGaji() {
+                this.inputGaji = {
+                    gaji_perhari: 100000,
+                    tunjangan: 0,
+                    uangMakan: 25000,
+                    honor: 0,
+                    lembur_perjam: 15000,
+                    jamLembur: 0,
+                    lain_lain: 0
+                };
+                this.displayGaji = {
+                    gaji_perhari: '100.000',
+                    tunjangan: '0',
+                    uangMakan: '25.000',
+                    honor: '0',
+                    lembur_perjam: '15.000',
+                    jamLembur: '0',
+                    lain_lain: '0'
+                };
+                this.hariKerja = 25;
+                this.hitungGaji();
+            },
+            hitungKeluarga() {
+                const p = this.inputKeluarga;
+                // Food: per day × family members × meals per day × 7 days (week)
+                const makanPerHariTotal = (p.makanPerHari || 0) * (p.jumlahKeluarga || 1) * (p.kaliMakan || 3);
+                const totalMakanMinggu = makanPerHariTotal * 7;
+                const totalMakanBulan = makanPerHariTotal * 30;
+                const totalMakanTahun = totalMakanBulan * 12;
+
+                // Monthly expenses
+                const listrik = p.listrik || 0;
+                const air = p.air || 0;
+                const internet = p.internet || 0;
+                const transportasi = p.transportasi || 0;
+                const pendidikan = p.pendidikan || 0;
+                const kesehatan = p.kesehatan || 0;
+                const lainLain = p.lainLain || 0;
+
+                const totalBulanan = listrik + air + internet + transportasi + pendidikan + kesehatan + lainLain;
+                const totalBulananTahun = totalBulanan * 12;
+                const totalBulanPlusMakan = totalBulanan + totalMakanBulan;
+                const totalTahun = totalBulanPlusMakan * 12;
+
+                this.hasilKeluarga = {
+                    totalMakanMinggu,
+                    totalMakanBulan,
+                    totalMakanTahun,
+                    listrik,
+                    air,
+                    internet,
+                    transportasi,
+                    pendidikan,
+                    kesehatan,
+                    lainLain,
+                    totalBulanan,
+                    totalBulananTahun,
+                    totalBulanPlusMakan,
+                    totalTahun
+                };
+            },
+            onInputKeluarga(field, event) {
+                const value = event.target.value.replace(/\D/g, '');
+                const num = parseInt(value) || 0;
+                this.inputKeluarga[field] = num;
+                this.displayKeluarga[field] = num.toLocaleString('id-ID');
+                this.hitungKeluarga();
+            },
+            resetKeluarga() {
+                this.inputKeluarga = {
+                    makanPerHari: 25000,
+                    jumlahKeluarga: 4,
+                    kaliMakan: 3,
+                    listrik: 300000,
+                    air: 100000,
+                    internet: 150000,
+                    transportasi: 300000,
+                    pendidikan: 200000,
+                    kesehatan: 150000,
+                    lainLain: 200000
+                };
+                this.displayKeluarga = {
+                    makanPerHari: '25.000',
+                    listrik: '300.000',
+                    air: '100.000',
+                    internet: '150.000',
+                    transportasi: '300.000',
+                    pendidikan: '200.000',
+                    kesehatan: '150.000',
+                    lainLain: '200.000'
+                };
+                this.hitungKeluarga();
+            },
+            rekomendasiKeluarga() {
+                const p = this.inputKeluarga;
+                const keluarga = p.jumlahKeluarga || 4;
+                // Auto-adjust based on family size
+                const makanDasar = 20000 + (keluarga - 2) * 5000;
+                this.inputKeluarga.makanPerHari = Math.max(15000, makanDasar);
+                this.displayKeluarga.makanPerHari = this.inputKeluarga.makanPerHari.toLocaleString('id-ID');
+
+                this.inputKeluarga.listrik = 250000 + (keluarga * 25000);
+                this.displayKeluarga.listrik = this.inputKeluarga.listrik.toLocaleString('id-ID');
+
+                this.inputKeluarga.air = 80000 + (keluarga * 10000);
+                this.displayKeluarga.air = this.inputKeluarga.air.toLocaleString('id-ID');
+
+                this.inputKeluarga.pendidikan = 150000 + (keluarga * 50000);
+                this.displayKeluarga.pendidikan = this.inputKeluarga.pendidikan.toLocaleString('id-ID');
+
+                this.hitungKeluarga();
             }
         }
     });
