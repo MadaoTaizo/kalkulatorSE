@@ -1326,7 +1326,7 @@
     <header class="header">
         <div class="header-left">
             <h1>📋 SE2026</h1>
-            <div class="subtitle">Sensus Ekonomi 2026 — Isi 7 angka, semua otomatis</div>
+            <div class="subtitle">Sensus Ekonomi 2026 — Perbaikan Logika Akuntansi</div>
         </div>
         <div class="header-nav">
             <button class="nav-btn" :class="{active: currentView === 'se2026'}" @click="currentView = 'se2026'">🏢 SE2026</button>
@@ -1339,7 +1339,7 @@
     </header>
 
     <!-- ===== MAIN GRID: SE2026 ===== -->
-    <div class="grid-2" v-show="currentView === 'se2026'">
+    <div v-show="currentView === 'se2026'">
     <div class="grid-2">
 
         <!-- ===== LEFT: INPUT ===== -->
@@ -1374,9 +1374,9 @@
                     </optgroup>
                 </select>
                 <div class="hpp-display">
-                    <span>HPP: {{ hppTerpilih }}%</span>
+                    <span>Estimasi HPP: {{ hppTerpilih }}%</span>
                     <small>— {{ getKategori(jenisUsahaTerpilih) }}</small>
-                    <span class="auto-fill-notice">✅ Rekomendasi auto</span>
+                    <span class="auto-fill-notice">✅ Perkiraan rata-rata</span>
                 </div>
             </div>
 
@@ -1402,10 +1402,59 @@
                     <option value="langsung"> Langsung (input manual)</option>
                     <option value="hitung"> Jumlah Terjual × Harga Jual</option>
                     <option value="modalMarkup"> Modal + Markup (%)</option>
+                    <option value="pesananMasukPerPeriode"> Pesanan Masuk (Total Per Periode → dibagi hari buka)</option>
                 </select>
             </div>
 
             <!-- Flexible Sales Input -->
+            <div v-if="input.caraPenjualan === 'pesananMasukPerPeriode'" class="form-row-3">
+                <div class="form-group">
+                    <label>Periode Pesanan</label>
+                    <select v-model="input.periodePesanan" @change="hitung" class="freq-select">
+                        <option value="harian">Harian</option>
+                        <option value="mingguan">Mingguan</option>
+                        <option value="bulanan">Bulanan</option>
+                        <option value="tahunan">Tahunan</option>
+                    </select>
+                </div>
+                <div class="form-group" v-if="input.periodePesanan !== 'harian' && input.periodePesanan !== 'tahunan'">
+                    <label>Total Pesanan Masuk <span>/ {{ input.periodePesanan === 'mingguan' ? 'Minggu' : 'Bulan' }}</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">Rp</span>
+                        <input type="text" v-model="inputDisplay.pesananMasukPerPeriode" @input="onInput('pesananMasukPerPeriode', $event)" placeholder="0" />
+                    </div>
+                    <span class="label-desc">Masukkan total omzet dari pesanan masuk untuk 1 {{ input.periodePesanan === 'mingguan' ? 'minggu' : 'bulan' }}, lalu hitung menjadi harian.</span>
+                </div>
+                <div class="form-group" v-if="input.periodePesanan === 'harian'">
+                    <label>Total Pesanan Masuk <span>/ Hari</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">Rp</span>
+                        <input type="text" v-model="inputDisplay.pesananMasukPerPeriode" @input="onInput('pesananMasukPerPeriode', $event)" placeholder="0" />
+                    </div>
+                </div>
+                <div class="form-group" v-if="input.periodePesanan === 'tahunan'">
+                    <label>Total Pesanan Masuk <span>/ Tahun</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">Rp</span>
+                        <input type="text" v-model="inputDisplay.pesananMasukPerPeriode" @input="onInput('pesananMasukPerPeriode', $event)" placeholder="0" />
+                    </div>
+                    <span class="label-desc">Masukkan total omzet dari pesanan masuk untuk 1 tahun, lalu hitung menjadi harian.</span>
+                </div>
+                <div class="form-group">
+                    <label>Harga Rata-Rata per Pesanan <span>Rp</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">Rp</span>
+                        <input type="text" v-model="inputDisplay.hargaPesanan" @input="onInput('hargaPesanan', $event)" placeholder="0" />
+                    </div>
+                    <span class="label-desc">Dipakai untuk mengubah total pesanan menjadi omzet harian.</span>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah Pesanan <span>/ Per Periode</span></label>
+                    <input type="number" v-model="input.jumlahPesananPerPeriode" @input="hitung" min="0" />
+                    <span class="label-desc">Total unit pesanan dalam 1 periode.</span>
+                </div>
+            </div>
+
             <div v-if="input.caraPenjualan === 'hitung'" class="form-row-3">
                 <div class="form-group">
                     <label>Jumlah Terjual <span>unit/hari</span></label>
@@ -1628,8 +1677,10 @@
             </div>
 
             <div class="info-box">
-                <strong>💡 Rekomendasi biaya otomatis!</strong><br />
-                Pilih jenis usaha → biaya operasional & non operasional terisi. Anda bisa <strong>edit, tambah, atau hapus</strong> sesuai kebutuhan.
+                <strong>💡 Perbaikan Logika Akuntansi!</strong><br />
+                • <strong>HPP</strong> dihitung dari % Penjualan (perkiraan)<br />
+                • <strong>Laba Kotor</strong> = Penjualan - HPP<br />
+                • <strong>Laba Bersih</strong> = Laba Kotor - Biaya Operasional - Biaya Non Operasional - Pajak
             </div>
         </div>
 
@@ -1656,13 +1707,15 @@
 
                 <tr class="space-row"><td colspan="2"></td></tr>
                 <tr>
-                    <td class="label">26.b Biaya Produksi</td>
-                    <td class="value">{{ formatRupiah(hasil.biayaProduksi) }}</td>
-                </tr>
-                <tr>
                     <td class="label">26.c HPP (Barang Terjual)</td>
                     <td class="value">{{ formatRupiah(hasil.hpp) }}</td>
                 </tr>
+                <tr class="group-total">
+                    <td class="label-bold">📈 Laba Kotor</td>
+                    <td class="value total profit" :class="{'loss': hasil.labaKotor < 0}">{{ formatRupiah(hasil.labaKotor) }}</td>
+                </tr>
+                
+                <tr class="space-row"><td colspan="2"></td></tr>
                 <tr>
                     <td class="label">26.d Biaya Operasional</td>
                     <td class="value">{{ formatRupiah(hasil.biayaOperasional) }}</td>
@@ -1671,16 +1724,16 @@
                     <td class="label">26.e Biaya Non Operasional</td>
                     <td class="value">{{ formatRupiah(hasil.biayaNonOperasionalTahunan) }}</td>
                 </tr>
+                <tr>
+                    <td class="label">26.b Biaya Produksi (Belanja)</td>
+                    <td class="value">{{ formatRupiah(hasil.biayaProduksi) }}</td>
+                </tr>
                 <tr class="group-total">
                     <td class="label-bold">26.f Total Pengeluaran</td>
                     <td class="value total">{{ formatRupiah(hasil.totalPengeluaran) }}</td>
                 </tr>
 
                 <tr class="space-row"><td colspan="2"></td></tr>
-                <tr class="highlight-row">
-                    <td class="label">📈 Estimasi Laba Kotor</td>
-                    <td class="value profit profit-lg" :class="{'loss': hasil.labaKotor < 0}">{{ formatRupiah(hasil.labaKotor) }}</td>
-                </tr>
                 <tr class="highlight-row">
                     <td class="label">💰 Laba Bersih / Tahun</td>
                     <td class="value profit profit-xl" :class="{'loss': hasil.labaBersihTahunan < 0}">{{ formatRupiah(hasil.labaBersihTahunan) }}</td>
@@ -1692,6 +1745,10 @@
                 <tr>
                     <td class="label-bold">Laba Bersih / Hari</td>
                     <td class="value profit" :class="{'loss': hasil.labaBersihHarian < 0}">{{ formatRupiah(hasil.labaBersihHarian) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Pajak (0.5%)</td>
+                    <td class="value">{{ formatRupiah(hasil.pajakEstimasi) }}</td>
                 </tr>
             </table>
 
@@ -1714,8 +1771,8 @@
                         <div class="dash-value blue">{{ formatRupiahSingkat(hasil.totalPenjualan) }}</div>
                     </div>
                     <div class="dash-item">
-                        <div class="dash-label">Total Biaya</div>
-                        <div class="dash-value red">{{ formatRupiahSingkat(hasil.totalPengeluaran) }}</div>
+                        <div class="dash-label">HPP / Thn</div>
+                        <div class="dash-value red">{{ formatRupiahSingkat(hasil.hpp) }}</div>
                     </div>
                     <div class="dash-item success">
                         <div class="dash-label">Laba Kotor</div>
@@ -1764,10 +1821,26 @@
                         <span class="value">{{ formatRupiah(totalBiayaNonOperasionalTahunan) }}</span>
                     </div>
                 </div>
+
+                <!-- Detail Belanja -->
+                <div class="detail-box detail-mt">
+                    <div class="detail-title">📋 Rincian Belanja / Produksi</div>
+                    <div class="detail-row">
+                        <span class="label">Belanja Barang</span>
+                        <span class="value">{{ formatRupiah(hitungBelanjaTahunan()) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Biaya Pembungkus</span>
+                        <span class="value">{{ formatRupiah(hitungPembungkusTahunan()) }}</span>
+                    </div>
+                    <div class="detail-total">
+                        <span>Total Biaya Produksi</span>
+                        <span class="value">{{ formatRupiah(hasil.biayaProduksi) }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
     </div>
 
     <!-- ===== GAJI BURUH HARIAN ===== -->
@@ -2111,7 +2184,7 @@
 
     <!-- ===== FOOTER ===== -->
     <div class="footer">
-        SE2026 Otomatis • Rekomendasi biaya per jenis usaha • Sensus Ekonomi 2026 • Kalkulator Gaji Buruh
+        SE2026 Otomatis • Perbaikan Logika Akuntansi • Sensus Ekonomi 2026
     </div>
 </div>
 
@@ -2508,8 +2581,11 @@
                 biayaPembungkus: 100000,
                 periodePembungkus: 'bulanan',
                 frekuensiPembungkus: 1,
-                // Flexible sales calculation
-                caraPenjualan: 'langsung', // langsung | hitung | modalMarkup
+                caraPenjualan: 'langsung',
+                periodePesanan: 'bulanan',
+                pesananMasukPerPeriode: 0,
+                hargaPesanan: 0,
+                jumlahPesananPerPeriode: 0,
                 jumlahTerjual: 100,
                 hargaJual: 15000,
                 modal: 10000,
@@ -2520,7 +2596,9 @@
                 belanjaBarang: '1.200.000',
                 biayaPembungkus: '100.000',
                 hargaJual: '15.000',
-                modal: '10.000'
+                modal: '10.000',
+                pesananMasukPerPeriode: '0',
+                hargaPesanan: '0'
             },
             biayaOperasional: [],
             biayaNonOperasional: [],
@@ -2546,7 +2624,6 @@
             currentView: 'se2026',
             namaPengusaha: '',
             nomorWA: '62895700341213',
-            // Gaji Buruh Daily
             inputGaji: {
                 gaji_perhari: 100000,
                 tunjangan: 0,
@@ -2799,20 +2876,16 @@
                     return nilai * frekuensi * 12;
                 }
             },
-            // ===== PERBAIKAN: Belanja tidak selalu dikali hari buka =====
             hitungBelanjaPeriode() {
                 const p = this.input;
                 const nilai = p.belanjaBarang || 0;
                 const frekuensi = p.frekuensiBelanja || 0;
 
                 if (p.periodeBelanja === 'harian') {
-                    // Harian: dikalikan dengan hari buka
                     return nilai * frekuensi * (p.hariBuka || 30);
                 } else if (p.periodeBelanja === 'mingguan') {
-                    // Mingguan: dikalikan 4 minggu (tidak peduli hari buka)
                     return nilai * frekuensi * 4;
                 } else {
-                    // Bulanan: dikalikan 1 bulan (tidak peduli hari buka)
                     return nilai * frekuensi * 1;
                 }
             },
@@ -2912,29 +2985,53 @@
                 } else if (p.caraPenjualan === 'modalMarkup') {
                     const hargaJual = (p.modal || 0) * (1 + (p.markupPersen || 0) / 100);
                     penjualanHarian = (p.jumlahTerjual || 0) * hargaJual;
+                } else if (p.caraPenjualan === 'pesananMasukPerPeriode') {
+                    const pesananPerPeriode = p.pesananMasukPerPeriode || 0;
+                    const periode = p.periodePesanan || 'bulanan';
+                    if (periode === 'harian') {
+                        penjualanHarian = pesananPerPeriode;
+                    } else if (periode === 'mingguan') {
+                        penjualanHarian = pesananPerPeriode / 7;
+                    } else if (periode === 'bulanan') {
+                        penjualanHarian = pesananPerPeriode / 30;
+                    } else if (periode === 'tahunan') {
+                        penjualanHarian = pesananPerPeriode / 365;
+                    }
                 }
                 const penjualanTahunan = penjualanHarian * p.hariBuka * 12;
                 const pendapatanLain = 0;
                 const totalPenjualan = penjualanTahunan + pendapatanLain;
 
+                // === PERBAIKAN LOGIKA AKUNTANSI ===
+                // 1. HPP dihitung dari persentase Penjualan
+                const hppValue = totalPenjualan * hpp;
+                
+                // 2. Biaya Produksi (Belanja + Pembungkus)
                 const biayaProduksi = this.hitungBiayaProduksi();
-                const hppValue = penjualanTahunan * hpp;
+                
+                // 3. Laba Kotor = Penjualan - HPP
+                const labaKotor = totalPenjualan - hppValue;
 
+                // 4. Biaya Operasional
                 let totalBiayaOperasional = 0;
                 for (const item of this.biayaOperasional) {
                     totalBiayaOperasional += this.hitungBiayaOperasionalItem(item);
                 }
 
+                // 5. Biaya Non Operasional
                 let totalBiayaNonOperasional = 0;
                 for (const item of this.biayaNonOperasional) {
                     totalBiayaNonOperasional += (item.nilai || 0) * 12;
                 }
 
-                const totalPengeluaran = biayaProduksi + hppValue + totalBiayaOperasional + totalBiayaNonOperasional;
-
-                const labaKotor = totalPenjualan - totalPengeluaran;
+                // 6. Pajak 0.5% dari Penjualan
                 const pajakEstimasi = totalPenjualan * 0.005;
-                const labaBersihTahunan = labaKotor - pajakEstimasi;
+
+                // 7. Total Pengeluaran = HPP + Biaya Produksi + Operasional + Non Operasional
+                const totalPengeluaran = hppValue + biayaProduksi + totalBiayaOperasional + totalBiayaNonOperasional;
+
+                // 8. Laba Bersih = Laba Kotor - Biaya Operasional - Biaya Non Operasional - Pajak
+                const labaBersihTahunan = labaKotor - totalBiayaOperasional - totalBiayaNonOperasional - pajakEstimasi;
                 const labaBersihBulanan = labaBersihTahunan / 12;
                 const labaBersihHarian = labaBersihTahunan / 365;
                 const rasioLaba = totalPenjualan > 0 ? ((labaBersihTahunan / totalPenjualan) * 100) : 0;
@@ -2994,7 +3091,7 @@
                 const jenis = this.jenisUsahaTerpilih;
                 const hsl = this.hasil;
 
-                const pesan = `📊 HASIL SE2026
+                const pesan = `📊 HASIL SE2026 (Perbaikan Logika Akuntansi)
 ${jenis}
 nomor 26 – 29
 
@@ -3003,12 +3100,22 @@ nomor 26 – 29
 27.b Pendapatan Lainnya	${this.formatRupiah(hsl.pendapatanLain)}
 27.c Total Penjualan	${this.formatRupiah(hsl.totalPenjualan)}
 
-📉 PENGELUARAN
-26.b Biaya Produksi	${this.formatRupiah(hsl.biayaProduksi)}
+📉 HPP & LABA KOTOR
 26.c HPP (Barang Terjual)	${this.formatRupiah(hsl.hpp)}
+Laba Kotor	${this.formatRupiah(hsl.labaKotor)}
+
+📉 BIAYA
+26.b Biaya Produksi	${this.formatRupiah(hsl.biayaProduksi)}
 26.d Biaya Operasional	${this.formatRupiah(hsl.biayaOperasional)}
 26.e Biaya Non Operasional	${this.formatRupiah(hsl.biayaNonOperasionalTahunan)}
-26.f Total Pengeluaran	${this.formatRupiah(hsl.totalPengeluaran)}`;
+Pajak (0.5%)	${this.formatRupiah(hsl.pajakEstimasi)}
+26.f Total Pengeluaran	${this.formatRupiah(hsl.totalPengeluaran)}
+
+💰 LABA BERSIH
+Tahunan: ${this.formatRupiah(hsl.labaBersihTahunan)}
+Bulanan: ${this.formatRupiah(hsl.labaBersihBulanan)}
+Harian: ${this.formatRupiah(hsl.labaBersihHarian)}
+Rasio Laba: ${hsl.rasioLaba}%`;
 
                 const url = `https://wa.me/${this.nomorWA}?text=${encodeURIComponent(pesan)}`;
                 window.open(url, '_blank');
@@ -3070,13 +3177,11 @@ nomor 26 – 29
             },
             hitungKeluarga() {
                 const p = this.inputKeluarga;
-                // Food: per day × family members × meals per day × 7 days (week)
                 const makanPerHariTotal = (p.makanPerHari || 0) * (p.jumlahKeluarga || 1) * (p.kaliMakan || 3);
                 const totalMakanMinggu = makanPerHariTotal * 7;
                 const totalMakanBulan = makanPerHariTotal * 30;
                 const totalMakanTahun = totalMakanBulan * 12;
 
-                // Monthly expenses
                 const listrik = p.listrik || 0;
                 const air = p.air || 0;
                 const internet = p.internet || 0;
@@ -3142,7 +3247,6 @@ nomor 26 – 29
             rekomendasiKeluarga() {
                 const p = this.inputKeluarga;
                 const keluarga = p.jumlahKeluarga || 4;
-                // Auto-adjust based on family size
                 const makanDasar = 20000 + (keluarga - 2) * 5000;
                 this.inputKeluarga.makanPerHari = Math.max(15000, makanDasar);
                 this.displayKeluarga.makanPerHari = this.inputKeluarga.makanPerHari.toLocaleString('id-ID');
