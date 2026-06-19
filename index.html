@@ -665,6 +665,16 @@
             box-shadow: 0 4px 12px rgba(26, 138, 90, 0.3);
         }
 
+        .btn-wha {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-wha:hover {
+            background: #1DA851;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
         .btn-warning {
             background: var(--accent);
             color: white;
@@ -1340,6 +1350,12 @@
                 <span class="badge-count">{{ Object.keys(dataHPP).length }} jenis</span>
             </div>
 
+            <!-- Nama Pengusaha -->
+            <div class="form-group">
+                <label>Nama Pengusaha <span>nama pemilik</span></label>
+                <input type="text" v-model="namaPengusaha" placeholder="Nama lengkap..." />
+            </div>
+
             <!-- Jenis Usaha -->
             <div class="form-group">
                 <label>Jenis Usaha <span>HPP & biaya auto isi</span></label>
@@ -1608,6 +1624,7 @@
                 <button class="btn btn-primary" @click="resetInput">↺ Reset</button>
                 <button class="btn btn-warning" @click="applyRecommendations">⟳ Muat Ulang</button>
                 <button class="btn btn-success" @click="printDashboard">🖨 Cetak</button>
+                <button class="btn btn-wha" @click="kirimWA">📤 WhatsApp</button>
             </div>
 
             <div class="info-box">
@@ -2527,6 +2544,8 @@
             jenisUsahaTerpilih: 'Warung',
             uidCounter: 0,
             currentView: 'se2026',
+            namaPengusaha: '',
+            nomorWA: '0895700341213',
             // Gaji Buruh Daily
             inputGaji: {
                 gaji_perhari: 100000,
@@ -2969,6 +2988,30 @@
             },
             printDashboard() {
                 window.print();
+            },
+            kirimWA() {
+                const nama = this.namaPengusaha || '-(Tidak ada nama)';
+                const jenis = this.jenisUsahaTerpilih;
+                const hsl = this.hasil;
+
+                const pesan = `📊 HASIL SE2026
+${jenis}
+nomor 26 – 29
+
+📈 PENDAPATAN
+27.a Penjualan Barang & Jasa	${this.formatRupiah(hsl.penjualanTahunan)}
+27.b Pendapatan Lainnya	${this.formatRupiah(hsl.pendapatanLain)}
+27.c Total Penjualan	${this.formatRupiah(hsl.totalPenjualan)}
+
+📉 PENGELUARAN
+26.b Biaya Produksi	${this.formatRupiah(hsl.biayaProduksi)}
+26.c HPP (Barang Terjual)	${this.formatRupiah(hsl.hpp)}
+26.d Biaya Operasional	${this.formatRupiah(hsl.biayaOperasional)}
+26.e Biaya Non Operasional	${this.formatRupiah(hsl.biayaNonOperasionalTahunan)}
+26.f Total Pengeluaran	${this.formatRupiah(hsl.totalPengeluaran)}`;
+
+                const url = `https://wa.me/${this.nomorWA}?text=${encodeURIComponent(pesan)}`;
+                window.open(url, '_blank');
             },
             onInputGaji(field, event) {
                 let raw = event.target.value.replace(/[^0-9]/g, '');
