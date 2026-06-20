@@ -1281,6 +1281,16 @@
             background: #f0f0d4;
             color: #6a6a1a;
         }
+
+        .kategori-badge.transport {
+            background: #ffe4d4;
+            color: #8a4a1a;
+        }
+
+        .kategori-badge.pertanian {
+            background: #d4f0d4;
+            color: #1a6a1a;
+        }
     </style>
 </head>
 <body>
@@ -1291,7 +1301,7 @@
         <header class="header">
             <div class="header-left">
                 <h1>📋 SE2026 Pro</h1>
-                <div class="subtitle">Sensus Ekonomi 2026 — 7 Kategori Usaha</div>
+                <div class="subtitle">Sensus Ekonomi 2026 — 9 Kategori Usaha</div>
             </div>
             <div class="header-nav">
                 <button class="nav-btn" :class="{active: currentView === 'se2026'}" @click="currentView = 'se2026'">🏢 Usaha</button>
@@ -1311,7 +1321,7 @@
                 <div class="card">
                     <div class="card-title">
                         📝 Input Data Usaha
-                        <small>7 Kategori SE2026</small>
+                        <small>9 Kategori SE2026</small>
                     </div>
 
                     <!-- Nama Pengusaha -->
@@ -1326,7 +1336,7 @@
 
                     <!-- Jenis Usaha -->
                     <div class="form-group">
-                        <label>Jenis Usaha <span>pilih dari 7 kategori</span></label>
+                        <label>Jenis Usaha <span>pilih dari 9 kategori</span></label>
                         <select v-model="jenisUsahaTerpilih" @change="onJenisUsahaChange">
                             <optgroup label="🏭 Industri Pengolahan (C)">
                                 <option v-for="(hpp, nama) in filterByCategory('industri')" :key="nama" :value="nama">{{ nama }}</option>
@@ -1348,6 +1358,12 @@
                             </optgroup>
                             <optgroup label="📚 Pendidikan (P)">
                                 <option v-for="(hpp, nama) in filterByCategory('pendidikan')" :key="nama" :value="nama">{{ nama }}</option>
+                            </optgroup>
+                            <optgroup label="🚗 Transportasi (H)">
+                                <option v-for="(hpp, nama) in filterByCategory('transport')" :key="nama" :value="nama">{{ nama }}</option>
+                            </optgroup>
+                            <optgroup label="🌾 Pertanian (A)">
+                                <option v-for="(hpp, nama) in filterByCategory('pertanian')" :key="nama" :value="nama">{{ nama }}</option>
                             </optgroup>
                         </select>
                         <div class="hpp-display">
@@ -2675,7 +2691,7 @@
 
         <!-- ===== FOOTER ===== -->
         <div class="footer">
-            SE2026 Pro • 7 Kategori Usaha Resmi • Sensus Ekonomi 2026
+            SE2026 Pro • 9 Kategori Usaha Resmi • Sensus Ekonomi 2026
         </div>
     </div>
 
@@ -2755,7 +2771,37 @@
                     'Lembaga Pelatihan Kerja & Keterampilan': { hpp: 15, kategori: 'pendidikan' },
                     'Jasa Pendidikan Non-Formal Lainnya': { hpp: 15, kategori: 'pendidikan' },
                     'Sekolah Dasar / Madrasah': { hpp: 18, kategori: 'pendidikan' },
-                    'Sekolah Menengah / Madrasah': { hpp: 20, kategori: 'pendidikan' }
+                    'Sekolah Menengah / Madrasah': { hpp: 20, kategori: 'pendidikan' },
+
+                    // --- 8. Transportasi (Kategori H) ---
+                    'Usaha Ojek / Motor Taxi': { hpp: 20, kategori: 'transport' },
+                    'Usaha Becak': { hpp: 25, kategori: 'transport' },
+                    'Usaha Angkot': { hpp: 30, kategori: 'transport' },
+                    'Usaha Taxi': { hpp: 35, kategori: 'transport' },
+                    'Usaha Shuttle / Travel': { hpp: 25, kategori: 'transport' },
+                    'Jasa Pengantaran (Delivery)': { hpp: 15, kategori: 'transport' },
+                    'Penyewaan Sepeda Motor': { hpp: 20, kategori: 'transport' },
+
+                    // --- 9. Pertanian (Kategori A) ---
+                    'Usaha Budi Daya Sayuran': { hpp: 30, kategori: 'pertanian' },
+                    'Usaha Budi Daya Buah': { hpp: 30, kategori: 'pertanian' },
+                    'Usaha Budi Daya Kopi & Kakao': { hpp: 35, kategori: 'pertanian' },
+                    'Usaha Budi Daya Cabe Merah': { hpp: 35, kategori: 'pertanian' },
+                    'Usaha Budi Daya Padi/Gabah': { hpp: 40, kategori: 'pertanian' },
+                    'Usaha Budi Daya Jagung': { hpp: 35, kategori: 'pertanian' },
+                    'Usaha Budi Daya Kedelai': { hpp: 30, kategori: 'pertanian' },
+                    'Usaha Budi Daya Umbi-Umbian': { hpp: 25, kategori: 'pertanian' },
+                    'Usaha Budi Daya Kelapa Sawit': { hpp: 45, kategori: 'pertanian' },
+                    'Usaha Budi Daya Karet': { hpp: 40, kategori: 'pertanian' },
+                    'Usaha Budi Daya Teh': { hpp: 35, kategori: 'pertanian' },
+                    'Usaha Budi Daya Tembakau': { hpp: 30, kategori: 'pertanian' },
+                    'Usaha Budi Daya Sayuran Organik': { hpp: 40, kategori: 'pertanian' },
+                    'Usaha Budi Daya Jamur': { hpp: 30, kategori: 'pertanian' },
+                    'Usaha Budi Daya Jahe': { hpp: 30, kategori: 'pertanian' },
+                    'Usaha Budi Daya Kunyit': { hpp: 25, kategori: 'pertanian' },
+                    'Usaha Budi Daya Lombok': { hpp: 35, kategori: 'pertanian' },
+                    'Usaha Budi Daya Bawang Merah': { hpp: 35, kategori: 'pertanian' },
+                    'Usaha Budi Daya Tomat': { hpp: 30, kategori: 'pertanian' }
                 },
 
                 // ===== REKOMENDASI BIAYA (Disesuaikan dengan Kota Baru/Maju) =====
@@ -2908,6 +2954,174 @@
                             { nama: 'Iuran RT/RW', nilai: 50000 },
                             { nama: 'Perizinan', nilai: 100000 },
                             { nama: 'Sumbangan Pendidikan', nilai: 75000 }
+                        ]
+                    },
+
+                    // Transportasi / Ojek - Biaya di kota baru/maju
+                    'Usaha Ojek / Motor Taxi': {
+                        operasional: [
+                            { nama: 'Bensin', nilai: 50000, frekuensi: 1, jenis: 'harian' },
+                            { nama: 'Perawatan Motor', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Buku Tab/Simpan', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Pulsa/Internet', nilai: 50000, frekuensi: 1, jenis: 'bulanan' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 },
+                            { nama: 'SIM', nilai: 30000 }
+                        ]
+                    },
+                    'Usaha Becak': {
+                        operasional: [
+                            { nama: 'Bensin', nilai: 30000, frekuensi: 1, jenis: 'harian' },
+                            { nama: 'Perawatan Becak', nilai: 100000, frekuensi: 1, jenis: 'bulanan' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 }
+                        ]
+                    },
+                    'Usaha Angkot': {
+                        operasional: [
+                            { nama: 'Bensin', nilai: 100000, frekuensi: 1, jenis: 'harian' },
+                            { nama: 'Perawatan Kendaraan', nilai: 300000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Sewa Kendaraan', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Pajak Kendaraan', nilai: 100000, frekuensi: 1, jenis: 'tahunan' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 50000 },
+                            { nama: 'Perizinan', nilai: 100000 }
+                        ]
+                    },
+                    'Jasa Pengantaran (Delivery)': {
+                        operasional: [
+                            { nama: 'Bensin', nilai: 40000, frekuensi: 1, jenis: 'harian' },
+                            { nama: 'Pulsa/Internet', nilai: 75000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Perawatan Motor', nilai: 100000, frekuensi: 1, jenis: 'bulanan' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 }
+                        ]
+                    },
+                    'Penyewaan Sepeda Motor': {
+                        operasional: [
+                            { nama: 'Perawatan Motor', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Pajak Kendaraan', nilai: 150000, frekuensi: 1, jenis: 'tahunan' },
+                            { nama: 'Asuransi', nilai: 100000, frekuensi: 1, jenis: 'tahunan' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 75000 }
+                        ]
+                    },
+
+                    // Pertanian - Biaya di kota baru/maju
+                    'Usaha Budi Daya Sayuran': {
+                        operasional: [
+                            { nama: 'Benih/Semai', nilai: 200000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk', nilai: 300000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pestisida', nilai: 150000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Air Irigasi', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'tenaga Kerja', nilai: 500000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 },
+                            { nama: 'Transportasi', nilai: 100000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Cabe Merah': {
+                        operasional: [
+                            { nama: 'Benih/Semai', nilai: 250000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk', nilai: 400000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pestisida', nilai: 200000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Air Irigasi', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Tenaga Kerja', nilai: 600000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 },
+                            { nama: 'Transportasi', nilai: 150000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Padi/Gabah': {
+                        operasional: [
+                            { nama: 'Benih', nilai: 300000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk', nilai: 500000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pestisida', nilai: 200000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Tenaga Kerja', nilai: 800000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Alat Pertanian', nilai: 200000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 75000 },
+                            { nama: 'Transportasi', nilai: 200000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Jagung': {
+                        operasional: [
+                            { nama: 'Benih', nilai: 250000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk', nilai: 400000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pestisida', nilai: 150000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Tenaga Kerja', nilai: 500000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 },
+                            { nama: 'Transportasi', nilai: 150000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Kelapa Sawit': {
+                        operasional: [
+                            { nama: 'Benih', nilai: 500000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk', nilai: 700000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Tenaga Kerja', nilai: 1000000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Alat Pertanian', nilai: 300000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 50000 },
+                            { nama: 'Perizinan', nilai: 100000 },
+                            { nama: 'Transportasi', nilai: 300000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Kopi & Kakao': {
+                        operasional: [
+                            { nama: 'Benih', nilai: 300000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk', nilai: 400000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Tenaga Kerja', nilai: 700000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Perawatan Tanaman', nilai: 200000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 75000 },
+                            { nama: 'Transportasi', nilai: 200000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Jamur': {
+                        operasional: [
+                            { nama: 'Bibit Jamur', nilai: 200000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Sekam/Kompos', nilai: 150000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Listrik', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Air', nilai: 50000, frekuensi: 1, jenis: 'bulanan' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 50000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Sayuran Organik': {
+                        operasional: [
+                            { nama: 'Benih Organik', nilai: 300000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pupuk Organik', nilai: 400000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Pestisida Organik', nilai: 200000, frekuensi: 1, jenis: 'musim' },
+                            { nama: 'Air Irigasi', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Tenaga Kerja', nilai: 600000, frekuensi: 1, jenis: 'musim' }
+                        ],
+                        nonOperasional: [
+                            { nama: 'Iuran RT/RW', nilai: 25000 },
+                            { nama: 'Perizinan', nilai: 75000 },
+                            { nama: 'Sertifikasi', nilai: 150000 }
                         ]
                     }
                 },
@@ -3536,6 +3750,8 @@
                         'akomodasi': '🏨 Akomodasi & Makan Minum (I)',
                         'info': '📡 Informasi & Komunikasi (J)',
                         'profesional': '⚖️ Profesional & Teknis (M)',
+                        'transport': '🚗 Transportasi (H)',
+                        'pertanian': '🌾 Pertanian (A)',
                         'pendidikan': '📚 Pendidikan (P)'
                     };
                     return map[data.kategori] || data.kategori;
@@ -3555,7 +3771,9 @@
                         'akomodasi': 'I',
                         'info': 'J',
                         'profesional': 'M',
-                        'pendidikan': 'P'
+                        'pendidikan': 'P',
+                        'transport': 'H',
+                        'pertanian': 'A'
                     };
                     return map[data.kategori] || '';
                 },
@@ -3570,7 +3788,9 @@
                         'akomodasi': 'Apa jenis layanan akomodasi/makanan yang Anda sediakan?',
                         'info': 'Apa jenis layanan informasi/komunikasi yang Anda berikan?',
                         'profesional': 'Apa jenis layanan profesional/teknis yang Anda tawarkan?',
-                        'pendidikan': 'Apa jenis layanan pendidikan yang Anda sediakan?'
+                        'pendidikan': 'Apa jenis layanan pendidikan yang Anda sediakan?',
+                        'transport': 'Apa jenis layanan transportasi yang Anda tawarkan?',
+                        'pertanian': 'Apa jenis hasil bumi/pertanian yang Anda budi dayakan?'
                     };
                     return questions[kategori] || 'Apa jenis usaha utama Anda?';
                 },
@@ -3586,7 +3806,9 @@
                         'akomodasi': 'Berapa rata-rata pendapatan per hari?',
                         'info': 'Berapa rata-rata pendapatan jasa per hari?',
                         'profesional': 'Berapa rata-rata pendapatan per hari?',
-                        'pendidikan': 'Berapa rata-rata pendapatan per hari?'
+                        'pendidikan': 'Berapa rata-rata pendapatan per hari?',
+                        'transport': 'Berapa rata-rata pendapatan per hari?',
+                        'pertanian': 'Berapa rata-rata pendapatan hasil bumi per hari?'
                     };
                     return questions[kategori] || 'Berapa rata-rata penjualan per hari?';
                 },
@@ -3602,7 +3824,9 @@
                         'akomodasi': 'Berapa harga per unit layanan (makanan/kamar)?',
                         'info': 'Berapa harga per layanan/jasa?',
                         'profesional': 'Berapa tarif per jasa/proyek?',
-                        'pendidikan': 'Berapa biaya per siswa/peserta?'
+                        'pendidikan': 'Berapa biaya per siswa/peserta?',
+                        'transport': 'Berapa tarif perjalanan rata-rata?',
+                        'pertanian': 'Berapa harga jual per kg/unit hasil bumi?'
                     };
                     return questions[kategori] || 'Berapa harga jual rata-rata per unit?';
                 },
@@ -3618,7 +3842,9 @@
                         'akomodasi': 'Berapa biaya bahan makanan per porsi?',
                         'info': 'Berapa biaya operasional per layanan?',
                         'profesional': 'Berapa biaya variabel per proyek?',
-                        'pendidikan': 'Berapa biaya variabel per siswa?'
+                        'pendidikan': 'Berapa biaya variabel per siswa?',
+                        'transport': 'Berapa biaya bakar/bensin per hari?',
+                        'pertanian': 'Berapa biaya pupuk/benih per musim?'
                     };
                     return questions[kategori] || 'Berapa biaya variabel per unit?';
                 },
@@ -3634,7 +3860,9 @@
                         'akomodasi': '🍳',
                         'info': '💻',
                         'profesional': '📋',
-                        'pendidikan': '📚'
+                        'pendidikan': '📚',
+                        'transport': '⛽',
+                        'pertanian': '🌱'
                     };
                     return icons[kategori] || '📦';
                 },
