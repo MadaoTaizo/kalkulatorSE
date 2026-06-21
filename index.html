@@ -1306,6 +1306,72 @@
             margin-top: 2px;
             font-style: italic;
         }
+
+        /* ========== ASSET STYLES ========== */
+        .asset-summary {
+            background: linear-gradient(135deg, #f0f7ff, #e3edf6);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+        }
+
+        .asset-summary .asset-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed #dce4ed;
+            font-size: 13px;
+        }
+
+        .asset-summary .asset-row:last-child {
+            border-bottom: none;
+        }
+
+        .asset-summary .asset-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: var(--primary);
+            padding-top: 8px;
+            margin-top: 4px;
+            border-top: 2px solid var(--primary);
+            font-size: 15px;
+        }
+
+        .asset-type-badge {
+            display: inline-block;
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .asset-type-badge.tanah {
+            background: #d4e8d4;
+            color: #1a6a1a;
+        }
+
+        .asset-type-badge.bangunan {
+            background: #e8d4d4;
+            color: #6a1a1a;
+        }
+
+        .asset-type-badge.lainnya {
+            background: #d4d4e8;
+            color: #1a1a6a;
+        }
+
+        /* ========== NOTE ROW ========== */
+        .note-row td {
+            padding-top: 10px !important;
+            font-size: 11px !important;
+            color: var(--text-muted) !important;
+            border-top: 2px dashed #dce6ef !important;
+            font-style: italic !important;
+        }
+        .note-row td .note {
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -1716,53 +1782,161 @@
                         <span class="amount">{{ formatRupiah(totalBiayaNonOperasionalTahunan) }}</span>
                     </div>
 
-                    <!-- Penyusutan Aset -->
+                    <!-- ===== ASET TANAH & BANGUNAN ===== -->
                     <div class="section-label section-margin-top">
-                        <span>🏗️ Penyusutan Aset</span>
-                        <button class="btn-recom" @click="tambahAset">+ Tambah Aset</button>
+                        <span>🏠 Aset Tanah & Bangunan</span>
+                        <button class="btn-recom" @click="setDefaultAsetTanahBangunan">⭐ Isi Otomatis</button>
                     </div>
 
                     <div class="question-helper" style="margin-bottom:10px;">
                         <span class="q-icon">💡</span>
-                        Penyusutan adalah <span class="highlight-text">penurunan nilai</span> aset seiring waktu.
-                        Contoh: Peralatan usaha, kendaraan, mesin, dll.
+                        Aset <span class="highlight-text">tanah dan bangunan</span> yang dimiliki untuk usaha.
+                        Nilai ini akan digunakan untuk perhitungan <span class="highlight-text">total aset</span> dan <span class="highlight-text">kekayaan bersih</span>.
                     </div>
 
-                    <div v-for="(item, index) in aset" :key="'aset-' + item._uid" class="cost-item">
-                        <button class="remove-btn" @click="removeAset(index)" v-if="aset.length > 0">✕</button>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Nilai Tanah</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayAset.tanah" @input="onInputAset('tanah', $event)" placeholder="0" />
+                            </div>
+                            <div class="question-helper" style="font-size:10px;">
+                                <span class="q-icon">🌍</span>
+                                Nilai <span class="highlight-text">tanah</span> yang dimiliki untuk usaha
+                                <span class="example">Contoh: "200.000.000"</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nilai Bangunan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayAset.bangunan" @input="onInputAset('bangunan', $event)" placeholder="0" />
+                            </div>
+                            <div class="question-helper" style="font-size:10px;">
+                                <span class="q-icon">🏗️</span>
+                                Nilai <span class="highlight-text">bangunan</span> yang dimiliki untuk usaha
+                                <span class="example">Contoh: "300.000.000"</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== LUAS TANAH ===== -->
+                    <div class="form-row-2" style="margin-top: 8px;">
+                        <div class="form-group">
+                            <label>28.d. Luas Tanah Usaha (m²)</label>
+                            <input type="number" v-model="luasTanahUsaha" @input="hitung" min="0" step="1" placeholder="0" />
+                            <div class="question-helper" style="font-size:10px;">
+                                <span class="q-icon">📏</span>
+                                Luas tanah yang digunakan untuk usaha <span class="highlight-text">dalam meter persegi</span>
+                                <span class="example">Contoh: "200"</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== ASET LAINNYA ===== -->
+                    <div class="section-label section-margin-top">
+                        <span>📦 Aset Lainnya</span>
+                        <button class="btn-recom" @click="setDefaultAsetLainnya">⭐ Isi Otomatis</button>
+                    </div>
+
+                    <div class="question-helper" style="margin-bottom:10px;">
+                        <span class="q-icon">💡</span>
+                        Aset <span class="highlight-text">selain tanah dan bangunan</span> yang digunakan untuk usaha,
+                        seperti kendaraan, mesin, peralatan, inventaris, dll.
+                    </div>
+
+                    <div v-for="(item, index) in asetLainnya" :key="'aset-lain-' + item._uid" class="cost-item">
+                        <button class="remove-btn" @click="removeAsetLainnya(index)" v-if="asetLainnya.length > 1">✕</button>
                         <div class="cost-header">
                             <div class="cost-name">
-                                <input type="text" v-model="item.nama" class="editable-name-input" placeholder="Nama aset..." />
+                                <input type="text" v-model="item.nama" @input="hitung" class="editable-name-input" placeholder="Nama aset..." />
+                                <span class="frequency-badge" v-if="item.isRekomendasi">⭐ Rekomendasi</span>
                             </div>
-                            <span class="cost-total">{{ formatRupiah(item.nilai / item.umurEkonomis) }}/tahun</span>
+                            <span class="cost-total">{{ formatRupiah(item.nilai) }}</span>
                         </div>
-                        <div class="form-row-3">
+                        <div class="form-row">
                             <div class="form-group">
                                 <label>Nama Aset</label>
-                                <input type="text" v-model="item.nama" placeholder="Contoh: Mesin Produksi" />
+                                <input type="text" v-model="item.nama" @input="hitung" placeholder="Contoh: Mesin Produksi" />
                             </div>
                             <div class="form-group">
                                 <label>Nilai (Rp)</label>
                                 <div class="input-prefix">
                                     <span class="prefix">Rp</span>
-                                    <input type="text" v-model="item.displayNilai" @input="onAsetInput(item, $event)" placeholder="0" />
+                                    <input type="text" v-model="item.displayNilai" @input="onAsetLainInput(item, $event)" placeholder="0" />
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Umur Ekonomis (tahun)</label>
-                                <input type="number" v-model="item.umurEkonomis" @input="hitung" min="1" max="50" />
                             </div>
                         </div>
                         <div class="question-helper" style="font-size:10px;margin-top:4px;">
                             <span class="q-icon">✏️</span>
-                            <span class="example">Contoh pengisian:</span> Nama: "{{ getAsetExample(item) }}", Nilai: "{{ getAsetValue(item) }}", Umur: "{{ getAsetUmur(item) }}" tahun
+                            <span class="example">Contoh pengisian:</span> Nama: "{{ item.nama || 'Mesin' }}", Nilai: "{{ item.displayNilai || '10.000.000' }}"
+                        </div>
+                    </div>
+
+                    <button class="add-cost-btn" @click="addAsetLainnya">+ Tambah Aset Lainnya</button>
+
+                    <!-- ===== TOTAL ASET ===== -->
+                    <div class="asset-summary">
+                        <div class="asset-row">
+                            <span>🌍 Tanah</span>
+                            <span>{{ formatRupiah(asetTanah) }}</span>
+                        </div>
+                        <div class="asset-row">
+                            <span>🏗️ Bangunan</span>
+                            <span>{{ formatRupiah(asetBangunan) }}</span>
+                        </div>
+                        <div class="asset-row">
+                            <span>📦 Aset Lainnya</span>
+                            <span>{{ formatRupiah(totalAsetLainnya) }}</span>
+                        </div>
+                        <div class="asset-total">
+                            <span>💰 Total Aset</span>
+                            <span>{{ formatRupiah(totalAset) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>💡 Total Aset</strong> adalah jumlah dari nilai tanah, bangunan, dan aset lainnya.<br />
+                        Digunakan untuk menghitung <span class="highlight-text">kekayaan bersih</span> dan <span class="highlight-text">return on assets (ROA)</span>.
+                    </div>
+
+                    <!-- Penyusutan Aset Tetap (Dihitung dari total aset) -->
+                    <div class="section-label section-margin-top">
+                        <span>📉 Penyusutan Aset Tetap</span>
+                    </div>
+
+                    <div class="question-helper" style="margin-bottom:10px;">
+                        <span class="q-icon">💡</span>
+                        Penyusutan aset tetap dihitung dari <span class="highlight-text">total aset</span> (tanah + bangunan + aset lainnya)
+                        dengan metode <span class="highlight-text">garis lurus</span> selama {{ umurEkonomisAset }} tahun.
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Total Aset</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" :value="formatRupiah(totalAset)" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Umur Ekonomis (tahun)</label>
+                            <input type="number" v-model="umurEkonomisAset" @input="hitung" min="1" max="50" />
+                            <div class="question-helper" style="font-size:10px;">
+                                <span class="q-icon">📅</span>
+                                Berapa tahun <span class="highlight-text">umur ekonomis</span> aset tetap?
+                                <span class="example">Contoh: "20" untuk bangunan</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="total-cost-summary">
-                        <span>Total Penyusutan / Tahun</span>
-                        <span class="amount">{{ formatRupiah(totalPenyusutanTahunan) }}</span>
+                        <span>Penyusutan Aset / Tahun</span>
+                        <span class="amount">{{ formatRupiah(totalPenyusutanAsetTahunan) }}</span>
                     </div>
+
+                    <hr class="divider" />
 
                     <!-- Modal Kerja -->
                     <div class="section-label section-margin-top">
@@ -1833,100 +2007,158 @@
                     </div>
                 </div>
 
-                <!-- RIGHT: HASIL -->
+                <!-- ===== RIGHT: HASIL ===== -->
                 <div class="card">
                     <div class="card-title">
                         📊 Laporan Keuangan
-                        <small>Standar Akuntansi</small>
+                        <small>Format SE2026</small>
+                    </div>
+
+                    <!-- ===== 26. RINCIAN PENGELUARAN ===== -->
+                    <div class="section-label">
+                        26. Rincian Pengeluaran Tahun {{ new Date().getFullYear() }}
+                        <span class="sub">(Rp)</span>
                     </div>
 
                     <table class="result-table">
                         <tr>
-                            <td class="label-bold" colspan="2">📈 PENDAPATAN</td>
-                        </tr>
-                        <tr>
-                            <td class="label">27.a Penjualan Barang &amp; Jasa</td>
-                            <td class="value">{{ formatRupiah(hasil.penjualanTahunan) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">27.b Pendapatan Lainnya</td>
-                            <td class="value">{{ formatRupiah(hasil.pendapatanLain) }}</td>
-                        </tr>
-                        <tr class="group-total">
-                            <td class="label-bold">27.c Total Penjualan</td>
-                            <td class="value total">{{ formatRupiah(hasil.totalPenjualan || hasil.totalPendapatan) }}</td>
-                        </tr>
-
-                        <tr class="space-row"><td colspan="2"></td></tr>
-                        <tr>
-                            <td class="label-bold" colspan="2">📉 HPP &amp; LABA KOTOR</td>
-                        </tr>
-                        <tr>
-                            <td class="label">HPP (Barang Terjual)</td>
-                            <td class="value">{{ formatRupiah(hasil.hpp) }}</td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td class="label">📈 Laba Kotor</td>
-                            <td class="value profit profit-lg" :class="{'loss': hasil.labaKotor < 0}">{{ formatRupiah(hasil.labaKotor) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Margin Laba Kotor</td>
-                            <td class="value">{{ hasil.grossProfitMargin }}%</td>
-                        </tr>
-
-                        <tr class="space-row"><td colspan="2"></td></tr>
-                        <tr>
-                            <td class="label-bold" colspan="2">💰 BIAYA</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Bahan Baku & Barang Jual</td>
-                            <td class="value">{{ formatRupiah((hasil.biayaBahanBaku || 0) + (hasil.biayaBarangJual || 0)) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Pembungkus</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaPembungkus || 0) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Biaya Operasional</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaOperasional || 0) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Biaya Non Operasional</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaNonOperasional || 0) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Upah & Jamsostek</td>
+                            <td class="label">26.a. Total Upah & Gaji serta Jaminan Sosial Pegawai</td>
                             <td class="value">{{ formatRupiah(hasil.totalBiayaTK || 0) }}</td>
                         </tr>
                         <tr>
-                            <td class="label">Penyusutan Aset</td>
-                            <td class="value">{{ formatRupiah(totalPenyusutanTahunan) }}</td>
+                            <td class="label">26.b. Biaya Produksi</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaBahanBaku || 0) }}</td>
                         </tr>
                         <tr>
-                            <td class="label">Pajak (PPn Final + PPN)</td>
-                            <td class="value">{{ formatRupiah(perhitunganPajak.totalPajak) }}</td>
+                            <td class="label">26.c. Biaya Pembelian Barang yang Terjual</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaBarangJual || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">26.d. Biaya Operasional (air, listrik, gas, internet, pulsa, pemeliharaan, biaya angkutan, dll.)</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaOperasional || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">26.e. Biaya Non-Operasional</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaNonOperasional || 0) }}</td>
                         </tr>
                         <tr class="group-total">
-                            <td class="label-bold">Total Pengeluaran</td>
-                            <td class="value total">{{ formatRupiah(hasil.totalPengeluaran || (hasil.hpp + hasil.biayaOperasional + hasil.biayaNonOperasional + hasil.totalBiayaTK + totalPenyusutanTahunan + perhitunganPajak.totalPajak)) }}</td>
+                            <td class="label-bold">26.f. Total Pengeluaran (a+b+c+d+e)</td>
+                            <td class="value total">{{ formatRupiah(hasil.totalPengeluaran || 0) }}</td>
                         </tr>
+                    </table>
 
-                        <tr class="space-row"><td colspan="2"></td></tr>
+                    <!-- ===== 27. RINCIAN PENJUALAN ===== -->
+                    <div class="section-label section-margin-top">
+                        27. Rincian Nilai Penjualan Tahun {{ new Date().getFullYear() }}
+                        <span class="sub">(Rp)</span>
+                    </div>
+
+                    <table class="result-table">
+                        <tr>
+                            <td class="label">27.a. Nilai Penjualan Barang dan Jasa</td>
+                            <td class="value">{{ formatRupiah(hasil.penjualanTahunan || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">27.b. Pendapatan Lainnya yang Dihasilkan Perusahaan</td>
+                            <td class="value">{{ formatRupiah(hasil.pendapatanLain || 0) }}</td>
+                        </tr>
+                        <tr class="group-total">
+                            <td class="label-bold">27.c. Total Nilai Penjualan (a+b)</td>
+                            <td class="value total">{{ formatRupiah(hasil.totalPenjualan || 0) }}</td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== 28. ASET ===== -->
+                    <div class="section-label section-margin-top">
+                        28. Nilai Aset pada 31 Desember {{ new Date().getFullYear() }}
+                        <span class="sub">(Rp)</span>
+                    </div>
+
+                    <table class="result-table">
+                        <tr>
+                            <td class="label">28.a. Nilai Aset Tanah dan Bangunan</td>
+                            <td class="value">{{ formatRupiah((asetTanah || 0) + (asetBangunan || 0)) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="padding-left:20px;">- Tanah</td>
+                            <td class="value">{{ formatRupiah(asetTanah || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="padding-left:20px;">- Bangunan</td>
+                            <td class="value">{{ formatRupiah(asetBangunan || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">28.b. Nilai Aset Selain Tanah dan Bangunan</td>
+                            <td class="value">{{ formatRupiah(totalAsetLainnya || 0) }}</td>
+                        </tr>
+                        <tr v-for="(item, idx) in asetLainnya" :key="'aset-detail-'+idx">
+                            <td class="label" style="padding-left:20px;">- {{ item.nama }}</td>
+                            <td class="value">{{ formatRupiah(item.nilai || 0) }}</td>
+                        </tr>
+                        <tr class="group-total">
+                            <td class="label-bold">28.c. Nilai Total Aset</td>
+                            <td class="value total">{{ formatRupiah(totalAset || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">28.d. Luas Tanah yang Dikuasai dan Digunakan untuk Kegiatan Usaha</td>
+                            <td class="value">{{ luasTanahUsaha || 0 }} m²</td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== NERACA LABA RUGI ===== -->
+                    <div class="section-label section-margin-top">
+                        📊 Ringkasan Laba Rugi
+                        <span class="sub">Tahun {{ new Date().getFullYear() }}</span>
+                    </div>
+
+                    <table class="result-table">
+                        <tr>
+                            <td class="label">Total Penjualan (27.c)</td>
+                            <td class="value">{{ formatRupiah(hasil.totalPenjualan || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Total Pengeluaran (26.f)</td>
+                            <td class="value">{{ formatRupiah(hasil.totalPengeluaran || 0) }}</td>
+                        </tr>
                         <tr class="highlight-row">
-                            <td class="label">💰 Laba Bersih (Owner) / Tahun</td>
-                            <td class="value profit profit-xl" :class="{'loss': (hasil.labaBersihTahunan || (hasil.totalPendapatan - hasil.totalPengeluaran)) < 0}">{{ formatRupiah(hasil.labaBersihTahunan || (hasil.totalPendapatan - hasil.totalPengeluaran)) }}</td>
+                            <td class="label">Laba Kotor (27.c - 26.b - 26.c)</td>
+                            <td class="value profit profit-lg" :class="{'loss': (hasil.labaKotor || 0) < 0}">
+                                {{ formatRupiah(hasil.labaKotor || 0) }}
+                            </td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td class="label">Laba Bersih (27.c - 26.f)</td>
+                            <td class="value profit profit-xl" :class="{'loss': (hasil.labaBersihTahunan || 0) < 0}">
+                                {{ formatRupiah(hasil.labaBersihTahunan || 0) }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="label-bold">Laba Bersih / Bulan</td>
-                            <td class="value profit" :class="{'loss': hasil.labaBersihBulanan < 0}">{{ formatRupiah(hasil.labaBersihBulanan || ((hasil.totalPendapatan - hasil.totalPengeluaran) / 12)) }}</td>
+                            <td class="label">Laba Bersih / Bulan</td>
+                            <td class="value profit" :class="{'loss': (hasil.labaBersihBulanan || 0) < 0}">
+                                {{ formatRupiah(hasil.labaBersihBulanan || 0) }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="label-bold">Laba Bersih / Hari</td>
-                            <td class="value profit" :class="{'loss': hasil.labaBersihHarian < 0}">{{ formatRupiah(hasil.labaBersihHarian || ((hasil.totalPendapatan - hasil.totalPengeluaran) / 365)) }}</td>
+                            <td class="label">Laba Bersih / Hari</td>
+                            <td class="value profit" :class="{'loss': (hasil.labaBersihHarian || 0) < 0}">
+                                {{ formatRupiah(hasil.labaBersihHarian || 0) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">Gross Profit Margin</td>
+                            <td class="value">{{ hasil.grossProfitMargin || 0 }}%</td>
                         </tr>
                         <tr>
                             <td class="label">Net Profit Margin</td>
-                            <td class="value">{{ hasil.netProfitMargin && hasil.netProfitMargin !== 'NaN' ? hasil.netProfitMargin + '%' : (hasil.totalPendapatan > 0 ? (((hasil.totalPendapatan - hasil.totalPengeluaran) / hasil.totalPendapatan) * 100).toFixed(1) + '%' : '0%') }}</td>
+                            <td class="value">{{ hasil.netProfitMargin || 0 }}%</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Return on Assets (ROA)</td>
+                            <td class="value">{{ roa }}%</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Kekayaan Bersih (Equity)</td>
+                            <td class="value">{{ formatRupiah(kekayaanBersih || 0) }}</td>
                         </tr>
                         <tr class="note-row">
                             <td colspan="2" class="note">
@@ -1936,7 +2168,7 @@
                         </tr>
                     </table>
 
-                    <!-- BEP Box -->
+                    <!-- ===== BEP ===== -->
                     <div class="bep-box">
                         <div class="bep-title">🎯 Break Even Point (Titik Impas)</div>
                         <div class="bep-value">{{ bep.pesan }}</div>
@@ -1946,9 +2178,7 @@
                         </div>
                     </div>
 
-                    <hr class="divider" />
-
-                    <!-- Dashboard -->
+                    <!-- ===== DASHBOARD ===== -->
                     <div>
                         <div class="dashboard-header">
                             <span class="dashboard-title">📌 Dashboard Keuangan</span>
@@ -1958,40 +2188,44 @@
                         <div class="dashboard-grid">
                             <div class="dash-item primary">
                                 <div class="dash-label">Omzet / Thn</div>
-                                <div class="dash-value blue">{{ formatRupiahSingkat(hasil.totalPenjualan) }}</div>
+                                <div class="dash-value blue">{{ formatRupiahSingkat(hasil.totalPenjualan || 0) }}</div>
                             </div>
                             <div class="dash-item">
                                 <div class="dash-label">Laba Kotor</div>
-                                <div class="dash-value green" :class="{'loss': hasil.labaKotor < 0}">{{ formatRupiahSingkat(hasil.labaKotor) }}</div>
+                                <div class="dash-value green" :class="{'loss': (hasil.labaKotor || 0) < 0}">
+                                    {{ formatRupiahSingkat(hasil.labaKotor || 0) }}
+                                </div>
                             </div>
                             <div class="dash-item success profit-highlight">
                                 <div class="dash-label">Laba Bersih</div>
-                                <div class="dash-value green" :class="{'loss': hasil.labaBersihTahunan < 0}">{{ formatRupiahSingkat(hasil.labaBersihTahunan) }}</div>
+                                <div class="dash-value green" :class="{'loss': (hasil.labaBersihTahunan || 0) < 0}">
+                                    {{ formatRupiahSingkat(hasil.labaBersihTahunan || 0) }}
+                                </div>
                             </div>
                             <div class="dash-item warning">
                                 <div class="dash-label">Margin Laba</div>
-                                <div class="dash-value gold">{{ hasil.netProfitMargin }}%</div>
+                                <div class="dash-value gold">{{ hasil.netProfitMargin || 0 }}%</div>
                             </div>
                             <div class="dash-item">
                                 <div class="dash-label">Modal Kerja</div>
-                                <div class="dash-value blue">{{ formatRupiahSingkat(modalKerja) }}</div>
+                                <div class="dash-value blue">{{ formatRupiahSingkat(modalKerja || 0) }}</div>
                             </div>
                             <div class="dash-item danger">
                                 <div class="dash-label">Pajak</div>
-                                <div class="dash-value red">{{ formatRupiahSingkat(perhitunganPajak.totalPajak) }}</div>
+                                <div class="dash-value red">{{ formatRupiahSingkat(perhitunganPajak.totalPajak || 0) }}</div>
                             </div>
                             <div class="dash-item primary">
-                                <div class="dash-label">BEP (Rp)</div>
-                                <div class="dash-value">{{ bep.rupiah === Infinity ? '∞' : formatRupiahSingkat(bep.rupiah) }}</div>
+                                <div class="dash-label">Total Aset</div>
+                                <div class="dash-value">{{ formatRupiahSingkat(totalAset || 0) }}</div>
                             </div>
                             <div class="dash-item">
-                                <div class="dash-label">Penyusutan</div>
-                                <div class="dash-value">{{ formatRupiahSingkat(totalPenyusutanTahunan) }}</div>
+                                <div class="dash-label">ROA</div>
+                                <div class="dash-value">{{ roa }}%</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Detail Rincian -->
+                    <!-- ===== DETAIL RINCIAN ===== -->
                     <div class="detail-box">
                         <div class="detail-title">📋 Rincian Biaya Operasional</div>
                         <div v-for="item in biayaOperasional" :key="'rincian-op-' + item._uid" class="detail-row">
@@ -2017,14 +2251,38 @@
                     </div>
 
                     <div class="detail-box detail-mt">
-                        <div class="detail-title">📋 Rincian Penyusutan Aset</div>
-                        <div v-for="item in aset" :key="'rincian-aset-' + item._uid" class="detail-row">
-                            <span class="label">{{ item.nama }} ({{ item.umurEkonomis }} th)</span>
-                            <span class="value">{{ formatRupiah(item.nilai / item.umurEkonomis) }}</span>
+                        <div class="detail-title">🏠 Rincian Aset</div>
+                        <div class="detail-row">
+                            <span class="label">🌍 Tanah</span>
+                            <span class="value">{{ formatRupiah(asetTanah) }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">🏗️ Bangunan</span>
+                            <span class="value">{{ formatRupiah(asetBangunan) }}</span>
+                        </div>
+                        <div v-for="item in asetLainnya" :key="'rincian-aset-lain-' + item._uid" class="detail-row">
+                            <span class="label">📦 {{ item.nama }}</span>
+                            <span class="value">{{ formatRupiah(item.nilai) }}</span>
                         </div>
                         <div class="detail-total">
-                            <span>Total Penyusutan</span>
-                            <span class="value">{{ formatRupiah(totalPenyusutanTahunan) }}</span>
+                            <span>Total Aset</span>
+                            <span class="value">{{ formatRupiah(totalAset) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-box detail-mt">
+                        <div class="detail-title">📉 Penyusutan Aset</div>
+                        <div class="detail-row">
+                            <span class="label">Metode</span>
+                            <span class="value">Garis Lurus</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Umur Ekonomis</span>
+                            <span class="value">{{ umurEkonomisAset }} tahun</span>
+                        </div>
+                        <div class="detail-total">
+                            <span>Penyusutan / Tahun</span>
+                            <span class="value">{{ formatRupiah(totalPenyusutanAsetTahunan) }}</span>
                         </div>
                     </div>
                 </div>
@@ -2819,6 +3077,10 @@
                             <td class="label">Return on Sales</td>
                             <td class="value">{{ rasioKeuangan.returnOnSales }}%</td>
                         </tr>
+                        <tr>
+                            <td class="label">Return on Assets (ROA)</td>
+                            <td class="value">{{ roa }}%</td>
+                        </tr>
 
                         <tr class="space-row"><td colspan="2"></td></tr>
                         <tr>
@@ -2847,7 +3109,8 @@
                         <strong>📊 Interpretasi Rasio</strong><br />
                         • Gross Profit Margin > 30%: Baik untuk usaha kecil<br />
                         • Net Profit Margin > 10%: Usaha menguntungkan<br />
-                        • Operating Ratio < 80%: Efisien dalam operasional
+                        • Operating Ratio < 80%: Efisien dalam operasional<br />
+                        • ROA > 10%: Penggunaan aset efektif
                     </div>
                 </div>
 
@@ -2922,6 +3185,8 @@
                 this.hitung();
                 this.hitungKeluarga();
                 this.applyRecommendations();
+                this.setDefaultAsetTanahBangunan();
+                this.setDefaultAsetLainnya();
             },
             data: {
                 // ===== DATA HPP (9 Kategori SE2026) =====
@@ -3026,9 +3291,160 @@
                     'Usaha Budi Daya Tomat': { hpp: 30, kategori: 'pertanian' }
                 },
 
-                // ===== REKOMENDASI BIAYA (Disesuaikan dengan Kota Baru/Maju) =====
+                // ===== DATA ASET DEFAULT =====
+                dataAsetDefault: {
+                    // Industri Pengolahan
+                    'Pembuatan Makanan & Minuman': {
+                        tanah: 250000000,
+                        bangunan: 300000000,
+                        lainnya: [
+                            { nama: 'Mesin Produksi', nilai: 150000000 },
+                            { nama: 'Peralatan Dapur', nilai: 50000000 },
+                            { nama: 'Kendaraan Operasional', nilai: 80000000 },
+                            { nama: 'Inventaris Kantor', nilai: 20000000 }
+                        ]
+                    },
+                    'Pengolahan Kayu & Furnitur': {
+                        tanah: 200000000,
+                        bangunan: 250000000,
+                        lainnya: [
+                            { nama: 'Mesin Pengolahan Kayu', nilai: 120000000 },
+                            { nama: 'Peralatan Kerja', nilai: 30000000 },
+                            { nama: 'Kendaraan Angkut', nilai: 70000000 },
+                            { nama: 'Inventaris', nilai: 15000000 }
+                        ]
+                    },
+                    // Konstruksi
+                    'Konstruksi Gedung': {
+                        tanah: 180000000,
+                        bangunan: 200000000,
+                        lainnya: [
+                            { nama: 'Alat Berat', nilai: 200000000 },
+                            { nama: 'Peralatan Konstruksi', nilai: 80000000 },
+                            { nama: 'Kendaraan Proyek', nilai: 100000000 },
+                            { nama: 'Peralatan Kantor', nilai: 25000000 }
+                        ]
+                    },
+                    // Perdagangan
+                    'Perdagangan Besar (Grosir)': {
+                        tanah: 300000000,
+                        bangunan: 350000000,
+                        lainnya: [
+                            { nama: 'Kendaraan Logistik', nilai: 150000000 },
+                            { nama: 'Peralatan Gudang', nilai: 80000000 },
+                            { nama: 'Sistem Inventory', nilai: 50000000 },
+                            { nama: 'Inventaris', nilai: 20000000 }
+                        ]
+                    },
+                    'Toko Kelontong / Sembako': {
+                        tanah: 150000000,
+                        bangunan: 180000000,
+                        lainnya: [
+                            { nama: 'Rak & Display', nilai: 30000000 },
+                            { nama: 'Kendaraan Operasional', nilai: 60000000 },
+                            { nama: 'Peralatan Toko', nilai: 15000000 },
+                            { nama: 'Inventaris', nilai: 5000000 }
+                        ]
+                    },
+                    // Akomodasi & Makan Minum
+                    'Restoran / Rumah Makan': {
+                        tanah: 200000000,
+                        bangunan: 250000000,
+                        lainnya: [
+                            { nama: 'Peralatan Dapur', nilai: 80000000 },
+                            { nama: 'Perabotan Restoran', nilai: 50000000 },
+                            { nama: 'Kendaraan', nilai: 70000000 },
+                            { nama: 'Sistem Kasir', nilai: 15000000 }
+                        ]
+                    },
+                    'Kafe / Kedai Kopi': {
+                        tanah: 150000000,
+                        bangunan: 180000000,
+                        lainnya: [
+                            { nama: 'Peralatan Kopi', nilai: 40000000 },
+                            { nama: 'Perabotan Kafe', nilai: 30000000 },
+                            { nama: 'Kendaraan', nilai: 50000000 },
+                            { nama: 'Sistem Kasir', nilai: 10000000 }
+                        ]
+                    },
+                    // Informasi & Komunikasi
+                    'Pengembangan Perangkat Lunak (Software)': {
+                        tanah: 120000000,
+                        bangunan: 150000000,
+                        lainnya: [
+                            { nama: 'Server & Komputer', nilai: 100000000 },
+                            { nama: 'Jaringan & Infrastruktur', nilai: 50000000 },
+                            { nama: 'Software License', nilai: 30000000 },
+                            { nama: 'Inventaris', nilai: 10000000 }
+                        ]
+                    },
+                    // Profesional & Teknis
+                    'Jasa Akuntansi & Pajak': {
+                        tanah: 100000000,
+                        bangunan: 120000000,
+                        lainnya: [
+                            { nama: 'Komputer & Perangkat', nilai: 40000000 },
+                            { nama: 'Software Akuntansi', nilai: 25000000 },
+                            { nama: 'Perabotan Kantor', nilai: 20000000 },
+                            { nama: 'Kendaraan', nilai: 50000000 }
+                        ]
+                    },
+                    // Pendidikan
+                    'Lembaga Kursus & Bimbingan Belajar': {
+                        tanah: 130000000,
+                        bangunan: 160000000,
+                        lainnya: [
+                            { nama: 'Peralatan Belajar', nilai: 30000000 },
+                            { nama: 'Komputer & Prasarana', nilai: 40000000 },
+                            { nama: 'Perabotan', nilai: 20000000 },
+                            { nama: 'Kendaraan', nilai: 50000000 }
+                        ]
+                    },
+                    // Transportasi
+                    'Usaha Ojek / Motor Taxi': {
+                        tanah: 50000000,
+                        bangunan: 60000000,
+                        lainnya: [
+                            { nama: 'Motor Operasional', nilai: 25000000 },
+                            { nama: 'Perlengkapan', nilai: 5000000 },
+                            { nama: 'Inventaris', nilai: 3000000 }
+                        ]
+                    },
+                    'Usaha Angkot': {
+                        tanah: 70000000,
+                        bangunan: 80000000,
+                        lainnya: [
+                            { nama: 'Kendaraan Angkot', nilai: 100000000 },
+                            { nama: 'Perlengkapan', nilai: 10000000 },
+                            { nama: 'Inventaris', nilai: 5000000 }
+                        ]
+                    },
+                    // Pertanian
+                    'Usaha Budi Daya Sayuran': {
+                        tanah: 200000000,
+                        bangunan: 150000000,
+                        lainnya: [
+                            { nama: 'Peralatan Pertanian', nilai: 50000000 },
+                            { nama: 'Sistem Irigasi', nilai: 30000000 },
+                            { nama: 'Kendaraan', nilai: 60000000 },
+                            { nama: 'Inventaris', nilai: 10000000 }
+                        ]
+                    },
+                    'Usaha Budi Daya Kelapa Sawit': {
+                        tanah: 500000000,
+                        bangunan: 200000000,
+                        lainnya: [
+                            { nama: 'Peralatan Pertanian', nilai: 80000000 },
+                            { nama: 'Kendaraan', nilai: 100000000 },
+                            { nama: 'Gudang', nilai: 50000000 },
+                            { nama: 'Inventaris', nilai: 20000000 }
+                        ]
+                    }
+                },
+
+                // ===== REKOMENDASI BIAYA =====
                 rekomendasiBiaya: {
-                    // Industri Pengolahan - Biaya di kota baru/maju
+                    // Industri Pengolahan
                     'Pembuatan Makanan & Minuman': {
                         operasional: [
                             { nama: 'Listrik', nilai: 450000, frekuensi: 1, jenis: 'bulanan' },
@@ -3057,8 +3473,7 @@
                             { nama: 'Perizinan Usaha', nilai: 100000 }
                         ]
                     },
-
-                    // Konstruksi - Biaya di kota baru/maju
+                    // Konstruksi
                     'Konstruksi Gedung': {
                         operasional: [
                             { nama: 'Listrik', nilai: 250000, frekuensi: 1, jenis: 'bulanan' },
@@ -3073,8 +3488,7 @@
                             { nama: 'Keamanan', nilai: 100000 }
                         ]
                     },
-
-                    // Perdagangan - Biaya di kota baru/maju
+                    // Perdagangan
                     'Perdagangan Besar (Grosir)': {
                         operasional: [
                             { nama: 'Listrik', nilai: 450000, frekuensi: 1, jenis: 'bulanan' },
@@ -3092,7 +3506,7 @@
                     'Toko Kelontong / Sembako': {
                         operasional: [
                             { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'Internet', nilai: 120000, frekuensi: 1, jenis: 'bulanan' },
+                            { nome: 'Internet', nilai: 120000, frekuensi: 1, jenis: 'bulanan' },
                             { nama: 'Sewa Tempat', nilai: 350000, frekuensi: 1, jenis: 'bulanan' },
                             { nama: 'Transportasi', nilai: 100000, frekuensi: 2, jenis: 'mingguan' }
                         ],
@@ -3101,8 +3515,7 @@
                             { nama: 'Iuran Kebersihan', nilai: 30000 }
                         ]
                     },
-
-                    // Akomodasi & Makan Minum - Biaya di kota baru/maju
+                    // Akomodasi & Makan Minum
                     'Restoran / Rumah Makan': {
                         operasional: [
                             { nama: 'Listrik', nilai: 500000, frekuensi: 1, jenis: 'bulanan' },
@@ -3131,8 +3544,7 @@
                             { nama: 'Pajak Hiburan', nilai: 75000 }
                         ]
                     },
-
-                    // Informasi & Komunikasi - Biaya di kota baru/maju
+                    // Informasi & Komunikasi
                     'Pengembangan Perangkat Lunak (Software)': {
                         operasional: [
                             { nama: 'Listrik', nilai: 180000, frekuensi: 1, jenis: 'bulanan' },
@@ -3146,8 +3558,7 @@
                             { nama: 'Perizinan', nilai: 100000 }
                         ]
                     },
-
-                    // Profesional & Teknis - Biaya di kota baru/maju
+                    // Profesional & Teknis
                     'Jasa Akuntansi & Pajak': {
                         operasional: [
                             { nama: 'Sewa Kantor', nilai: 450000, frekuensi: 1, jenis: 'bulanan' },
@@ -3162,8 +3573,7 @@
                             { nama: 'Perizinan', nilai: 100000 }
                         ]
                     },
-
-                    // Pendidikan - Biaya di kota baru/maju
+                    // Pendidikan
                     'Lembaga Kursus & Bimbingan Belajar': {
                         operasional: [
                             { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
@@ -3178,8 +3588,7 @@
                             { nama: 'Sumbangan Pendidikan', nilai: 75000 }
                         ]
                     },
-
-                    // Transportasi / Ojek - Biaya di kota baru/maju
+                    // Transportasi
                     'Usaha Ojek / Motor Taxi': {
                         operasional: [
                             { nama: 'Bensin', nilai: 50000, frekuensi: 1, jenis: 'harian' },
@@ -3191,16 +3600,6 @@
                             { nama: 'Iuran RT/RW', nilai: 25000 },
                             { nama: 'Perizinan', nilai: 50000 },
                             { nama: 'SIM', nilai: 30000 }
-                        ]
-                    },
-                    'Usaha Becak': {
-                        operasional: [
-                            { nama: 'Bensin', nilai: 30000, frekuensi: 1, jenis: 'harian' },
-                            { nama: 'Perawatan Becak', nilai: 100000, frekuensi: 1, jenis: 'bulanan' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 50000 }
                         ]
                     },
                     'Usaha Angkot': {
@@ -3215,83 +3614,19 @@
                             { nama: 'Perizinan', nilai: 100000 }
                         ]
                     },
-                    'Jasa Pengantaran (Delivery)': {
-                        operasional: [
-                            { nama: 'Bensin', nilai: 40000, frekuensi: 1, jenis: 'harian' },
-                            { nama: 'Pulsa/Internet', nilai: 75000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'Perawatan Motor', nilai: 100000, frekuensi: 1, jenis: 'bulanan' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 50000 }
-                        ]
-                    },
-                    'Penyewaan Sepeda Motor': {
-                        operasional: [
-                            { nama: 'Perawatan Motor', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'Pajak Kendaraan', nilai: 150000, frekuensi: 1, jenis: 'tahunan' },
-                            { nama: 'Asuransi', nilai: 100000, frekuensi: 1, jenis: 'tahunan' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 75000 }
-                        ]
-                    },
-
-                    // Pertanian - Biaya di kota baru/maju
+                    // Pertanian
                     'Usaha Budi Daya Sayuran': {
                         operasional: [
                             { nama: 'Benih/Semai', nilai: 200000, frekuensi: 1, jenis: 'musim' },
                             { nama: 'Pupuk', nilai: 300000, frekuensi: 1, jenis: 'musim' },
                             { nama: 'Pestisida', nilai: 150000, frekuensi: 1, jenis: 'musim' },
                             { nama: 'Air Irigasi', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'tenaga Kerja', nilai: 500000, frekuensi: 1, jenis: 'musim' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 50000 },
-                            { nama: 'Transportasi', nilai: 100000 }
-                        ]
-                    },
-                    'Usaha Budi Daya Cabe Merah': {
-                        operasional: [
-                            { nama: 'Benih/Semai', nilai: 250000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pupuk', nilai: 400000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pestisida', nilai: 200000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Air Irigasi', nilai: 150000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'Tenaga Kerja', nilai: 600000, frekuensi: 1, jenis: 'musim' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 50000 },
-                            { nama: 'Transportasi', nilai: 150000 }
-                        ]
-                    },
-                    'Usaha Budi Daya Padi/Gabah': {
-                        operasional: [
-                            { nama: 'Benih', nilai: 300000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pupuk', nilai: 500000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pestisida', nilai: 200000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Tenaga Kerja', nilai: 800000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Alat Pertanian', nilai: 200000, frekuensi: 1, jenis: 'musim' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 75000 },
-                            { nama: 'Transportasi', nilai: 200000 }
-                        ]
-                    },
-                    'Usaha Budi Daya Jagung': {
-                        operasional: [
-                            { nama: 'Benih', nilai: 250000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pupuk', nilai: 400000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pestisida', nilai: 150000, frekuensi: 1, jenis: 'musim' },
                             { nama: 'Tenaga Kerja', nilai: 500000, frekuensi: 1, jenis: 'musim' }
                         ],
                         nonOperasional: [
                             { nama: 'Iuran RT/RW', nilai: 25000 },
                             { nama: 'Perizinan', nilai: 50000 },
-                            { nama: 'Transportasi', nilai: 150000 }
+                            { nama: 'Transportasi', nilai: 100000 }
                         ]
                     },
                     'Usaha Budi Daya Kelapa Sawit': {
@@ -3305,45 +3640,6 @@
                             { nama: 'Iuran RT/RW', nilai: 50000 },
                             { nama: 'Perizinan', nilai: 100000 },
                             { nama: 'Transportasi', nilai: 300000 }
-                        ]
-                    },
-                    'Usaha Budi Daya Kopi & Kakao': {
-                        operasional: [
-                            { nama: 'Benih', nilai: 300000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pupuk', nilai: 400000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Tenaga Kerja', nilai: 700000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Perawatan Tanaman', nilai: 200000, frekuensi: 1, jenis: 'musim' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 75000 },
-                            { nama: 'Transportasi', nilai: 200000 }
-                        ]
-                    },
-                    'Usaha Budi Daya Jamur': {
-                        operasional: [
-                            { nama: 'Bibit Jamur', nilai: 200000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Sekam/Kompos', nilai: 150000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Listrik', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'Air', nilai: 50000, frekuensi: 1, jenis: 'bulanan' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 50000 }
-                        ]
-                    },
-                    'Usaha Budi Daya Sayuran Organik': {
-                        operasional: [
-                            { nama: 'Benih Organik', nilai: 300000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pupuk Organik', nilai: 400000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Pestisida Organik', nilai: 200000, frekuensi: 1, jenis: 'musim' },
-                            { nama: 'Air Irigasi', nilai: 100000, frekuensi: 1, jenis: 'bulanan' },
-                            { nama: 'Tenaga Kerja', nilai: 600000, frekuensi: 1, jenis: 'musim' }
-                        ],
-                        nonOperasional: [
-                            { nama: 'Iuran RT/RW', nilai: 25000 },
-                            { nama: 'Perizinan', nilai: 75000 },
-                            { nama: 'Sertifikasi', nilai: 150000 }
                         ]
                     }
                 },
@@ -3384,9 +3680,20 @@
                     pendapatanLain: '0'
                 },
 
+                // ===== ASET =====
+                asetTanah: 0,
+                asetBangunan: 0,
+                asetLainnya: [],
+                displayAset: {
+                    tanah: '0',
+                    bangunan: '0'
+                },
+                umurEkonomisAset: 20,
+                luasTanahUsaha: 0,
+
+                // ===== BIAYA =====
                 biayaOperasional: [],
                 biayaNonOperasional: [],
-                aset: [],
 
                 hasil: {
                     penjualanTahunan: 0,
@@ -3425,32 +3732,193 @@
                 filteredProfesi: [],
                 listProfesi: [
                     { kode: '000', nama: 'Tidak Bekerja', gaji: 0 },
-                    { kode: '001', nama: 'Akuntan', gaji: 3200000 },
-                    { kode: '002', nama: 'Analis Keuangan', gaji: 3500000 },
-                    { kode: '003', nama: 'Apoteker', gaji: 3500000 },
-                    { kode: '004', nama: 'Arsitek', gaji: 4000000 },
-                    { kode: '005', nama: 'Bidan', gaji: 3500000 },
-                    { kode: '006', nama: 'Dokter Umum', gaji: 5000000 },
-                    { kode: '007', nama: 'Dosen', gaji: 4500000 },
-                    { kode: '008', nama: 'Guru', gaji: 3200000 },
-                    { kode: '009', nama: 'Konsultan', gaji: 5000000 },
-                    { kode: '010', nama: 'Manajer', gaji: 5000000 },
-                    { kode: '011', nama: 'Notaris', gaji: 5000000 },
-                    { kode: '012', nama: 'Pengacara', gaji: 4000000 },
-                    { kode: '013', nama: 'Perawat', gaji: 3500000 },
-                    { kode: '014', nama: 'Programer', gaji: 6000000 },
-                    { kode: '015', nama: 'Psikolog', gaji: 6000000 },
-                    { kode: '016', nama: 'Sekretaris', gaji: 3500000 },
-                    { kode: '017', nama: 'TNI', gaji: 4000000 },
-                    { kode: '018', nama: 'Polisi', gaji: 3500000 },
-                    { kode: '019', nama: 'PNS', gaji: 3500000 },
-                    { kode: '020', nama: 'Buruh', gaji: 2500000 },
-                    { kode: '021', nama: 'Pedagang', gaji: 3000000 },
-                    { kode: '022', nama: 'Petani', gaji: 2200000 },
-                    { kode: '023', nama: 'Nelayan', gaji: 2500000 },
-                    { kode: '024', nama: 'Sopir', gaji: 2800000 },
-                    { kode: '025', nama: 'Tukang Bangunan', gaji: 3000000 },
-                    { kode: '999', nama: 'Lainnya', gaji: 3000000 }
+                    { kode: '001', nama: 'Agen Tenaga Kerja', gaji: 3200000 },
+                    { kode: '002', nama: 'Ahli Sejarah dan Cagar Budaya', gaji: 3500000 },
+                    { kode: '003', nama: 'Akuntan', gaji: 3200000 },
+                    { kode: '004', nama: 'Analis Keuangan', gaji: 3500000 },
+                    { kode: '005', nama: 'Anggota DPD', gaji: 5000000 },
+                    { kode: '006', nama: 'Anggota DPR RI/MPR RI', gaji: 5500000 },
+                    { kode: '007', nama: 'Anggota DPRD Provinsi/Kabupaten/Kota', gaji: 4500000 },
+                    { kode: '008', nama: 'Apoteker', gaji: 3500000 },
+                    { kode: '009', nama: 'Arsiparis', gaji: 3200000 },
+                    { kode: '010', nama: 'Arsitek', gaji: 4000000 },
+                    { kode: '011', nama: 'Asisten Apoteker', gaji: 3500000 },
+                    { kode: '012', nama: 'Atase', gaji: 5000000 },
+                    { kode: '013', nama: 'Atlet/Olahragawan', gaji: 3200000 },
+                    { kode: '014', nama: 'Awak Kapal', gaji: 3000000 },
+                    { kode: '015', nama: 'Bhikkhu', gaji: 2000000 },
+                    { kode: '016', nama: 'Biarawan', gaji: 2000000 },
+                    { kode: '017', nama: 'Biarawati', gaji: 2000000 },
+                    { kode: '018', nama: 'Bidan', gaji: 3500000 },
+                    { kode: '019', nama: 'Broker/Pialang Saham', gaji: 6000000 },
+                    { kode: '020', nama: 'Bupati', gaji: 8500000 },
+                    { kode: '021', nama: 'Buruh Angkut Barang', gaji: 2500000 },
+                    { kode: '022', nama: 'Buruh Bangunan', gaji: 3000000 },
+                    { kode: '023', nama: 'Buruh Industri', gaji: 2800000 },
+                    { kode: '024', nama: 'Buruh Perikanan', gaji: 2500000 },
+                    { kode: '025', nama: 'Buruh Pertambangan', gaji: 3500000 },
+                    { kode: '026', nama: 'Buruh Pertanian/Kehutanan', gaji: 2200000 },
+                    { kode: '027', nama: 'Buruh Peternakan', gaji: 2200000 },
+                    { kode: '028', nama: 'Camat', gaji: 5000000 },
+                    { kode: '029', nama: 'Chef', gaji: 4000000 },
+                    { kode: '030', nama: 'Chief Executive Officer (CEO)', gaji: 10000000 },
+                    { kode: '031', nama: 'Dokter Gigi', gaji: 6000000 },
+                    { kode: '032', nama: 'Dokter Hewan', gaji: 4000000 },
+                    { kode: '033', nama: 'Dokter Spesialis', gaji: 8000000 },
+                    { kode: '034', nama: 'Dokter Umum', gaji: 5000000 },
+                    { kode: '035', nama: 'Dosen', gaji: 4500000 },
+                    { kode: '036', nama: 'Duta Besar', gaji: 7000000 },
+                    { kode: '037', nama: 'Empu Keris', gaji: 3500000 },
+                    { kode: '038', nama: 'Fotografer', gaji: 3000000 },
+                    { kode: '039', nama: 'Gembala', gaji: 2000000 },
+                    { kode: '040', nama: 'Gubernur', gaji: 7500000 },
+                    { kode: '041', nama: 'Guru', gaji: 3200000 },
+                    { kode: '042', nama: 'Hakim', gaji: 5000000 },
+                    { kode: '043', nama: 'Hakim Agung', gaji: 7000000 },
+                    { kode: '044', nama: 'Imam Masjid', gaji: 2500000 },
+                    { kode: '045', nama: 'Jaksa', gaji: 4500000 },
+                    { kode: '046', nama: 'Jaksa Agung', gaji: 6500000 },
+                    { kode: '047', nama: 'Jiaosheng', gaji: 2800000 },
+                    { kode: '048', nama: 'Juru Gambar Teknik/Drafter', gaji: 3000000 },
+                    { kode: '049', nama: 'Kameramen', gaji: 3500000 },
+                    { kode: '050', nama: 'Kapten Kapal', gaji: 4000000 },
+                    { kode: '051', nama: 'Kasir', gaji: 2600000 },
+                    { kode: '052', nama: 'Kepala Desa', gaji: 2500000 },
+                    { kode: '053', nama: 'Ketua Adat', gaji: 3000000 },
+                    { kode: '054', nama: 'Ketua Organisasi', gaji: 4000000 },
+                    { kode: '055', nama: 'Konsultan', gaji: 5000000 },
+                    { kode: '056', nama: 'Kreator Konten', gaji: 3000000 },
+                    { kode: '057', nama: 'Kurator', gaji: 4000000 },
+                    { kode: '058', nama: 'Kurir', gaji: 2500000 },
+                    { kode: '059', nama: 'Lurah', gaji: 3500000 },
+                    { kode: '060', nama: 'Makelar', gaji: 5000000 },
+                    { kode: '061', nama: 'Manajer', gaji: 5000000 },
+                    { kode: '062', nama: 'Masinis', gaji: 3000000 },
+                    { kode: '063', nama: 'Mekanik', gaji: 2800000 },
+                    { kode: '064', nama: 'Menteri/Kepala Badan (setingkat Menteri)', gaji: 8500000 },
+                    { kode: '064a', nama: 'Wakil Menteri/Wakil Kepala Badan', gaji: 7500000 },
+                    { kode: '065', nama: 'Nakhoda', gaji: 4500000 },
+                    { kode: '066', nama: 'Nelayan', gaji: 2500000 },
+                    { kode: '067', nama: 'Notaris', gaji: 5000000 },
+                    { kode: '068', nama: 'Operator Layanan Pelanggan (Customer Service)', gaji: 2800000 },
+                    { kode: '069', nama: 'Operator Mesin', gaji: 2800000 },
+                    { kode: '070', nama: 'Pandita', gaji: 3000000 },
+                    { kode: '071', nama: 'Panitera Pengadilan', gaji: 4500000 },
+                    { kode: '072', nama: 'Paraja', gaji: 3000000 },
+                    { kode: '073', nama: 'Paranormal', gaji: 3500000 },
+                    { kode: '074', nama: 'Pastor', gaji: 3000000 },
+                    { kode: '075', nama: 'Pedagang', gaji: 3000000 },
+                    { kode: '076', nama: 'Pedagang Asongan/Keliling Makanan', gaji: 2000000 },
+                    { kode: '077', nama: 'Pedagang Asongan/Keliling Nonmakanan', gaji: 2200000 },
+                    { kode: '078', nama: 'Pedagang Online', gaji: 2800000 },
+                    { kode: '079', nama: 'Pegawai Pemerintah dengan Perjanjian Kerja (PPPK)', gaji: 3500000 },
+                    { kode: '080', nama: 'Pekerja Garmen/Konveksi', gaji: 2500000 },
+                    { kode: '081', nama: 'Pekerja Percetakan', gaji: 2800000 },
+                    { kode: '082', nama: 'Pekerja Profesional Penjualan (agen asuransi, sales)', gaji: 3000000 },
+                    { kode: '083', nama: 'Pekerja Sosial', gaji: 3200000 },
+                    { kode: '084', nama: 'Pelaku Ekosistem Musik', gaji: 3200000 },
+                    { kode: '085', nama: 'Pelaku Ekosistem Perfilman', gaji: 3500000 },
+                    { kode: '086', nama: 'Pelaku Ekosistem Seni Pertunjukan', gaji: 3000000 },
+                    { kode: '087', nama: 'Pelaku Ekosistem Seni Rupa dan Kriya', gaji: 2800000 },
+                    { kode: '088', nama: 'Pelatih/Instruktur Olahraga', gaji: 3500000 },
+                    { kode: '089', nama: 'Pelayan Toko', gaji: 2500000 },
+                    { kode: '090', nama: 'Pembantu/Asisten Rumah Tangga', gaji: 2200000 },
+                    { kode: '091', nama: 'Pemberi Pinjaman', gaji: 3200000 },
+                    { kode: '092', nama: 'Pembuat Makanan/Juru Masak', gaji: 2800000 },
+                    { kode: '093', nama: 'Pembuat Minuman (Barista, Bartender, dll)', gaji: 2500000 },
+                    { kode: '094', nama: 'Pembuat Rokok/Cerutu/Tembakau Gulung', gaji: 2500000 },
+                    { kode: '095', nama: 'Pembuat Sepatu dan Tas', gaji: 2500000 },
+                    { kode: '096', nama: 'Pembudi Daya Ikan dan Biota Air Lainnya', gaji: 2800000 },
+                    { kode: '097', nama: 'Pemulung', gaji: 2000000 },
+                    { kode: '098', nama: 'Penagih Hutang (Debt Collector)', gaji: 3000000 },
+                    { kode: '099', nama: 'Penasihat Spiritual', gaji: 3000000 },
+                    { kode: '100', nama: 'Penata Busana', gaji: 3500000 },
+                    { kode: '101', nama: 'Penata Rambut', gaji: 3000000 },
+                    { kode: '102', nama: 'Penata Rias', gaji: 3500000 },
+                    { kode: '103', nama: 'Penata Suara', gaji: 3500000 },
+                    { kode: '104', nama: 'Pendeta', gaji: 3000000 },
+                    { kode: '105', nama: 'Peneliti', gaji: 4000000 },
+                    { kode: '106', nama: 'Penerjemah', gaji: 3200000 },
+                    { kode: '107', nama: 'Pengacara', gaji: 4000000 },
+                    { kode: '108', nama: 'Pengasuh Anak (Baby Sitter)', gaji: 2200000 },
+                    { kode: '109', nama: 'Pengelola Gedung/Properti', gaji: 3000000 },
+                    { kode: '110', nama: 'Pengemudi Ojek Online', gaji: 2800000 },
+                    { kode: '111', nama: 'Pengemudi Ojek Pangkalan', gaji: 2500000 },
+                    { kode: '112', nama: 'Pengepul', gaji: 2800000 },
+                    { kode: '113', nama: 'Penjaga Keamanan/Satpam', gaji: 2500000 },
+                    { kode: '114', nama: 'Penjahit', gaji: 2500000 },
+                    { kode: '115', nama: 'Penulis', gaji: 4000000 },
+                    { kode: '116', nama: 'Penyelenggara Acara (Event Organizer/EO)', gaji: 4500000 },
+                    { kode: '117', nama: 'Penyiar Radio', gaji: 3000000 },
+                    { kode: '118', nama: 'Penyiar Televisi', gaji: 4000000 },
+                    { kode: '119', nama: 'Perajin Batu', gaji: 2800000 },
+                    { kode: '120', nama: 'Perajin Kayu, Bambu, dan Anyaman', gaji: 2500000 },
+                    { kode: '121', nama: 'Perajin Kulit dan Tekstil', gaji: 2500000 },
+                    { kode: '122', nama: 'Perajin Logam', gaji: 2800000 },
+                    { kode: '123', nama: 'Perajin Perhiasan', gaji: 3500000 },
+                    { kode: '124', nama: 'Perajin Tembikar/Keramik', gaji: 2500000 },
+                    { kode: '125', nama: 'Peramal', gaji: 3000000 },
+                    { kode: '126', nama: 'Perancang Busana/Desainer', gaji: 4000000 },
+                    { kode: '127', nama: 'Perangkat Desa', gaji: 2500000 },
+                    { kode: '128', nama: 'Perawat', gaji: 3500000 },
+                    { kode: '129', nama: 'Petani/Pekebun/Petani Hutan', gaji: 2200000 },
+                    { kode: '130', nama: 'Peternak', gaji: 2500000 },
+                    { kode: '131', nama: 'Petugas Pemadam Kebakaran', gaji: 3500000 },
+                    { kode: '132', nama: 'Petugas Stasiun Pengisian Bahan Bakar (SPBU)', gaji: 2800000 },
+                    { kode: '133', nama: 'Pilot', gaji: 10000000 },
+                    { kode: '134', nama: 'Pinandita', gaji: 2500000 },
+                    { kode: '135', nama: 'PNS Fungsional Tertentu', gaji: 4000000 },
+                    { kode: '136', nama: 'PNS Fungsional Umum', gaji: 3500000 },
+                    { kode: '137', nama: 'PNS Struktural', gaji: 4000000 },
+                    { kode: '138', nama: 'Polisi', gaji: 3500000 },
+                    { kode: '139', nama: 'Pramugara/i', gaji: 6000000 },
+                    { kode: '140', nama: 'Pramusaji', gaji: 2500000 },
+                    { kode: '141', nama: 'Presiden', gaji: 12000000 },
+                    { kode: '142', nama: 'Programer', gaji: 6000000 },
+                    { kode: '143', nama: 'Psikiater', gaji: 10000000 },
+                    { kode: '144', nama: 'Psikolog', gaji: 6000000 },
+                    { kode: '145', nama: 'Pustakawan', gaji: 3000000 },
+                    { kode: '146', nama: 'Resepsionis', gaji: 2800000 },
+                    { kode: '147', nama: 'Sekretaris', gaji: 3500000 },
+                    { kode: '148', nama: 'Seniman/Artis', gaji: 4000000 },
+                    { kode: '149', nama: 'Sopir', gaji: 2800000 },
+                    { kode: '150', nama: 'Supervisor/Mandor', gaji: 4000000 },
+                    { kode: '151', nama: 'Tabib', gaji: 3000000 },
+                    { kode: '152', nama: 'Teknisi', gaji: 3500000 },
+                    { kode: '153', nama: 'Teller Bank', gaji: 3000000 },
+                    { kode: '154', nama: 'Tenaga Cuci', gaji: 2200000 },
+                    { kode: '155', nama: 'Tenaga Humas', gaji: 3500000 },
+                    { kode: '156', nama: 'Tenaga Kebersihan', gaji: 2200000 },
+                    { kode: '157', nama: 'Tenaga Tata Usaha', gaji: 3000000 },
+                    { kode: '158', nama: 'Tentara Nasional Indonesia (TNI)', gaji: 4000000 },
+                    { kode: '159', nama: 'Tukang Bangunan', gaji: 3000000 },
+                    { kode: '160', nama: 'Tukang Cat', gaji: 2800000 },
+                    { kode: '161', nama: 'Tukang Cukur', gaji: 2500000 },
+                    { kode: '162', nama: 'Tukang Fotokopi', gaji: 2500000 },
+                    { kode: '163', nama: 'Tukang Gigi', gaji: 3500000 },
+                    { kode: '164', nama: 'Tukang Kaca', gaji: 2800000 },
+                    { kode: '165', nama: 'Tukang Kayu', gaji: 2800000 },
+                    { kode: '166', nama: 'Tukang Kunci', gaji: 2500000 },
+                    { kode: '167', nama: 'Tukang Las/Pandai Besi', gaji: 2800000 },
+                    { kode: '168', nama: 'Tukang Listrik', gaji: 3000000 },
+                    { kode: '169', nama: 'Tukang Pijat', gaji: 3000000 },
+                    { kode: '170', nama: 'Tukang Pipa', gaji: 2800000 },
+                    { kode: '171', nama: 'Tukang Sablon', gaji: 2500000 },
+                    { kode: '172', nama: 'Tukang Sol Sepatu', gaji: 2200000 },
+                    { kode: '173', nama: 'Tukang Tambal Ban', gaji: 2500000 },
+                    { kode: '174', nama: 'Tukang Tebang Kayu', gaji: 2800000 },
+                    { kode: '175', nama: 'Uskup', gaji: 4000000 },
+                    { kode: '176', nama: 'Ustaz/Mubalig', gaji: 3000000 },
+                    { kode: '177', nama: 'Wakil Bupati', gaji: 7500000 },
+                    { kode: '178', nama: 'Wakil Gubernur', gaji: 8000000 },
+                    { kode: '179', nama: 'Wakil Presiden', gaji: 12000000 },
+                    { kode: '180', nama: 'Wakil Walikota', gaji: 7500000 },
+                    { kode: '181', nama: 'Walikota', gaji: 8500000 },
+                    { kode: '182', nama: 'Wartawan', gaji: 4000000 },
+                    { kode: '183', nama: 'Wenshi', gaji: 3000000 },
+                    { kode: '184', nama: 'Xueshi', gaji: 3000000 },
+                    { kode: '185', nama: 'Lainnya (tuliskan)', gaji: 3000000 },
+                    { kode: '999', nama: 'Tidak Tahu', gaji: 0 }
                 ],
 
                 // ===== GAJI =====
@@ -3609,14 +4077,21 @@
                     }
                     return total;
                 },
-                totalPenyusutanTahunan() {
+                totalAsetLainnya() {
                     let total = 0;
-                    for (const item of this.aset) {
-                        if (item.nilai > 0 && item.umurEkonomis > 0) {
-                            total += item.nilai / item.umurEkonomis;
-                        }
+                    for (const item of this.asetLainnya) {
+                        total += item.nilai || 0;
                     }
                     return total;
+                },
+                totalAset() {
+                    return (this.asetTanah || 0) + (this.asetBangunan || 0) + this.totalAsetLainnya;
+                },
+                totalPenyusutanAsetTahunan() {
+                    if (this.umurEkonomisAset > 0 && this.totalAset > 0) {
+                        return this.totalAset / this.umurEkonomisAset;
+                    }
+                    return 0;
                 },
                 modalKerja() {
                     const penjualanHarian = this.input.penjualanHarian || 0;
@@ -3647,7 +4122,7 @@
                 },
                 bep() {
                     const biayaTetap = this.totalBiayaOperasionalTahunan + this.totalBiayaNonOperasionalTahunan + this
-                        .totalPenyusutanTahunan;
+                        .totalPenyusutanAsetTahunan;
                     const hargaJual = this.input.hargaJual || 0;
                     const biayaVariabel = this.input.biayaVariabel || 0;
 
@@ -3684,6 +4159,15 @@
                         workingCapitalRatio: ((this.modalKerja / penjualan) * 100).toFixed(1)
                     };
                 },
+                roa() {
+                    if (this.totalAset > 0 && this.hasil.labaBersihTahunan) {
+                        return ((this.hasil.labaBersihTahunan / this.totalAset) * 100).toFixed(1);
+                    }
+                    return '0';
+                },
+                kekayaanBersih() {
+                    return this.totalAset;
+                },
                 syncIncome() {
                     const labaUsahaBulan = this.hasil.labaBersihBulanan || 0;
                     const gajiBulan = this.hasilGaji.totalPerBulan || 0;
@@ -3718,7 +4202,7 @@
                 analisisSkenario() {
                     const penjualanNormal = this.hasil.totalPenjualan || 0;
                     const biayaTetap = this.totalBiayaOperasionalTahunan + this.totalBiayaNonOperasionalTahunan + this
-                        .totalPenyusutanTahunan;
+                        .totalPenyusutanAsetTahunan;
 
                     const hitungLaba = (penjualan) => {
                         const hpp = penjualan * (this.hppTerpilih / 100);
@@ -3766,6 +4250,81 @@
                         }
                     }
                     return result;
+                },
+
+                // ===== ASET METHODS =====
+                onInputAset(field, event) {
+                    let raw = event.target.value.replace(/[^0-9]/g, '');
+                    if (raw === '') raw = '0';
+                    const num = parseInt(raw, 10);
+                    this[`aset${field.charAt(0).toUpperCase() + field.slice(1)}`] = num;
+                    this.displayAset[field] = num.toLocaleString('id-ID');
+                    this.hitung();
+                },
+                onAsetLainInput(item, event) {
+                    let raw = event.target.value.replace(/[^0-9]/g, '');
+                    if (raw === '') raw = '0';
+                    const num = parseInt(raw, 10);
+                    item.nilai = num;
+                    item.displayNilai = num.toLocaleString('id-ID');
+                    this.hitung();
+                },
+                addAsetLainnya() {
+                    this.asetLainnya.push({
+                        _uid: this.uidCounter++,
+                        nama: 'Aset Lainnya',
+                        nilai: 0,
+                        displayNilai: '0',
+                        isRekomendasi: false
+                    });
+                    this.hitung();
+                },
+                removeAsetLainnya(index) {
+                    if (this.asetLainnya.length > 0) {
+                        this.asetLainnya.splice(index, 1);
+                        this.hitung();
+                    }
+                },
+                setDefaultAsetTanahBangunan() {
+                    const jenis = this.jenisUsahaTerpilih;
+                    const defaultAset = this.dataAsetDefault[jenis];
+
+                    if (defaultAset) {
+                        this.asetTanah = defaultAset.tanah || 0;
+                        this.displayAset.tanah = (defaultAset.tanah || 0).toLocaleString('id-ID');
+                        this.asetBangunan = defaultAset.bangunan || 0;
+                        this.displayAset.bangunan = (defaultAset.bangunan || 0).toLocaleString('id-ID');
+                    } else {
+                        this.asetTanah = 100000000;
+                        this.displayAset.tanah = '100.000.000';
+                        this.asetBangunan = 150000000;
+                        this.displayAset.bangunan = '150.000.000';
+                    }
+                    this.hitung();
+                },
+                setDefaultAsetLainnya() {
+                    const jenis = this.jenisUsahaTerpilih;
+                    const defaultAset = this.dataAsetDefault[jenis];
+
+                    if (defaultAset && defaultAset.lainnya) {
+                        this.asetLainnya = defaultAset.lainnya.map(item => ({
+                            _uid: this.uidCounter++,
+                            nama: item.nama,
+                            nilai: item.nilai,
+                            displayNilai: item.nilai.toLocaleString('id-ID'),
+                            isRekomendasi: true
+                        }));
+                    } else {
+                        this.asetLainnya = [
+                            { _uid: this.uidCounter++, nama: 'Peralatan Usaha', nilai: 50000000,
+                                displayNilai: '50.000.000', isRekomendasi: true },
+                            { _uid: this.uidCounter++, nama: 'Kendaraan Operasional', nilai: 60000000,
+                                displayNilai: '60.000.000', isRekomendasi: true },
+                            { _uid: this.uidCounter++, nama: 'Inventaris', nilai: 15000000, displayNilai: '15.000.000',
+                                isRekomendasi: true }
+                        ];
+                    }
+                    this.hitung();
                 },
 
                 // ===== PROFESI =====
@@ -4037,20 +4596,6 @@
                     };
                     return values[item.nama] || item.displayNilai || '0';
                 },
-                getAsetExample(item) {
-                    const examples = {
-                        'Mesin': 'Mesin Produksi',
-                        'Kendaraan': 'Kendaraan Operasional',
-                        'Peralatan': 'Peralatan Kantor'
-                    };
-                    return examples[item.nama] || item.nama || 'Aset';
-                },
-                getAsetValue(item) {
-                    return item.displayNilai || '10.000.000';
-                },
-                getAsetUmur(item) {
-                    return item.umurEkonomis || '5';
-                },
 
                 // ===== INPUT HANDLERS =====
                 onInput(field, event) {
@@ -4070,14 +4615,6 @@
                     this.hitung();
                 },
                 onNonCostInput(item, event) {
-                    let raw = event.target.value.replace(/[^0-9]/g, '');
-                    if (raw === '') raw = '0';
-                    const num = parseInt(raw, 10);
-                    item.nilai = num;
-                    item.displayNilai = num.toLocaleString('id-ID');
-                    this.hitung();
-                },
-                onAsetInput(item, event) {
                     let raw = event.target.value.replace(/[^0-9]/g, '');
                     if (raw === '') raw = '0';
                     const num = parseInt(raw, 10);
@@ -4125,11 +4662,11 @@
                         ];
                     }
 
-                    if (this.aset.length === 0) {
-                        this.aset = [
-                            { _uid: this.uidCounter++, nama: 'Peralatan Usaha', nilai: 10000000, umurEkonomis: 5,
-                                displayNilai: '10.000.000' }
-                        ];
+                    if (this.asetLainnya.length === 0) {
+                        this.setDefaultAsetLainnya();
+                    }
+                    if (this.asetTanah === 0 && this.asetBangunan === 0) {
+                        this.setDefaultAsetTanahBangunan();
                     }
 
                     this.hitung();
@@ -4212,22 +4749,6 @@
                     }
                 },
 
-                // ===== ASET =====
-                tambahAset() {
-                    this.aset.push({
-                        _uid: this.uidCounter++,
-                        nama: 'Aset Baru',
-                        nilai: 0,
-                        umurEkonomis: 5,
-                        displayNilai: '0'
-                    });
-                    this.hitung();
-                },
-                removeAset(index) {
-                    this.aset.splice(index, 1);
-                    this.hitung();
-                },
-
                 // ===== PERHITUNGAN PRODUKSI =====
                 hitungBelanjaPeriode() {
                     const p = this.input;
@@ -4266,6 +4787,8 @@
                 onJenisUsahaChange() {
                     this.updateHPP();
                     this.applyRecommendations();
+                    this.setDefaultAsetTanahBangunan();
+                    this.setDefaultAsetLainnya();
                     this.hitung();
                 },
                 updateHPP() {
@@ -4312,7 +4835,7 @@
                     const totalBiayaTK = biayaGaji + biayaJamsos;
 
                     // ===== G. PENYUSUTAN & PAJAK =====
-                    const penyusutan = this.totalPenyusutanTahunan;
+                    const penyusutan = this.totalPenyusutanAsetTahunan;
                     const pajak = this.perhitunganPajak.totalPajak;
 
                     // ===== H. LABA BERSIH =====
@@ -4419,7 +4942,6 @@
                 hitungKeluarga() {
                     const p = this.inputKeluarga;
 
-                    // ===== 🛒 MAKANAN MINGGUAN =====
                     const bahanMakanan = p.bahanMakanan || 0;
                     const makananJadi = p.makananJadi || 0;
                     const jajanAnak = p.jajanAnak || 0;
@@ -4431,7 +4953,6 @@
                     const totalMakananBulan = (totalMakananMinggu * 4) + susuAnak + airMinum + rokok;
                     const totalMakanTahun = totalMakananBulan * 12;
 
-                    // ===== 🏠 BUKAN MAKANAN BULANAN =====
                     const listrik = p.listrik || 0;
                     const air = p.air || 0;
                     const pulsa = p.pulsa || 0;
@@ -4456,12 +4977,10 @@
                         pembersihRumah + transportasi + bbm + gas + iuranSekolah + bpjs + cicilan + sewaRumah +
                         asistenRumah + hiburan + transferKeluarga + iuranRT + lainLain;
 
-                    // ===== BAYI =====
                     const popok = p.popok || 0;
                     const susuBayi = p.susuBayi || 0;
                     const totalBayiBulan = popok + susuBayi;
 
-                    // ===== BUKAN MAKANAN TAHUNAN =====
                     const pajakKendaraan = p.pajakKendaraan || 0;
                     const pbb = p.pbb || 0;
                     const pakaian = p.pakaian || 0;
@@ -4476,7 +4995,6 @@
                     const totalNonMakananTahun = pajakKendaraan + pbb + pakaian + kontrakRumah +
                         perlengkapanSekolah + ukt + servisKendaraan + zakat + hajatan + lainnyaTahun;
 
-                    // ===== TOTAL KELUARGA =====
                     const totalBulanan = totalMakananBulan + totalNonMakananBulan + totalBayiBulan;
                     const totalBulananTahun = totalBulanan * 12;
                     const totalBulanPlusMakan = totalBulanan;
@@ -4759,7 +5277,7 @@ Margin Laba Kotor: ${hsl.grossProfitMargin}%
 Produksi: ${this.formatRupiah(hsl.hpp)}
 Operasional: ${this.formatRupiah(hsl.biayaOperasional)}
 Non Operasional: ${this.formatRupiah(hsl.biayaNonOperasional)}
-Penyusutan: ${this.formatRupiah(this.totalPenyusutanTahunan)}
+Penyusutan: ${this.formatRupiah(this.totalPenyusutanAsetTahunan)}
 Pajak: ${this.formatRupiah(pajak.totalPajak)}
 
 🎯 LABA BERSIH
@@ -4767,6 +5285,10 @@ Tahunan: ${this.formatRupiah(hsl.labaBersihTahunan)}
 Bulanan: ${this.formatRupiah(hsl.labaBersihBulanan)}
 Harian: ${this.formatRupiah(hsl.labaBersihHarian)}
 Net Profit Margin: ${hsl.netProfitMargin}%
+
+🏠 ASET
+Total Aset: ${this.formatRupiah(this.totalAset)}
+ROA: ${this.roa}%
 
 📊 BEP: ${this.bep.pesan}`;
 
@@ -4790,7 +5312,7 @@ Net Profit Margin: ${hsl.netProfitMargin}%
                         ['HPP', this.hasil.hpp],
                         ['Biaya Operasional', this.hasil.biayaOperasional],
                         ['Biaya Non Operasional', this.hasil.biayaNonOperasional],
-                        ['Penyusutan', this.totalPenyusutanTahunan],
+                        ['Penyusutan', this.totalPenyusutanAsetTahunan],
                         ['Pajak', this.perhitunganPajak.totalPajak],
                         [''],
                         ['LABA BERSIH'],
@@ -4798,6 +5320,10 @@ Net Profit Margin: ${hsl.netProfitMargin}%
                         ['Bulanan', this.hasil.labaBersihBulanan],
                         ['Harian', this.hasil.labaBersihHarian],
                         ['Net Profit Margin', this.hasil.netProfitMargin + '%'],
+                        [''],
+                        ['ASET'],
+                        ['Total Aset', this.totalAset],
+                        ['ROA', this.roa + '%'],
                         [''],
                         ['BEP'],
                         ['Unit', this.bep.unit],
@@ -4826,10 +5352,14 @@ Net Profit Margin: ${hsl.netProfitMargin}%
                         const data = {
                             biayaOperasional: this.biayaOperasional,
                             biayaNonOperasional: this.biayaNonOperasional,
-                            aset: this.aset,
+                            asetLainnya: this.asetLainnya,
+                            asetTanah: this.asetTanah,
+                            asetBangunan: this.asetBangunan,
+                            umurEkonomisAset: this.umurEkonomisAset,
                             input: this.input,
                             jenisUsahaTerpilih: this.jenisUsahaTerpilih,
-                            namaPengusaha: this.namaPengusaha
+                            namaPengusaha: this.namaPengusaha,
+                            luasTanahUsaha: this.luasTanahUsaha
                         };
                         localStorage.setItem('se2026_data', JSON.stringify(data));
                     } catch (e) {
@@ -4843,7 +5373,24 @@ Net Profit Margin: ${hsl.netProfitMargin}%
                             const data = JSON.parse(raw);
                             if (data.biayaOperasional) this.biayaOperasional = data.biayaOperasional;
                             if (data.biayaNonOperasional) this.biayaNonOperasional = data.biayaNonOperasional;
-                            if (data.aset) this.aset = data.aset;
+                            if (data.asetLainnya) {
+                                this.asetLainnya = data.asetLainnya;
+                                for (const item of this.asetLainnya) {
+                                    if (item.nilai) {
+                                        item.displayNilai = item.nilai.toLocaleString('id-ID');
+                                    }
+                                }
+                            }
+                            if (data.asetTanah !== undefined) {
+                                this.asetTanah = data.asetTanah;
+                                this.displayAset.tanah = data.asetTanah.toLocaleString('id-ID');
+                            }
+                            if (data.asetBangunan !== undefined) {
+                                this.asetBangunan = data.asetBangunan;
+                                this.displayAset.bangunan = data.asetBangunan.toLocaleString('id-ID');
+                            }
+                            if (data.umurEkonomisAset) this.umurEkonomisAset = data.umurEkonomisAset;
+                            if (data.luasTanahUsaha !== undefined) this.luasTanahUsaha = data.luasTanahUsaha;
                             if (data.input) {
                                 Object.assign(this.input, data.input);
                                 for (const key of Object.keys(this.inputDisplay)) {
