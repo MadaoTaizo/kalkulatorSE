@@ -30,12 +30,6 @@
             --transition: 0.25s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         html {
             font-size: 16px;
             scroll-behavior: smooth;
@@ -276,8 +270,15 @@
             gap: 8px;
         }
 
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
         @media (max-width: 768px) {
             .form-row,
+            .form-row-2,
             .form-row-3,
             .form-row-4 {
                 grid-template-columns: 1fr;
@@ -1117,6 +1118,13 @@
             margin-top: 18px;
         }
 
+        .section-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
         .total-cost-summary {
             background: linear-gradient(135deg, #e3edf6, #d4e2ef);
             padding: 10px 16px;
@@ -1290,6 +1298,13 @@
         .kategori-badge.pertanian {
             background: #d4f0d4;
             color: #1a6a1a;
+        }
+
+        .input-help {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -1839,7 +1854,7 @@
                         </tr>
                         <tr class="group-total">
                             <td class="label-bold">27.c Total Penjualan</td>
-                            <td class="value total">{{ formatRupiah(hasil.totalPenjualan) }}</td>
+                            <td class="value total">{{ formatRupiah(hasil.totalPenjualan || hasil.totalPendapatan) }}</td>
                         </tr>
 
                         <tr class="space-row"><td colspan="2"></td></tr>
@@ -1865,23 +1880,23 @@
                         </tr>
                         <tr>
                             <td class="label">Bahan Baku & Barang Jual</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaBahanBaku + hasil.biayaBarangJual) }}</td>
+                            <td class="value">{{ formatRupiah((hasil.biayaBahanBaku || 0) + (hasil.biayaBarangJual || 0)) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Pembungkus</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaPembungkus) }}</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaPembungkus || 0) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Biaya Operasional</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaOperasional) }}</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaOperasional || 0) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Biaya Non Operasional</td>
-                            <td class="value">{{ formatRupiah(hasil.biayaNonOperasional) }}</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaNonOperasional || 0) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Upah & Jamsostek</td>
-                            <td class="value">{{ formatRupiah(hasil.totalBiayaTK) }}</td>
+                            <td class="value">{{ formatRupiah(hasil.totalBiayaTK || 0) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Penyusutan Aset</td>
@@ -1893,25 +1908,25 @@
                         </tr>
                         <tr class="group-total">
                             <td class="label-bold">Total Pengeluaran</td>
-                            <td class="value total">{{ formatRupiah(hasil.totalPengeluaran) }}</td>
+                            <td class="value total">{{ formatRupiah(hasil.totalPengeluaran || (hasil.hpp + hasil.biayaOperasional + hasil.biayaNonOperasional + hasil.totalBiayaTK + totalPenyusutanTahunan + perhitunganPajak.totalPajak)) }}</td>
                         </tr>
 
                         <tr class="space-row"><td colspan="2"></td></tr>
                         <tr class="highlight-row">
                             <td class="label">💰 Laba Bersih (Owner) / Tahun</td>
-                            <td class="value profit profit-xl" :class="{'loss': hasil.labaBersihTahunan < 0}">{{ formatRupiah(hasil.labaBersihTahunan) }}</td>
+                            <td class="value profit profit-xl" :class="{'loss': (hasil.labaBersihTahunan || (hasil.totalPendapatan - hasil.totalPengeluaran)) < 0}">{{ formatRupiah(hasil.labaBersihTahunan || (hasil.totalPendapatan - hasil.totalPengeluaran)) }}</td>
                         </tr>
                         <tr>
                             <td class="label-bold">Laba Bersih / Bulan</td>
-                            <td class="value profit" :class="{'loss': hasil.labaBersihBulanan < 0}">{{ formatRupiah(hasil.labaBersihBulanan) }}</td>
+                            <td class="value profit" :class="{'loss': hasil.labaBersihBulanan < 0}">{{ formatRupiah(hasil.labaBersihBulanan || ((hasil.totalPendapatan - hasil.totalPengeluaran) / 12)) }}</td>
                         </tr>
                         <tr>
                             <td class="label-bold">Laba Bersih / Hari</td>
-                            <td class="value profit" :class="{'loss': hasil.labaBersihHarian < 0}">{{ formatRupiah(hasil.labaBersihHarian) }}</td>
+                            <td class="value profit" :class="{'loss': hasil.labaBersihHarian < 0}">{{ formatRupiah(hasil.labaBersihHarian || ((hasil.totalPendapatan - hasil.totalPengeluaran) / 365)) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Net Profit Margin</td>
-                            <td class="value">{{ hasil.netProfitMargin }}%</td>
+                            <td class="value">{{ hasil.netProfitMargin && hasil.netProfitMargin !== 'NaN' ? hasil.netProfitMargin + '%' : (hasil.totalPendapatan > 0 ? (((hasil.totalPendapatan - hasil.totalPengeluaran) / hasil.totalPendapatan) * 100).toFixed(1) + '%' : '0%') }}</td>
                         </tr>
                         <tr class="note-row">
                             <td colspan="2" class="note">
@@ -2200,175 +2215,336 @@
                 <div class="card">
                     <div class="card-title">🍚 Pengeluaran Keluarga</div>
 
-                    <div class="section-label">🍽️ Makan</div>
+                    <div class="section-label">🛒 Makanan & Minuman Mingguan</div>
+                    <div class="section-desc">Pengeluaran seminggu untuk bahan makanan & jajan</div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Makan per Hari <span>per orang</span></label>
+                            <label>Bahan Masak <span>Mingguan</span></label>
                             <div class="input-prefix">
                                 <span class="prefix">Rp</span>
-                                <input type="text" v-model="displayKeluarga.makanPerHari" @input="onInputKeluarga('makanPerHari', $event)" placeholder="0" />
+                                <input type="text" v-model="displayKeluarga.bahanMakanan" @input="onInputKeluarga('bahanMakanan', $event)" placeholder="0" />
                             </div>
-                            <div class="question-helper">
-                                <span class="q-icon">🍚</span>
-                                Berapa <span class="highlight-text">rata-rata pengeluaran makanan</span> keluarga seminggu?
-                                <span class="example">(biasanya, rata-rata, atau seminggu terakhir)</span>
+                            <small class="input-help">Beras, minyak, telur, ikan, ayam, daging, sayur, bumbu, buah, mie, dll</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Makanan Jadi <span>Mingguan</span></label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.makananJadi" @input="onInputKeluarga('makananJadi', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Nasi bungkus, jajanan, kerupuk, es krim, dll</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Jajan Anak Sekolah <span>Mingguan</span></label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.jajanAnak" @input="onInputKeluarga('jajanAnak', $event)" placeholder="0" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Jumlah Keluarga</label>
-                            <input type="number" v-model="inputKeluarga.jumlahKeluarga" @input="hitungKeluarga" min="1" max="20" />
-                            <div class="question-helper">
-                                <span class="q-icon">👨‍👩‍👧‍👦</span>
-                                Berapa <span class="highlight-text">jumlah anggota</span> keluarga?
-                                <span class="example">Contoh: "4"</span>
+                            <label>Susu Anak <span>Bulanan</span></label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.susuAnak" @input="onInputKeluarga('susuAnak', $event)" placeholder="0" />
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Air Minum Kemasan <span>Bulanan</span></label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.airMinum" @input="onInputKeluarga('airMinum', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Galon, isi ulang, kemasan</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Rokok <span>Bulanan</span></label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.rokok" @input="onInputKeluarga('rokok', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-label section-margin-top">🏠 Bukan Makanan Rutin Bulanan</div>
+                    <div class="section-desc">Pengeluaran bulanan rutin non-makanan</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Listrik</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.listrik" @input="onInputKeluarga('listrik', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Air</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.air" @input="onInputKeluarga('air', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pulsa & Paket Data</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.pulsa" @input="onInputKeluarga('pulsa', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Wifi / Internet</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.internet" @input="onInputKeluarga('internet', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Perlengkapan Mandi</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.perlengkapanMandi" @input="onInputKeluarga('perlengkapanMandi', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Sabun, odol, sampo, dll</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Kosmetik & Skincare</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.kosmetik" @input="onInputKeluarga('kosmetik', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Skincare, parfum, pembalut, popok</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pembersih Rumah</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.pembersihRumah" @input="onInputKeluarga('pembersihRumah', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Cuci pakaian, piring, lantai</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Transportasi</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.transportasi" @input="onInputKeluarga('transportasi', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Gojek, Transjogja, dll</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>BBM Kendaraan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.bbm" @input="onInputKeluarga('bbm', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Pertalite, Pertamax, Solar</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Gas Memasak</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.gas" @input="onInputKeluarga('gas', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Iuran Sekolah</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.iuranSekolah" @input="onInputKeluarga('iuranSekolah', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>BPJS Kesehatan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.bpjs" @input="onInputKeluarga('bpjs', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cicilan Barang</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.cicilan" @input="onInputKeluarga('cicilan', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Sewa Rumah</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.sewaRumah" @input="onInputKeluarga('sewaRumah', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ART / Asisten Rumah</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.asistenRumah" @input="onInputKeluarga('asistenRumah', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Gaji/upah asisten RT</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Hiburan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.hiburan" @input="onInputKeluarga('hiburan', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">TV Kabel, Netflix, Viu, dll</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Transfer ke Keluarga</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.transferKeluarga" @input="onInputKeluarga('transferKeluarga', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Transfer rutin ke keluarga lain</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Iuran RT/RW</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.iuranRT" @input="onInputKeluarga('iuranRT', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Iuran sampah, keamanan</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pengeluaran Bulanan Lainnya</label>
+                        <div class="input-prefix">
+                            <span class="prefix">Rp</span>
+                            <input type="text" v-model="displayKeluarga.lainLain" @input="onInputKeluarga('lainLain', $event)" placeholder="0" />
+                        </div>
+                    </div>
+
+                    <div class="section-label section-margin-top">📅 Bukan Makanan Rutin Tahunan</div>
+                    <div class="section-desc">Pengeluaran tahunan rutin non-makanan</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pajak Kendaraan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.pajakKendaraan" @input="onInputKeluarga('pajakKendaraan', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>PBB</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.pbb" @input="onInputKeluarga('pbb', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pakaian & Serat</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.pakaian" @input="onInputKeluarga('pakaian', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Pakaian, mukena, kerudung, sepatu</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Kontrak Rumah Tahunan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.kontrakRumah" @input="onInputKeluarga('kontrakRumah', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Perlengkapan Sekolah</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.perlengkapanSekolah" @input="onInputKeluarga('perlengkapanSekolah', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Seragam, buku, tas</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Uang Kuliah (UKT)</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.ukt" @input="onInputKeluarga('ukt', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Servis Kendaraan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.servisKendaraan" @input="onInputKeluarga('servisKendaraan', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Servis, ganti oli</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Zakat & Infak</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.zakat" @input="onInputKeluarga('zakat', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Hajatan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.hajatan" @input="onInputKeluarga('hajatan', $event)" placeholder="0" />
+                            </div>
+                            <small class="input-help">Nikahan, syukuran, dll</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Lainnya Tahunan</label>
+                            <div class="input-prefix">
+                                <span class="prefix">Rp</span>
+                                <input type="text" v-model="displayKeluarga.lainnyaTahun" @input="onInputKeluarga('lainnyaTahun', $event)" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jumlah Keluarga</label>
+                        <input type="number" v-model="inputKeluarga.jumlahKeluarga" @input="hitungKeluarga" min="1" max="20" />
                     </div>
 
                     <div class="form-group">
                         <label>👶 Anak Kecil (< 5 tahun)</label>
                         <input type="number" v-model="inputKeluarga.anakKecil" @input="hitungKeluarga" min="0" max="10" />
-                        <div class="question-helper dynamic">
-                            <span class="q-icon">💡</span>
-                            Jumlah anak balita. Tambahkan <span class="highlight-text">untuk calculasi popok & kebutuhan bayi</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Kali Makan per Hari</label>
-                        <select v-model="inputKeluarga.kaliMakan" @change="hitungKeluarga">
-                            <option value="2">2x (Siang-Malam)</option>
-                            <option value="3">3x (Pagi-Siangan-Malam)</option>
-                            <option value="4">4x (+ Snack)</option>
-                            <option value="5">5x (+ Snack + Minum)</option>
-                        </select>
-                        <div class="question-helper">
-                            <span class="q-icon">🍽️</span>
-                            Berapa <span class="highlight-text">kali makan</span> dalam sehari?
-                            <span class="example">Contoh: "3" (pagi, siang, malam)</span>
-                        </div>
-                    </div>
-
-                    <div class="section-label section-margin-top">🏠 Biaya Bulanan</div>
-
-                    <div class="form-group">
-                        <label>Listrik</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.listrik" @input="onInputKeluarga('listrik', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">⚡</span>
-                            Berapa <span class="highlight-text">pengeluaran listrik</span> per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Air</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.air" @input="onInputKeluarga('air', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">💧</span>
-                            Berapa <span class="highlight-text">biaya air</span> per bulan?
-                            <span class="example">Contoh: "100.000"</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pulsa</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.pulsa" @input="onInputKeluarga('pulsa', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">📱</span>
-                            Berapa <span class="highlight-text">pengeluaran pulsa</span> seluruh anggota keluarga per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Internet/HP</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.internet" @input="onInputKeluarga('internet', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">📶</span>
-                            Berapa <span class="highlight-text">pengeluaran internet</span> seluruh anggota keluarga per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Transportasi</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.transportasi" @input="onInputKeluarga('transportasi', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">🚗</span>
-                            Berapa <span class="highlight-text">rata-rata pengeluaran non-makanan rutin</span> per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pendidikan</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.pendidikan" @input="onInputKeluarga('pendidikan', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">📚</span>
-                            Berapa <span class="highlight-text">rata-rata pengeluaran non-makanan rutin</span> per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Kesehatan</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.kesehatan" @input="onInputKeluarga('kesehatan', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">🏥</span>
-                            Berapa <span class="highlight-text">rata-rata pengeluaran non-makanan rutin</span> per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Lain-lain</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.lainLain" @input="onInputKeluarga('lainLain', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">📦</span>
-                            Berapa <span class="highlight-text">rata-rata pengeluaran non-makanan rutin</span> per bulan?
-                            <span class="example">(biasanya, rata-rata, atau sebulan terakhir)</span>
-                        </div>
-                    </div>
-
-                    <div class="section-label section-margin-top">📅 Biaya Tahunan</div>
-
-                    <div class="form-group">
-                        <label>Lain-Lain (Tahunan)</label>
-                        <div class="input-prefix">
-                            <span class="prefix">Rp</span>
-                            <input type="text" v-model="displayKeluarga.lainLainTahun" @input="onInputKeluarga('lainLainTahun', $event)" placeholder="0" />
-                        </div>
-                        <div class="question-helper">
-                            <span class="q-icon">📅</span>
-                            Berapa <span class="highlight-text">rata-rata pengeluaran non-makanan rutin</span> keluarga tahunan?
-                            <span class="example">(biasanya, rata-rata, atau setahun terakhir)</span>
-                        </div>
                     </div>
 
                     <!-- ===== BIAYA BAYI/ANAK KECIL (Hanya muncul jika ada anak kecil) ===== -->
@@ -2405,6 +2581,7 @@
                     <button class="btn-recom" @click="rekomendasiKeluarga" style="margin-bottom:12px;">⭐ Rekomendasi</button>
 
                     <div class="btn-group">
+                        <button class="btn btn-warning" @click="hitungKeluarga">🔢 Hitung</button>
                         <button class="btn btn-primary" @click="resetKeluarga">↺ Reset</button>
                         <button class="btn btn-success" @click="printDashboard">🖨 Cetak</button>
                     </div>
@@ -2487,6 +2664,46 @@
                             <td class="label">📈 Total / Bulan (termasuk makan)</td>
                             <td class="value profit profit-lg">{{ formatRupiah(hasilKeluarga.totalBulanPlusMakan) }}</td>
                         </tr>
+
+                        <!-- ===== BIAYA TAHUNAN BARU ===== -->
+                        <tr class="space-row"><td colspan="2"></td></tr>
+                        <tr>
+                            <td class="label">🚗 Pajak Kendaraan</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.pajakKendaraan) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">🛡️ Asuransi Kendaraan</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.asuransiKendaraan) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">🎓 Pendidikan/Tahun</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.pendidikanTahun) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">💚 Zakat</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.zakat) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">🎁 Hadiah</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.hadiah) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">✈️ Liburan/Wisata</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.liburan) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">🔧 Perbaikan Rumah</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.perbaikanRumah) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">📋 Lain-Lain/Tahun</td>
+                            <td class="value">{{ formatRupiah(hasilKeluarga.lainLainTahun) }}</td>
+                        </tr>
+                        <tr class="group-total">
+                            <td class="label-bold">Total Biaya Tahunan</td>
+                            <td class="value total">{{ formatRupiah(hasilKeluarga.totalTahunan) }}</td>
+                        </tr>
+
                         <tr class="highlight-row">
                             <td class="label">💰 Total / Tahun</td>
                             <td class="value profit profit-xl">{{ formatRupiah(hasilKeluarga.totalTahun) }}</td>
@@ -2630,7 +2847,7 @@
                         <strong>📊 Interpretasi Rasio</strong><br />
                         • Gross Profit Margin > 30%: Baik untuk usaha kecil<br />
                         • Net Profit Margin > 10%: Usaha menguntungkan<br />
-                        • Operating Ratio < 80%: Efisien dalam operacional
+                        • Operating Ratio < 80%: Efisien dalam operasional
                     </div>
                 </div>
 
@@ -2701,8 +2918,13 @@
     <script>
         new Vue({
             el: '#app',
+            mounted() {
+                this.hitung();
+                this.hitungKeluarga();
+                this.applyRecommendations();
+            },
             data: {
-                // ===== DATA HPP (7 Kategori SE2026) =====
+                // ===== DATA HPP (9 Kategori SE2026) =====
                 dataHPP: {
                     // --- 1. Industri Pengolahan (Kategori C) ---
                     'Pembuatan Makanan & Minuman': { hpp: 55, kategori: 'industri' },
@@ -2835,7 +3057,7 @@
                             { nama: 'Perizinan Usaha', nilai: 100000 }
                         ]
                     },
-                    
+
                     // Konstruksi - Biaya di kota baru/maju
                     'Konstruksi Gedung': {
                         operasional: [
@@ -3143,14 +3365,13 @@
                     hariPiutang: 30,
                     hariPersediaan: 30,
                     hariUtang: 30,
-                    // Biaya according to SPT guidelines
                     biayaGaji: 0,
                     biayaJamsos: 0,
+                    pendapatanLain: 0,
                     biayaBahanBaku: 0,
                     biayaBarangJual: 0,
                     biayaOperasional: 0,
-                    biayaNonOperasional: 0,
-                    pendapatanLain: 0
+                    biayaNonOperasional: 0
                 },
                 inputDisplay: {
                     penjualanHarian: '1.500.000',
@@ -3168,28 +3389,21 @@
                 aset: [],
 
                 hasil: {
-                    // A. Pendapatan
                     penjualanTahunan: 0,
                     pendapatanLain: 0,
+                    totalPenjualan: 0,
                     totalPendapatan: 0,
-                    // B. Biaya Produksi (HPP)
                     biayaBahanBaku: 0,
                     biayaBarangJual: 0,
                     biayaPembungkus: 0,
                     hpp: 0,
-                    // C. Laba Kotor
                     labaKotor: 0,
-                    // D. Biaya Operasional
                     biayaOperasional: 0,
-                    // E. Biaya Non-Operasional
                     biayaNonOperasional: 0,
-                    // F. Biaya TK (Upah + Jamsos)
                     biayaGaji: 0,
                     biayaJamsos: 0,
                     totalBiayaTK: 0,
-                    // G. Total Biaya
                     totalPengeluaran: 0,
-                    // H. Laba Bersih
                     labaBersihTahunan: 0,
                     labaBersihBulanan: 0,
                     labaBersihHarian: 0,
@@ -3210,194 +3424,33 @@
                 showSuggestion: false,
                 filteredProfesi: [],
                 listProfesi: [
-                    // UMK Lubuklinggau Based Salaries (2024-2025: ~Rp 3.2-3.5 juta)
                     { kode: '000', nama: 'Tidak Bekerja', gaji: 0 },
-                    { kode: '001', nama: 'Agen Tenaga Kerja', gaji: 3200000 },
-                    { kode: '002', nama: 'Ahli Sejarah dan Cagar Budaya', gaji: 3500000 },
-                    { kode: '003', nama: 'Akuntan', gaji: 3200000 },
-                    { kode: '004', nama: 'Analis Keuangan', gaji: 3500000 },
-                    { kode: '005', nama: 'Anggota DPD', gaji: 5000000 },
-                    { kode: '006', nama: 'Anggota DPR RI/MPR RI', gaji: 5500000 },
-                    { kode: '007', nama: 'Anggota DPRD Provinsi/Kabupaten/Kota', gaji: 4500000 },
-                    { kode: '008', nama: 'Apoteker', gaji: 3500000 },
-                    { kode: '009', nama: 'Arsiparis', gaji: 3200000 },
-                    { kode: '010', nama: 'Arsitek', gaji: 4000000 },
-                    { kode: '011', nama: 'Asisten Apoteker', gaji: 3500000 },
-                    { kode: '012', nama: 'Atase', gaji: 5000000 },
-                    { kode: '013', nama: 'Atlet/Olahragawan', gaji: 3200000 },
-                    { kode: '014', nama: 'Awak Kapal', gaji: 3000000 },
-                    { kode: '015', nama: 'Bhikkhu', gaji: 2000000 },
-                    { kode: '016', nama: 'Biarawan', gaji: 2000000 },
-                    { kode: '017', nama: 'Biarawati', gaji: 2000000 },
-                    { kode: '018', nama: 'Bidan', gaji: 3500000 },
-                    { kode: '019', nama: 'Broker/Pialang Saham', gaji: 6000000 },
-                    { kode: '020', nama: 'Bupati', gaji: 8500000 },
-                    { kode: '021', nama: 'Buruh Angkut Barang', gaji: 2500000 },
-                    { kode: '022', nama: 'Buruh Bangunan', gaji: 3000000 },
-                    { kode: '023', nama: 'Buruh Industri', gaji: 2800000 },
-                    { kode: '024', nama: 'Buruh Perikanan', gaji: 2500000 },
-                    { kode: '025', nama: 'Buruh Pertambangan', gaji: 3500000 },
-                    { kode: '026', nama: 'Buruh Pertanian/Kehutanan', gaji: 2200000 },
-                    { kode: '027', nama: 'Buruh Peternakan', gaji: 2200000 },
-                    { kode: '028', nama: 'Camat', gaji: 5000000 },
-                    { kode: '029', nama: 'Chef', gaji: 4000000 },
-                    { kode: '030', nama: 'Chief Executive Officer (CEO)', gaji: 10000000 },
-                    { kode: '031', nama: 'Dokter Gigi', gaji: 6000000 },
-                    { kode: '032', nama: 'Dokter Hewan', gaji: 4000000 },
-                    { kode: '033', nama: 'Dokter Spesialis', gaji: 8000000 },
-                    { kode: '034', nama: 'Dokter Umum', gaji: 5000000 },
-                    { kode: '035', nama: 'Dosen', gaji: 4500000 },
-                    { kode: '036', nama: 'Editor', gaji: 4000000 },
-                    { kode: '037', nama: 'Entertainer', gaji: 3500000 },
-                    { kode: '038', nama: 'Fotografer', gaji: 3000000 },
-                    { kode: '039', nama: 'Gembala', gaji: 2000000 },
-                    { kode: '040', nama: 'Gubernur', gaji: 7500000 },
-                    { kode: '041', nama: 'Guru', gaji: 3200000 },
-                    { kode: '042', nama: 'Hakim', gaji: 5000000 },
-                    { kode: '043', nama: 'Hakim Agung', gaji: 7000000 },
-                    { kode: '044', nama: 'Imam Masjid', gaji: 2500000 },
-                    { kode: '045', nama: 'Jaksa', gaji: 4500000 },
-                    { kode: '046', nama: 'Jaksa Agung', gaji: 6500000 },
-                    { kode: '047', nama: 'Jiaosheng', gaji: 2800000 },
-                    { kode: '048', nama: 'Juru Gambar Teknik/Drafter', gaji: 3000000 },
-                    { kode: '049', nama: 'Kameramen', gaji: 3500000 },
-                    { kode: '050', nama: 'Kapten Kapal', gaji: 4000000 },
-                    { kode: '051', nama: 'Kasir', gaji: 2600000 },
-                    { kode: '052', nama: 'Kepala Desa', gaji: 2500000 },
-                    { kode: '053', nama: 'Ketua Adat', gaji: 3000000 },
-                    { kode: '054', nama: 'Ketua Organisasi', gaji: 4000000 },
-                    { kode: '055', nama: 'Konsultan', gaji: 5000000 },
-                    { kode: '056', nama: 'Kreator Konten', gaji: 3000000 },
-                    { kode: '057', nama: 'Kurator', gaji: 4000000 },
-                    { kode: '058', nama: 'Kurier', gaji: 2500000 },
-                    { kode: '059', nama: 'Lurah', gaji: 3500000 },
-                    { kode: '060', nama: 'Makelar', gaji: 5000000 },
-                    { kode: '061', nama: 'Manajer', gaji: 5000000 },
-                    { kode: '062', nama: 'Masinis', gaji: 3000000 },
-                    { kode: '063', nama: 'Mekanik', gaji: 2800000 },
-                    { kode: '064', nama: 'Mentri/Kepala Badan', gaji: 6500000 },
-                    { kode: '065', nama: 'Nakhoda', gaji: 4500000 },
-                    { kode: '066', nama: 'Nelayan', gaji: 2500000 },
-                    { kode: '067', nama: 'Notaris', gaji: 5000000 },
-                    { kode: '068', nama: 'Customer Service', gaji: 2800000 },
-                    { kode: '069', nama: 'Operator Mesin', gaji: 2800000 },
-                    { kode: '070', nama: 'Pandita', gaji: 3000000 },
-                    { kode: '071', nama: 'Panitera Pengadilan', gaji: 4500000 },
-                    { kode: '072', nama: 'Paraja', gaji: 3000000 },
-                    { kode: '073', nama: 'Paranormal', gaji: 3500000 },
-                    { kode: '074', nama: 'Pastor', gaji: 3000000 },
-                    { kode: '075', nama: 'Pedagang', gaji: 3000000 },
-                    { kode: '076', nama: 'Pedagang Asongan/Keliling Makanan', gaji: 2000000 },
-                    { kode: '077', nama: 'Pedagang Asongan/Keliling Nonmakanan', gaji: 2200000 },
-                    { kode: '078', nama: 'Pedagang Online', gaji: 2800000 },
-                    { kode: '079', nama: 'Pegawai Govt PPPK', gaji: 3500000 },
-                    { kode: '080', nama: 'Pekerja Garmen/Konveksi', gaji: 2500000 },
-                    { kode: '081', nama: 'Pekerja Percetakan', gaji: 2800000 },
-                    { kode: '082', nama: 'Pekerja Penjualan', gaji: 3000000 },
-                    { kode: '083', nama: 'Pekerja Sosial', gaji: 3200000 },
-                    { kode: '084', nama: 'Pelaku Ekosistem Musik', gaji: 3200000 },
-                    { kode: '085', nama: 'Pelaku Ekosistem Perfilman', gaji: 3500000 },
-                    { kode: '086', nama: 'Pelaku Ekosistem Seni Pertunjukan', gaji: 3000000 },
-                    { kode: '087', nama: 'Pelaku Ekosistem Seni Rupa', gaji: 2800000 },
-                    { kode: '088', nama: 'Pelatih/Instruktur Olahraga', gaji: 3500000 },
-                    { kode: '089', nama: 'Pelayan Toko', gaji: 2500000 },
-                    { kode: '090', nama: 'Pembantu/Asisten Rumah Tangga', gaji: 2200000 },
-                    { kode: '091', nama: 'Pemberi Pinjaman', gaji: 3200000 },
-                    { kode: '092', nama: 'Pembuat Makanan/Juru Masak', gaji: 2800000 },
-                    { kode: '093', nama: 'Pembuat Minuman (Barista/Bartender)', gaji: 2500000 },
-                    { kode: '094', nama: 'Pembuat Rokok', gaji: 2500000 },
-                    { kode: '095', nama: 'Pembuat Sepatu dan Tas', gaji: 2500000 },
-                    { kode: '096', nama: 'Pembudi Daya Ikan', gaji: 2800000 },
-                    { kode: '097', nama: 'Pemulung', gaji: 2000000 },
-                    { kode: '098', nama: 'Penagih Hutang', gaji: 3000000 },
-                    { kode: '099', nama: 'Penasihat Spiritual', gaji: 3000000 },
-                    { kode: '100', nama: 'Penata Busana', gaji: 3500000 },
-                    { kode: '101', nama: 'Penata Rambut', gaji: 3000000 },
-                    { kode: '102', nama: 'Penata Rias', gaji: 3500000 },
-                    { kode: '103', nama: 'Penata Suara', gaji: 3500000 },
-                    { kode: '104', nama: 'Pendeta', gaji: 3000000 },
-                    { kode: '105', nama: 'Peneliti', gaji: 4000000 },
-                    { kode: '106', nama: 'Penerjemah', gaji: 3200000 },
-                    { kode: '107', nama: 'Pengacara', gaji: 4000000 },
-                    { kode: '108', nama: 'Pengasuh Anak (Baby Sitter)', gaji: 2200000 },
-                    { kode: '109', nama: 'Pengelola Gedung/Properti', gaji: 3000000 },
-                    { kode: '110', nama: 'Pengemudi Ojek Online', gaji: 2800000 },
-                    { kode: '111', nama: 'Pengemudi Ojek Pangkalan', gaji: 2500000 },
-                    { kode: '112', nama: 'Pengepul', gaji: 2800000 },
-                    { kode: '113', nama: 'Penjaga Keamanan/Satpam', gaji: 2500000 },
-                    { kode: '114', nama: 'Penjahit', gaji: 2500000 },
-                    { kode: '115', nama: 'Penulis', gaji: 4000000 },
-                    { kode: '116', nama: 'Penyelenggara Acara (EO)', gaji: 4500000 },
-                    { kode: '117', nama: 'Penyiar Radio', gaji: 3000000 },
-                    { kode: '118', nama: 'Penyiar Televisi', gaji: 4000000 },
-                    { kode: '119', nama: 'Perajin Batu', gaji: 2800000 },
-                    { kode: '120', nama: 'Perajin Kayu/Bambu/Anyaman', gaji: 2500000 },
-                    { kode: '121', nama: 'Perajin Kulit dan Tekstil', gaji: 2500000 },
-                    { kode: '122', nama: 'Perajin Logam', gaji: 2800000 },
-                    { kode: '123', nama: 'Perajin Perhiasan', gaji: 3500000 },
-                    { kode: '124', nama: 'Perajin Tembikar/Keramik', gaji: 2500000 },
-                    { kode: '125', nama: 'Peramal', gaji: 3000000 },
-                    { kode: '126', nama: 'Perancang Busana/Desainer', gaji: 4000000 },
-                    { kode: '127', nama: 'Perangkat Desa', gaji: 2500000 },
-                    { kode: '128', nama: 'Perawat', gaji: 3500000 },
-                    { kode: '129', nama: 'Petani/Pekebun', gaji: 2200000 },
-                    { kode: '130', nama: 'Peternak', gaji: 2500000 },
-                    { kode: '131', nama: 'Petugas Pemadam Kebakaran', gaji: 3500000 },
-                    { kode: '132', nama: 'Petugas SPBU', gaji: 2800000 },
-                    { kode: '133', nama: 'Pilot', gaji: 10000000 },
-                    { kode: '134', nama: 'Pinandita', gaji: 2500000 },
-                    { kode: '135', nama: 'PNS Fungsional Tertentu', gaji: 4000000 },
-                    { kode: '136', nama: 'PNS Fungsional Umum', gaji: 3500000 },
-                    { kode: '137', nama: 'PNS Struktural', gaji: 4000000 },
-                    { kode: '138', nama: 'Polisi', gaji: 3500000 },
-                    { kode: '139', nama: 'Pramugara/i', gaji: 6000000 },
-                    { kode: '140', nama: 'Pramusaji', gaji: 2500000 },
-                    { kode: '141', nama: 'Presiden', gaji: 12000000 },
-                    { kode: '142', nama: 'Programer', gaji: 6000000 },
-                    { kode: '143', nama: 'Psikiater', gaji: 10000000 },
-                    { kode: '144', nama: 'Psikolog', gaji: 6000000 },
-                    { kode: '145', nama: 'Pustakawan', gaji: 3000000 },
-                    { kode: '146', nama: 'Resepsionis', gaji: 2800000 },
-                    { kode: '147', nama: 'Sekretaris', gaji: 3500000 },
-                    { kode: '148', nama: 'Seniman/Artis', gaji: 4000000 },
-                    { kode: '149', nama: 'Sopir', gaji: 2800000 },
-                    { kode: '150', nama: 'Supervisor/Mandor', gaji: 4000000 },
-                    { kode: '151', nama: 'Tabib', gaji: 3000000 },
-                    { kode: '152', nama: 'Teknisi', gaji: 3500000 },
-                    { kode: '153', nama: 'Teller Bank', gaji: 3000000 },
-                    { kode: '154', nama: 'Tenaga Cuci', gaji: 2200000 },
-                    { kode: '155', nama: 'Tenaga Html', gaji: 3500000 },
-                    { kode: '156', nama: 'Tenaga Kebersihan', gaji: 2200000 },
-                    { kode: '157', nama: 'Tenaga Tata Usaha', gaji: 3000000 },
-                    { kode: '158', nama: 'TNI', gaji: 4000000 },
-                    { kode: '159', nama: 'Tukang Bangunan', gaji: 3000000 },
-                    { kode: '160', nama: 'Tukang Cat', gaji: 2800000 },
-                    { kode: '161', nama: 'Tukang Cukur', gaji: 2500000 },
-                    { kode: '162', nama: 'Tukang Fotokopi', gaji: 2500000 },
-                    { kode: '163', nama: 'Tukang Gigi', gaji: 3500000 },
-                    { kode: '164', nama: 'Tukang Kaca', gaji: 2800000 },
-                    { kode: '165', nama: 'Tukang Kayu', gaji: 2800000 },
-                    { kode: '166', nama: 'Tukang Kunci', gaji: 2500000 },
-                    { kode: '167', nama: 'Tukang Las/Pandai Besi', gaji: 2800000 },
-                    { kode: '168', nama: 'Tukang Listrik', gaji: 3000000 },
-                    { kode: '169', nama: 'Tukang Pijat', gaji: 3000000 },
-                    { kode: '170', nama: 'Tukang Pipa', gaji: 2800000 },
-                    { kode: '171', nama: 'Tukang Sablon', gaji: 2500000 },
-                    { kode: '172', nama: 'Tukang Sol Sepatu', gaji: 2200000 },
-                    { kode: '173', nama: 'Tukang Tambal Ban', gaji: 2500000 },
-                    { kode: '174', nama: 'Tukang Tebang Kayu', gaji: 2800000 },
-                    { kode: '175', nama: 'Uskup', gaji: 4000000 },
-                    { kode: '176', nama: 'Ustaz/Mubalig', gaji: 3000000 },
-                    { kode: '177', nama: 'Wakil Bupati', gaji: 7500000 },
-                    { kode: '178', nama: 'Wakil Gubernur', gaji: 8000000 },
-                    { kode: '179', nama: 'Wakil Presiden', gaji: 12000000 },
-                    { kode: '180', nama: 'Wakil Walikota', gaji: 7500000 },
-                    { kode: '181', nama: 'Walikota', gaji: 8500000 },
-                    { kode: '182', nama: 'Wartawan', gaji: 4000000 },
-                    { kode: '183', nama: 'Wenshi', gaji: 3000000 },
-                    { kode: '184', nama: 'Xueshi', gaji: 3000000 },
-                    { kode: '185', nama: 'Lainnya', gaji: 3000000 },
-                    { kode: '999', nama: 'Tidak Tahu', gaji: 0 }
+                    { kode: '001', nama: 'Akuntan', gaji: 3200000 },
+                    { kode: '002', nama: 'Analis Keuangan', gaji: 3500000 },
+                    { kode: '003', nama: 'Apoteker', gaji: 3500000 },
+                    { kode: '004', nama: 'Arsitek', gaji: 4000000 },
+                    { kode: '005', nama: 'Bidan', gaji: 3500000 },
+                    { kode: '006', nama: 'Dokter Umum', gaji: 5000000 },
+                    { kode: '007', nama: 'Dosen', gaji: 4500000 },
+                    { kode: '008', nama: 'Guru', gaji: 3200000 },
+                    { kode: '009', nama: 'Konsultan', gaji: 5000000 },
+                    { kode: '010', nama: 'Manajer', gaji: 5000000 },
+                    { kode: '011', nama: 'Notaris', gaji: 5000000 },
+                    { kode: '012', nama: 'Pengacara', gaji: 4000000 },
+                    { kode: '013', nama: 'Perawat', gaji: 3500000 },
+                    { kode: '014', nama: 'Programer', gaji: 6000000 },
+                    { kode: '015', nama: 'Psikolog', gaji: 6000000 },
+                    { kode: '016', nama: 'Sekretaris', gaji: 3500000 },
+                    { kode: '017', nama: 'TNI', gaji: 4000000 },
+                    { kode: '018', nama: 'Polisi', gaji: 3500000 },
+                    { kode: '019', nama: 'PNS', gaji: 3500000 },
+                    { kode: '020', nama: 'Buruh', gaji: 2500000 },
+                    { kode: '021', nama: 'Pedagang', gaji: 3000000 },
+                    { kode: '022', nama: 'Petani', gaji: 2200000 },
+                    { kode: '023', nama: 'Nelayan', gaji: 2500000 },
+                    { kode: '024', nama: 'Sopir', gaji: 2800000 },
+                    { kode: '025', nama: 'Tukang Bangunan', gaji: 3000000 },
+                    { kode: '999', nama: 'Lainnya', gaji: 3000000 }
                 ],
 
                 // ===== GAJI =====
@@ -3432,36 +3485,82 @@
 
                 // ===== KELUARGA =====
                 inputKeluarga: {
-                    // Komposisi Keluarga
                     jumlahKeluarga: 4,
                     anakKecil: 0,
-                    // a. Pengeluaran Listrik
+                    bahanMakanan: 500000,
+                    makananJadi: 150000,
+                    jajanAnak: 100000,
+                    susuAnak: 0,
+                    airMinum: 50000,
+                    rokok: 0,
                     listrik: 300000,
-                    // b. Pengeluaran Pulsa & Internet
+                    air: 100000,
                     pulsa: 100000,
                     internet: 150000,
-                    // c. Pengeluaran Makanan Mingguan
-                    makanPerMinggu: 700000,
-                    // d. Pengeluaran Non-Makanan Bulanan
-                    air: 100000,
-                    transportasi: 300000,
-                    kesehatan: 150000,
-                    pendidikan: 200000,
-                    // e. Pengeluaran Non-Makanan Tahunan
-                    lainLainTahun: 2400000,
+                    perlengkapanMandi: 100000,
+                    kosmetik: 50000,
+                    pembersihRumah: 75000,
+                    transportasi: 200000,
+                    bbm: 300000,
+                    gas: 50000,
+                    iuranSekolah: 150000,
+                    bpjs: 0,
+                    cicilan: 0,
+                    sewaRumah: 0,
+                    asistenRumah: 0,
+                    hiburan: 100000,
+                    transferKeluarga: 0,
+                    iuranRT: 50000,
+                    lainLain: 0,
+                    pajakKendaraan: 0,
+                    pbb: 0,
+                    pakaian: 500000,
+                    kontrakRumah: 0,
+                    perlengkapanSekolah: 300000,
+                    ukt: 0,
+                    servisKendaraan: 200000,
+                    zakat: 300000,
+                    hajatan: 0,
+                    lainnyaTahun: 0,
                     popok: 0,
                     susuBayi: 0
                 },
                 displayKeluarga: {
+                    bahanMakanan: '500.000',
+                    makananJadi: '150.000',
+                    jajanAnak: '100.000',
+                    susuAnak: '0',
+                    airMinum: '50.000',
+                    rokok: '0',
                     listrik: '300.000',
+                    air: '100.000',
                     pulsa: '100.000',
                     internet: '150.000',
-                    makanPerMinggu: '700.000',
-                    air: '100.000',
-                    transportasi: '300.000',
-                    kesehatan: '150.000',
-                    pendidikan: '200.000',
-                    lainLainTahun: '2.400.000',
+                    perlengkapanMandi: '100.000',
+                    kosmetik: '50.000',
+                    pembersihRumah: '75.000',
+                    transportasi: '200.000',
+                    bbm: '300.000',
+                    gas: '50.000',
+                    iuranSekolah: '150.000',
+                    bpjs: '0',
+                    cicilan: '0',
+                    sewaRumah: '0',
+                    asistenRumah: '0',
+                    hiburan: '100.000',
+                    transferKeluarga: '0',
+                    iuranRT: '50.000',
+                    lainLain: '0',
+                    pajakKendaraan: '0',
+                    pbb: '0',
+                    pakaian: '500.000',
+                    kontrakRumah: '0',
+                    perlengkapanSekolah: '300.000',
+                    ukt: '0',
+                    servisKendaraan: '200.000',
+                    zakat: '300.000',
+                    hajatan: '0',
+                    lainnyaTahun: '0',
                     popok: '0',
                     susuBayi: '0'
                 },
@@ -3480,8 +3579,18 @@
                     susuBayi: 0,
                     totalBayiBulan: 0,
                     totalBulanan: 0,
+                    totalBulananTahun: 0,
                     totalBulanPlusMakan: 0,
-                    totalTahun: 0
+                    totalTahunan: 0,
+                    totalTahun: 0,
+                    pajakKendaraan: 0,
+                    asuransiKendaraan: 0,
+                    pendidikanTahun: 0,
+                    zakat: 0,
+                    hadiah: 0,
+                    liburan: 0,
+                    perbaikanRumah: 0,
+                    lainLainTahun: 0
                 }
             },
 
@@ -3517,7 +3626,7 @@
                     return (hariPiutang + hariPersediaan - hariUtang) * penjualanHarian;
                 },
                 perhitunganPajak() {
-                    const omzet = this.hasil.totalPenjualan;
+                    const omzet = this.hasil.totalPenjualan || 0;
                     const batasUMKM = 4800000000;
 
                     let ppnFinal = 0;
@@ -3564,20 +3673,20 @@
                     const labaKotor = this.hasil.labaKotor || 0;
                     const labaBersih = this.hasil.labaBersihTahunan || 0;
                     const biayaOperasional = this.totalBiayaOperasionalTahunan || 0;
+                    const totalPengeluaran = this.hasil.totalPengeluaran || 0;
 
                     return {
                         grossProfitMargin: ((labaKotor / penjualan) * 100).toFixed(1),
                         netProfitMargin: ((labaBersih / penjualan) * 100).toFixed(1),
                         returnOnSales: ((labaBersih / penjualan) * 100).toFixed(1),
                         operatingRatio: ((biayaOperasional / penjualan) * 100).toFixed(1),
-                        costToIncomeRatio: (((this.hasil.totalPengeluaran || 0) / penjualan) * 100).toFixed(1),
+                        costToIncomeRatio: ((totalPengeluaran / penjualan) * 100).toFixed(1),
                         workingCapitalRatio: ((this.modalKerja / penjualan) * 100).toFixed(1)
                     };
                 },
-                // Sync income vs keluarga expenses
                 syncIncome() {
                     const labaUsahaBulan = this.hasil.labaBersihBulanan || 0;
-                    const gajiBulan = this.hasilGaji.totalTerima || 0;
+                    const gajiBulan = this.hasilGaji.totalPerBulan || 0;
                     const totalIncomeBulan = labaUsahaBulan + gajiBulan;
 
                     const pengeluaranKeluargaBulan = this.hasilKeluarga.totalBulanPlusMakan || 0;
@@ -3585,11 +3694,10 @@
                     const sisaBulan = totalIncomeBulan - pengeluaranKeluargaBulan;
                     const sisaTahun = sisaBulan * 12;
 
-                    // Determine status
                     let statusText = '⚠️ Modal Menipis';
                     let statusColor = 'var(--danger)';
                     if (sisaBulan >= pengeluaranKeluargaBulan * 0.5) {
-                        statusText = '✅-Seimbang';
+                        statusText = '✅ Seimbang';
                         statusColor = 'var(--secondary)';
                     } else if (sisaBulan >= 0) {
                         statusText = '⚠️ Perlu Hemat';
@@ -3611,9 +3719,6 @@
                     const penjualanNormal = this.hasil.totalPenjualan || 0;
                     const biayaTetap = this.totalBiayaOperasionalTahunan + this.totalBiayaNonOperasionalTahunan + this
                         .totalPenyusutanTahunan;
-                    const biayaVariabel = this.input.biayaVariabel || 0;
-                    const hargaJual = this.input.hargaJual || 0;
-                    const unitNormal = penjualanNormal / (hargaJual || 1);
 
                     const hitungLaba = (penjualan) => {
                         const hpp = penjualan * (this.hppTerpilih / 100);
@@ -3651,7 +3756,6 @@
                 }
             },
 
-            // ===== METODE DINAMIS UNTUK PERTANYAAN =====
             methods: {
                 // ===== FILTER & UTILITY =====
                 filterByCategory(kategori) {
@@ -3663,6 +3767,7 @@
                     }
                     return result;
                 },
+
                 // ===== PROFESI =====
                 getProfesiNama(kode) {
                     const p = this.listProfesi.find(x => x.kode === kode);
@@ -3673,7 +3778,7 @@
                     if (query.length > 0) {
                         this.filteredProfesi = this.listProfesi.filter(p =>
                             p.nama.toLowerCase().includes(query)
-                        ).slice(0, 10); // Max 10 suggestions
+                        ).slice(0, 10);
                         this.showSuggestion = true;
                     } else {
                         this.showSuggestion = false;
@@ -3690,42 +3795,24 @@
                     const p = this.listProfesi.find(x => x.kode === this.profesiTerpilih);
                     if (p && p.gaji > 0) {
                         const bulan = p.gaji;
-                        // Auto-fill Hari Kerja default
                         this.hariKerja = 25;
-
-                        // Convert monthly salary to daily (assume 25 working days)
                         const daily = Math.round(bulan / 25);
-
-                        // Auto-fill Gaji Pokok per hari
                         this.inputGaji.gajiPokok = daily;
                         this.displayGaji.gajiPokok = daily.toLocaleString('id-ID');
-
-                        // Auto-fill Tunjangan (typically 10-20% of salary)
                         const tunjangan = Math.round(bulan * 0.15);
                         this.inputGaji.tunjangan = tunjangan;
                         this.displayGaji.tunjangan = tunjangan.toLocaleString('id-ID');
-
-                        // Auto-fill Uang Makan (typical Rp 30,000 per hari)
                         const uangMakan = 30000;
                         this.inputGaji.uangMakan = uangMakan;
                         this.displayGaji.uangMakan = uangMakan.toLocaleString('id-ID');
-
-                        // Reset Lembur
                         this.inputGaji.jamLembur = 0;
                         this.inputGaji.lemburPerJam = Math.round(daily * 0.5);
-
-                        // Auto-fill Lain-Lain (typically 5-10% of salary)
                         const lainLain = Math.round(bulan * 0.05);
                         this.inputGaji.lainLain = lainLain;
                         this.displayGaji.lainLain = lainLain.toLocaleString('id-ID');
-
-                        // Hitung total
                         this.hitungGaji();
-
-                        // Auto-adjust Keluarga expenses based on profession salary
                         this.adjustKeluargaByIncome(bulan);
                     } else {
-                        // Reset all if no profession or 0 salary
                         this.hariKerja = 25;
                         this.inputGaji.gajiPokok = 100000;
                         this.displayGaji.gajiPokok = '100.000';
@@ -4174,9 +4261,6 @@
                 hitungPembungkusTahunan() {
                     return this.hitungPembungkusPeriode() * 12;
                 },
-                hitungBiayaProduksi() {
-                    return (this.hitungBelanjaPeriode() + this.hitungPembungkusPeriode()) * 12;
-                },
 
                 // ===== PERHITUNGAN UTAMA =====
                 onJenisUsahaChange() {
@@ -4193,44 +4277,36 @@
                     const hppPersen = this.hppTerpilih / 100;
 
                     // ===== A. PENDAPATAN =====
-                    // Calculate effective working days considering holidays
                     const hariLibur = p.hariLibur || 0;
                     const totalHarikerja = (p.hariBuka * 12) - hariLibur;
                     const penjualanTahunan = (p.penjualanHarian || 0) * totalHarikerja;
-                    // Other income (sewa, royalti, bunga, dividen, donasi, subsidi)
                     const pendapatanLain = (p.pendapatanLain || 0) * 12;
                     const totalPendapatan = penjualanTahunan + pendapatanLain;
 
                     // ===== B. BIAYA PRODUKSI (HPP) =====
-                    // Cost of goods sold: bahan baku + barang diperdagangkan
                     const biayaBahanBaku = (p.biayaBahanBaku || 0) * 12;
-                    const biayaBarangJual = this.hitungBelanjaPeriode() * 12;
-                    const biayaPembungkus = this.hitungPembungkusPeriode() * 12;
+                    const biayaBarangJual = this.hitungBelanjaTahunan();
+                    const biayaPembungkus = this.hitungPembungkusTahunan();
                     const hppValue = biayaBahanBaku + biayaBarangJual + biayaPembungkus;
 
                     // ===== C. LABA KOTOR =====
                     const labaKotor = totalPendapatan - hppValue;
 
-                    // ===== D. BIAYA OPERASIONAL (Non-Produksi) =====
-                    // Listrik, air, gas, internet, pulsa, pemeliharaan, biaya Angkutan
+                    // ===== D. BIAYA OPERASIONAL =====
                     let totalBiayaOperasional = 0;
                     for (const item of this.biayaOperasional) {
                         totalBiayaOperasional += this.hitungBiayaOperasionalItem(item);
                     }
-                    // Add manually entered operational costs
                     totalBiayaOperasional += (p.biayaOperasional || 0) * 12;
 
                     // ===== E. BIAYA NON-OPERASIONAL =====
-                    // Biaya bunga, biaya pajak, biaya administrasi, biaya hukum, donasi
                     let totalBiayaNonOperasional = 0;
                     for (const item of this.biayaNonOperasional) {
                         totalBiayaNonOperasional += (item.nilai || 0) * 12;
                     }
-                    // Add manually entered non-operational costs
                     totalBiayaNonOperasional += (p.biayaNonOperasional || 0) * 12;
 
                     // ===== F. BIAYA UPAH & JAMSOS =====
-                    // Upah/gaji employees + Jamsostek
                     const biayaGaji = (p.biayaGaji || 0) * 12;
                     const biayaJamsos = (p.biayaJamsos || 0) * 12;
                     const totalBiayaTK = biayaGaji + biayaJamsos;
@@ -4250,28 +4326,21 @@
                     const netProfitMargin = totalPendapatan > 0 ? ((labaBersihTahunan / totalPendapatan) * 100) : 0;
 
                     this.hasil = {
-                        // A. Pendapatan
                         penjualanTahunan,
                         pendapatanLain,
+                        totalPenjualan: totalPendapatan,
                         totalPendapatan: totalPendapatan,
-                        // B. Biaya Produksi (HPP)
                         biayaBahanBaku,
                         biayaBarangJual,
                         biayaPembungkus,
                         hpp: hppValue,
-                        // C. Laba Kotor
                         labaKotor,
-                        // D. Biaya Operasional
                         biayaOperasional: totalBiayaOperasional,
-                        // E. Biaya Non-Operasional
                         biayaNonOperasional: totalBiayaNonOperasional,
-                        // F. Biaya TK (Upah + Jamsos)
                         biayaGaji,
                         biayaJamsos,
                         totalBiayaTK,
-                        // G. Total Biaya
                         totalPengeluaran,
-                        // H. Laba Bersih
                         labaBersihTahunan,
                         labaBersihBulanan,
                         labaBersihHarian,
@@ -4349,40 +4418,81 @@
                 },
                 hitungKeluarga() {
                     const p = this.inputKeluarga;
-                    const makanPerHariTotal = (p.makanPerHari || 0) * (p.jumlahKeluarga || 1) * (p.kaliMakan || 3);
-                    const totalMakanMinggu = makanPerHariTotal * 7;
-                    const totalMakanBulan = makanPerHariTotal * 30;
-                    const totalMakanTahun = totalMakanBulan * 12;
 
+                    // ===== 🛒 MAKANAN MINGGUAN =====
+                    const bahanMakanan = p.bahanMakanan || 0;
+                    const makananJadi = p.makananJadi || 0;
+                    const jajanAnak = p.jajanAnak || 0;
+                    const susuAnak = p.susuAnak || 0;
+                    const airMinum = p.airMinum || 0;
+                    const rokok = p.rokok || 0;
+
+                    const totalMakananMinggu = bahanMakanan + makananJadi + jajanAnak;
+                    const totalMakananBulan = (totalMakananMinggu * 4) + susuAnak + airMinum + rokok;
+                    const totalMakanTahun = totalMakananBulan * 12;
+
+                    // ===== 🏠 BUKAN MAKANAN BULANAN =====
                     const listrik = p.listrik || 0;
                     const air = p.air || 0;
+                    const pulsa = p.pulsa || 0;
                     const internet = p.internet || 0;
+                    const perlengkapanMandi = p.perlengkapanMandi || 0;
+                    const kosmetik = p.kosmetik || 0;
+                    const pembersihRumah = p.pembersihRumah || 0;
                     const transportasi = p.transportasi || 0;
-                    const pendidikan = p.pendidikan || 0;
-                    const kesehatan = p.kesehatan || 0;
+                    const bbm = p.bbm || 0;
+                    const gas = p.gas || 0;
+                    const iuranSekolah = p.iuranSekolah || 0;
+                    const bpjs = p.bpjs || 0;
+                    const cicilan = p.cicilan || 0;
+                    const sewaRumah = p.sewaRumah || 0;
+                    const asistenRumah = p.asistenRumah || 0;
+                    const hiburan = p.hiburan || 0;
+                    const transferKeluarga = p.transferKeluarga || 0;
+                    const iuranRT = p.iuranRT || 0;
                     const lainLain = p.lainLain || 0;
 
-                    // Hitung biaya bayi/anak kecil jika ada
-                    const anakKecil = p.anakKecil || 0;
-                    const popok = (p.popok || 0) * Math.max(1, anakKecil);
-                    const susuBayi = (p.susuBayi || 0) * Math.max(1, anakKecil);
+                    const totalNonMakananBulan = listrik + air + pulsa + internet + perlengkapanMandi + kosmetik +
+                        pembersihRumah + transportasi + bbm + gas + iuranSekolah + bpjs + cicilan + sewaRumah +
+                        asistenRumah + hiburan + transferKeluarga + iuranRT + lainLain;
+
+                    // ===== BAYI =====
+                    const popok = p.popok || 0;
+                    const susuBayi = p.susuBayi || 0;
                     const totalBayiBulan = popok + susuBayi;
 
-                    const totalBulanan = listrik + air + internet + transportasi + pendidikan + kesehatan + lainLain + totalBayiBulan;
+                    // ===== BUKAN MAKANAN TAHUNAN =====
+                    const pajakKendaraan = p.pajakKendaraan || 0;
+                    const pbb = p.pbb || 0;
+                    const pakaian = p.pakaian || 0;
+                    const kontrakRumah = p.kontrakRumah || 0;
+                    const perlengkapanSekolah = p.perlengkapanSekolah || 0;
+                    const ukt = p.ukt || 0;
+                    const servisKendaraan = p.servisKendaraan || 0;
+                    const zakat = p.zakat || 0;
+                    const hajatan = p.hajatan || 0;
+                    const lainnyaTahun = p.lainnyaTahun || 0;
+
+                    const totalNonMakananTahun = pajakKendaraan + pbb + pakaian + kontrakRumah +
+                        perlengkapanSekolah + ukt + servisKendaraan + zakat + hajatan + lainnyaTahun;
+
+                    // ===== TOTAL KELUARGA =====
+                    const totalBulanan = totalMakananBulan + totalNonMakananBulan + totalBayiBulan;
                     const totalBulananTahun = totalBulanan * 12;
-                    const totalBulanPlusMakan = totalBulanan + totalMakanBulan;
-                    const totalTahun = totalBulanPlusMakan * 12;
+                    const totalBulanPlusMakan = totalBulanan;
+                    const totalTahunan = totalNonMakananTahun;
+                    const totalTahun = totalBulananTahun + totalTahunan;
 
                     this.hasilKeluarga = {
-                        totalMakanMinggu,
-                        totalMakanBulan,
-                        totalMakanTahun,
+                        totalMakanMinggu: totalMakananMinggu,
+                        totalMakanBulan: totalMakananBulan,
+                        totalMakanTahun: totalMakanTahun,
                         listrik,
                         air,
                         internet,
                         transportasi,
-                        pendidikan,
-                        kesehatan,
+                        pendidikan: iuranSekolah + ukt + perlengkapanSekolah,
+                        kesehatan: bpjs,
                         lainLain,
                         popok,
                         susuBayi,
@@ -4390,34 +4500,96 @@
                         totalBulanan,
                         totalBulananTahun,
                         totalBulanPlusMakan,
+                        pajakKendaraan,
+                        asuransiKendaraan: 0,
+                        pendidikanTahun: perlengkapanSekolah + ukt,
+                        zakat,
+                        hadiah: hajatan,
+                        liburan: 0,
+                        perbaikanRumah: 0,
+                        lainLainTahun: lainnyaTahun,
+                        totalTahunan,
                         totalTahun
                     };
                 },
                 resetKeluarga() {
                     this.inputKeluarga = {
-                        makanPerHari: 25000,
                         jumlahKeluarga: 4,
                         anakKecil: 0,
-                        kaliMakan: 3,
+                        bahanMakanan: 500000,
+                        makananJadi: 150000,
+                        jajanAnak: 100000,
+                        susuAnak: 0,
+                        airMinum: 50000,
+                        rokok: 0,
                         listrik: 300000,
                         air: 100000,
+                        pulsa: 100000,
                         internet: 150000,
-                        transportasi: 300000,
-                        pendidikan: 200000,
-                        kesehatan: 150000,
-                        lainLain: 200000,
+                        perlengkapanMandi: 100000,
+                        kosmetik: 50000,
+                        pembersihRumah: 75000,
+                        transportasi: 200000,
+                        bbm: 300000,
+                        gas: 50000,
+                        iuranSekolah: 150000,
+                        bpjs: 0,
+                        cicilan: 0,
+                        sewaRumah: 0,
+                        asistenRumah: 0,
+                        hiburan: 100000,
+                        transferKeluarga: 0,
+                        iuranRT: 50000,
+                        lainLain: 0,
+                        pajakKendaraan: 0,
+                        pbb: 0,
+                        pakaian: 500000,
+                        kontrakRumah: 0,
+                        perlengkapanSekolah: 300000,
+                        ukt: 0,
+                        servisKendaraan: 200000,
+                        zakat: 300000,
+                        hajatan: 0,
+                        lainnyaTahun: 0,
                         popok: 0,
                         susuBayi: 0
                     };
                     this.displayKeluarga = {
-                        makanPerHari: '25.000',
+                        bahanMakanan: '500.000',
+                        makananJadi: '150.000',
+                        jajanAnak: '100.000',
+                        susuAnak: '0',
+                        airMinum: '50.000',
+                        rokok: '0',
                         listrik: '300.000',
                         air: '100.000',
+                        pulsa: '100.000',
                         internet: '150.000',
-                        transportasi: '300.000',
-                        pendidikan: '200.000',
-                        kesehatan: '150.000',
-                        lainLain: '200.000',
+                        perlengkapanMandi: '100.000',
+                        kosmetik: '50.000',
+                        pembersihRumah: '75.000',
+                        transportasi: '200.000',
+                        bbm: '300.000',
+                        gas: '50.000',
+                        iuranSekolah: '150.000',
+                        bpjs: '0',
+                        cicilan: '0',
+                        sewaRumah: '0',
+                        asistenRumah: '0',
+                        hiburan: '100.000',
+                        transferKeluarga: '0',
+                        iuranRT: '50.000',
+                        lainLain: '0',
+                        pajakKendaraan: '0',
+                        pbb: '0',
+                        pakaian: '500.000',
+                        kontrakRumah: '0',
+                        perlengkapanSekolah: '300.000',
+                        ukt: '0',
+                        servisKendaraan: '200.000',
+                        zakat: '300.000',
+                        hajatan: '0',
+                        lainnyaTahun: '0',
                         popok: '0',
                         susuBayi: '0'
                     };
@@ -4427,8 +4599,8 @@
                     const keluarga = this.inputKeluarga.jumlahKeluarga || 4;
                     const anakKecil = this.inputKeluarga.anakKecil || 0;
                     const makanDasar = 20000 + (keluarga - 2) * 5000;
-                    this.inputKeluarga.makanPerHari = Math.max(15000, makanDasar);
-                    this.displayKeluarga.makanPerHari = this.inputKeluarga.makanPerHari.toLocaleString('id-ID');
+                    this.inputKeluarga.bahanMakanan = Math.max(15000, makanDasar) * 7;
+                    this.displayKeluarga.bahanMakanan = this.inputKeluarga.bahanMakanan.toLocaleString('id-ID');
 
                     this.inputKeluarga.listrik = 250000 + (keluarga * 25000);
                     this.displayKeluarga.listrik = this.inputKeluarga.listrik.toLocaleString('id-ID');
@@ -4436,15 +4608,12 @@
                     this.inputKeluarga.air = 80000 + (keluarga * 10000);
                     this.displayKeluarga.air = this.inputKeluarga.air.toLocaleString('id-ID');
 
-                    this.inputKeluarga.pendidikan = 150000 + (keluarga * 50000);
-                    this.displayKeluarga.pendidikan = this.inputKeluarga.pendidikan.toLocaleString('id-ID');
+                    this.inputKeluarga.iuranSekolah = 150000 + (keluarga * 50000);
+                    this.displayKeluarga.iuranSekolah = this.inputKeluarga.iuranSekolah.toLocaleString('id-ID');
 
-                    // Rekomendasi biaya bayi/anak kecil jika ada
                     if (anakKecil > 0) {
-                        // Popok: ~200rb/orang/bulan untuk popok sekali pakai
                         this.inputKeluarga.popok = 200000 * anakKecil;
                         this.displayKeluarga.popok = this.inputKeluarga.popok.toLocaleString('id-ID');
-                        // Susu & perlengkapan bayi: ~300rb/orang/bulan
                         this.inputKeluarga.susuBayi = 300000 * anakKecil;
                         this.displayKeluarga.susuBayi = this.inputKeluarga.susuBayi.toLocaleString('id-ID');
                     }
@@ -4452,44 +4621,36 @@
                     this.hitungKeluarga();
                 },
 
-                // Adjust Keluarga expenses based on profession salary
                 adjustKeluargaByIncome(salary) {
-                    // Get keluarga composition
                     const keluarga = this.inputKeluarga.jumlahKeluarga || 4;
                     const anakKecil = this.inputKeluarga.anakKecil || 0;
 
-                    // Calculate recommended makan per hari based on salary
-                    // Higher salary = more allocation for food
                     let makanPerHari;
                     if (salary >= 5000000) {
-                        makanPerHari = 30000; // Premium
+                        makanPerHari = 30000;
                     } else if (salary >= 4000000) {
-                        makanPerHari = 25000; // Good
+                        makanPerHari = 25000;
                     } else if (salary >= 3500000) {
-                        makanPerHari = 20000; // Standard
+                        makanPerHari = 20000;
                     } else {
-                        makanPerHari = 15000; // Minimal (UMK level)
+                        makanPerHari = 15000;
                     }
 
-                    // Update makan per hari
-                    this.inputKeluarga.makanPerHari = makanPerHari;
-                    this.displayKeluarga.makanPerHari = makanPerHari.toLocaleString('id-ID');
+                    this.inputKeluarga.bahanMakanan = makanPerHari * 7 * (keluarga);
+                    this.displayKeluarga.bahanMakanan = this.inputKeluarga.bahanMakanan.toLocaleString('id-ID');
 
-                    // Adjust biaya bulanan (listrik, air, internet, transportasi)
-                    // Based on keluarga size and salary level
                     let biayaDasar;
                     if (salary >= 5000000) {
-                        biayaDasar = 1000000; // Higher income = better facilities
+                        biayaDasar = 1000000;
                     } else if (salary >= 4000000) {
                         biayaDasar = 800000;
                     } else if (salary >= 3500000) {
                         biayaDasar = 650000;
                     } else {
-                        biayaDasar = 500000; // Minimal for UMK
+                        biayaDasar = 500000;
                     }
 
-                    // Distribute biaya dasar proportionally
-                    const ratio = (keluarga + anakKecil) / 4; // Base on keluarga size
+                    const ratio = (keluarga + anakKecil) / 4;
                     const multiplier = Math.max(0.7, Math.min(1.5, ratio));
 
                     this.inputKeluarga.listrik = Math.round(biayaDasar * multiplier);
@@ -4504,15 +4665,11 @@
                     this.inputKeluarga.transportasi = Math.round(300000 * multiplier);
                     this.displayKeluarga.transportasi = this.inputKeluarga.transportasi.toLocaleString('id-ID');
 
-                    // Recalculate keluarga
                     this.hitungKeluarga();
 
-                    // Auto-adjust biaya Bayi (popok, Susu Bayi) if ada anak kecil
                     if (anakKecil > 0) {
-                        // Popok: Rp 50,000/bulan per anak
                         this.inputKeluarga.popok = 50000 * anakKecil;
                         this.displayKeluarga.popok = this.inputKeluarga.popok.toLocaleString('id-ID');
-                        // Susu Bayi: Rp 100,000/bulan per anak
                         this.inputKeluarga.susuBayi = 100000 * anakKecil;
                         this.displayKeluarga.susuBayi = this.inputKeluarga.susuBayi.toLocaleString('id-ID');
                     } else {
@@ -4528,6 +4685,8 @@
                     this.input = {
                         penjualanHarian: 0,
                         hariBuka: 30,
+                        hariLibur: 0,
+                        periodeLibur: 'none',
                         belanjaBarang: 0,
                         periodeBelanja: 'harian',
                         frekuensiBelanja: 1,
@@ -4538,14 +4697,24 @@
                         biayaVariabel: 0,
                         hariPiutang: 30,
                         hariPersediaan: 30,
-                        hariUtang: 30
+                        hariUtang: 30,
+                        biayaGaji: 0,
+                        biayaJamsos: 0,
+                        pendapatanLain: 0,
+                        biayaBahanBaku: 0,
+                        biayaBarangJual: 0,
+                        biayaOperasional: 0,
+                        biayaNonOperasional: 0
                     };
                     this.inputDisplay = {
                         penjualanHarian: '0',
                         belanjaBarang: '0',
                         biayaPembungkus: '0',
                         hargaJual: '0',
-                        biayaVariabel: '0'
+                        biayaVariabel: '0',
+                        biayaGaji: '0',
+                        biayaJamsos: '0',
+                        pendapatanLain: '0'
                     };
                     this.applyRecommendations();
                     this.hitung();
@@ -4587,9 +4756,9 @@ Laba Kotor: ${this.formatRupiah(hsl.labaKotor)}
 Margin Laba Kotor: ${hsl.grossProfitMargin}%
 
 💰 BIAYA
-Produksi: ${this.formatRupiah(hsl.biayaProduksi)}
+Produksi: ${this.formatRupiah(hsl.hpp)}
 Operasional: ${this.formatRupiah(hsl.biayaOperasional)}
-Non Operasional: ${this.formatRupiah(hsl.biayaNonOperasionalTahunan)}
+Non Operasional: ${this.formatRupiah(hsl.biayaNonOperasional)}
 Penyusutan: ${this.formatRupiah(this.totalPenyusutanTahunan)}
 Pajak: ${this.formatRupiah(pajak.totalPajak)}
 
@@ -4618,9 +4787,9 @@ Net Profit Margin: ${hsl.netProfitMargin}%
                         ['Gross Profit Margin', this.hasil.grossProfitMargin + '%'],
                         [''],
                         ['BIAYA'],
-                        ['Biaya Produksi', this.hasil.biayaProduksi],
+                        ['HPP', this.hasil.hpp],
                         ['Biaya Operasional', this.hasil.biayaOperasional],
-                        ['Biaya Non Operasional', this.hasil.biayaNonOperasionalTahunan],
+                        ['Biaya Non Operasional', this.hasil.biayaNonOperasional],
                         ['Penyusutan', this.totalPenyusutanTahunan],
                         ['Pajak', this.perhitunganPajak.totalPajak],
                         [''],
