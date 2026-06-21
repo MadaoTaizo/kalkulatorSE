@@ -3374,7 +3374,7 @@
                         lainnya: [
                             { nama: 'Server & Komputer', nilai: 100000000 },
                             { nama: 'Jaringan & Infrastruktur', nilai: 50000000 },
-                            { nama: 'Software License', nilai: 30000000 },
+                            { nome: 'Software License', nilai: 30000000 },
                             { nama: 'Inventaris', nilai: 10000000 }
                         ]
                     },
@@ -4806,30 +4806,30 @@
                     const pendapatanLain = (p.pendapatanLain || 0) * 12;
                     const totalPendapatan = penjualanTahunan + pendapatanLain;
 
-                    // ===== B. BIAYA PRODUKSI (HPP) =====
+                    // ===== B. BIAYA PRODUKSI (26.b) =====
                     const biayaBahanBaku = (p.biayaBahanBaku || 0) * 12;
-                    const biayaBarangJual = this.hitungBelanjaTahunan();
+                    const biayaBarangJual = this.hitungBelanjaTahunan(); // 26.c
                     const biayaPembungkus = this.hitungPembungkusTahunan();
                     const hppValue = biayaBahanBaku + biayaBarangJual + biayaPembungkus;
 
                     // ===== C. LABA KOTOR =====
                     const labaKotor = totalPendapatan - hppValue;
 
-                    // ===== D. BIAYA OPERASIONAL =====
+                    // ===== D. BIAYA OPERASIONAL (26.d) =====
                     let totalBiayaOperasional = 0;
                     for (const item of this.biayaOperasional) {
                         totalBiayaOperasional += this.hitungBiayaOperasionalItem(item);
                     }
                     totalBiayaOperasional += (p.biayaOperasional || 0) * 12;
 
-                    // ===== E. BIAYA NON-OPERASIONAL =====
+                    // ===== E. BIAYA NON-OPERASIONAL (26.e) =====
                     let totalBiayaNonOperasional = 0;
                     for (const item of this.biayaNonOperasional) {
                         totalBiayaNonOperasional += (item.nilai || 0) * 12;
                     }
                     totalBiayaNonOperasional += (p.biayaNonOperasional || 0) * 12;
 
-                    // ===== F. BIAYA UPAH & JAMSOS =====
+                    // ===== F. BIAYA UPAH & JAMSOS (26.a) =====
                     const biayaGaji = (p.biayaGaji || 0) * 12;
                     const biayaJamsos = (p.biayaJamsos || 0) * 12;
                     const totalBiayaTK = biayaGaji + biayaJamsos;
@@ -4838,10 +4838,12 @@
                     const penyusutan = this.totalPenyusutanAsetTahunan;
                     const pajak = this.perhitunganPajak.totalPajak;
 
-                    // ===== H. LABA BERSIH =====
-                    const totalPengeluaran = hppValue + totalBiayaOperasional + totalBiayaNonOperasional +
-                        totalBiayaTK + penyusutan + pajak;
-                    const labaBersihTahunan = totalPendapatan - totalPengeluaran;
+                    // ===== H. TOTAL PENGELUARAN (26.f) =====
+                    // Total pengeluaran = 26.a + 26.b + 26.c + 26.d + 26.e
+                    const totalPengeluaran = totalBiayaTK + biayaBahanBaku + biayaBarangJual + totalBiayaOperasional + totalBiayaNonOperasional;
+
+                    // ===== I. LABA BERSIH =====
+                    const labaBersihTahunan = totalPendapatan - totalPengeluaran - penyusutan - pajak;
                     const labaBersihBulanan = labaBersihTahunan / 12;
                     const labaBersihHarian = labaBersihTahunan / 365;
 
@@ -4853,17 +4855,17 @@
                         pendapatanLain,
                         totalPenjualan: totalPendapatan,
                         totalPendapatan: totalPendapatan,
-                        biayaBahanBaku,
-                        biayaBarangJual,
+                        biayaBahanBaku, // 26.b
+                        biayaBarangJual, // 26.c
                         biayaPembungkus,
                         hpp: hppValue,
                         labaKotor,
-                        biayaOperasional: totalBiayaOperasional,
-                        biayaNonOperasional: totalBiayaNonOperasional,
+                        biayaOperasional: totalBiayaOperasional, // 26.d
+                        biayaNonOperasional: totalBiayaNonOperasional, // 26.e
                         biayaGaji,
                         biayaJamsos,
-                        totalBiayaTK,
-                        totalPengeluaran,
+                        totalBiayaTK, // 26.a
+                        totalPengeluaran, // 26.f (a+b+c+d+e)
                         labaBersihTahunan,
                         labaBersihBulanan,
                         labaBersihHarian,
