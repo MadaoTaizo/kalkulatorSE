@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1526,6 +1527,27 @@
                             {{ getBiayaVariabelQuestion() }}
                             <span class="example">Contoh: "{{ getBiayaVariabelExample() }}"</span>
                         </div>
+                    </div>
+
+                    <!-- ===== BIAYA BAHAN BAKU (26.b) ===== -->
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Biaya Bahan Baku (26.b) <span>per bulan</span></label>
+                        <div class="input-prefix">
+                            <span class="prefix">Rp</span>
+                            <input type="text" v-model="inputDisplay.biayaBahanBaku" @input="onInput('biayaBahanBaku', $event)" placeholder="0" />
+                        </div>
+                        <div class="question-helper dynamic">
+                            <span class="q-icon">🏭</span>
+                            Masukkan biaya bahan baku <span class="highlight-text">per bulan</span> untuk produksi.
+                            <span class="example">Contoh: "500.000"</span>
+                        </div>
+                        <div class="question-helper" style="margin-top: 4px;">
+                            <span class="q-icon">💡</span>
+                            <strong>Rekomendasi otomatis:</strong> 
+                            <span v-if="getRekomendasiBahanBaku() > 0">{{ formatRupiah(getRekomendasiBahanBaku()) }} / bulan</span>
+                            <span v-else>Klik tombol "⭐ Rekomendasi Bahan Baku" di bawah</span>
+                        </div>
+                        <button class="btn-recom" @click="rekomendasiBahanBaku" style="margin-top: 4px;">⭐ Rekomendasi Bahan Baku</button>
                     </div>
 
                     <!-- Belanja Barang -->
@@ -3714,6 +3736,108 @@
                     }
                 },
 
+                // ===== REKOMENDASI BAHAN BAKU =====
+                rekomendasiBahanBaku: {
+                    // Industri Pengolahan
+                    'Pembuatan Makanan & Minuman': 1500000,
+                    'Pengolahan Kayu & Furnitur': 1000000,
+                    'Industri Tekstil & Pakaian Jadi': 800000,
+                    'Percetakan & Reproduksi Media': 500000,
+                    'Industri Logam Dasar & Barang Logam': 2000000,
+                    'Industri Plastik & Kemasan': 1200000,
+                    'Industri Kerajinan & Souvenir': 600000,
+                    'Pembuatan Alat Kesehatan': 700000,
+                    'Pembuatan Elektronik & Komponen': 1500000,
+                    'Pengolahan Kelapa Sawit': 3000000,
+
+                    // Konstruksi
+                    'Konstruksi Gedung': 5000000,
+                    'Konstruksi Sipil (Jalan, Jembatan)': 4000000,
+                    'Konstruksi Khusus (Instalasi Listrik, Plumbing)': 2000000,
+                    'Jasa Arsitektur & Perencanaan': 300000,
+                    'Jasa Pengawasan Proyek': 200000,
+                    'Penyewaan Alat Berat': 1000000,
+
+                    // Perdagangan
+                    'Perdagangan Mobil & Motor': 8000000,
+                    'Perdagangan Besar (Grosir)': 5000000,
+                    'Toko Kelontong / Sembako': 2000000,
+                    'Toko Pakaian & Aksesoris': 1500000,
+                    'Toko Elektronik & Perabotan': 3000000,
+                    'Apotek & Toko Obat': 2000000,
+                    'Toko Buku & Alat Tulis': 800000,
+                    'Toko Perhiasan & Jam': 1000000,
+                    'Toko Bahan Bangunan': 2500000,
+                    'E-commerce & Penjualan Online': 1000000,
+
+                    // Akomodasi & Makan Minum
+                    'Hotel / Penginapan': 500000,
+                    'Restoran / Rumah Makan': 2000000,
+                    'Katering & Jasa Boga': 1500000,
+                    'Kafe / Kedai Kopi': 800000,
+                    'Warung Makan & Angkringan': 600000,
+                    'Bakery & Toko Roti': 700000,
+                    'Catering & Katering Event': 1200000,
+                    'Villa & Homestay': 300000,
+
+                    // Informasi & Komunikasi
+                    'Jasa Internet / Warnet': 100000,
+                    'Jasa Telekomunikasi (Pulsa, PPOB)': 500000,
+                    'Pengembangan Perangkat Lunak (Software)': 100000,
+                    'Jasa Konsultan IT': 50000,
+                    'Jasa Pembuatan Aplikasi': 50000,
+                    'Jasa Maintenance IT': 100000,
+                    'Jasa Data Center': 200000,
+
+                    // Profesional & Teknis
+                    'Jasa Hukum & Pengacara': 50000,
+                    'Jasa Akuntansi & Pajak': 50000,
+                    'Jasa Arsitektur & Teknik Sipil': 100000,
+                    'Jasa Fotografi & Videografi': 200000,
+                    'Jasa Periklanan & Pemasaran': 100000,
+                    'Jasa Konsultan Manajemen': 50000,
+                    'Jasa Desain Grafis': 50000,
+                    'Jasa Penerjemah & Interpretasi': 50000,
+
+                    // Pendidikan
+                    'Lembaga Pendidikan Anak Usia Dini (PAUD)': 200000,
+                    'Lembaga Kursus & Bimbingan Belajar': 100000,
+                    'Lembaga Pelatihan Kerja & Keterampilan': 150000,
+                    'Jasa Pendidikan Non-Formal Lainnya': 100000,
+                    'Sekolah Dasar / Madrasah': 300000,
+                    'Sekolah Menengah / Madrasah': 400000,
+
+                    // Transportasi
+                    'Usaha Ojek / Motor Taxi': 50000,
+                    'Usaha Becak': 30000,
+                    'Usaha Angkot': 150000,
+                    'Usaha Taxi': 200000,
+                    'Usaha Shuttle / Travel': 100000,
+                    'Jasa Pengantaran (Delivery)': 50000,
+                    'Penyewaan Sepeda Motor': 50000,
+
+                    // Pertanian
+                    'Usaha Budi Daya Sayuran': 500000,
+                    'Usaha Budi Daya Buah': 400000,
+                    'Usaha Budi Daya Kopi & Kakao': 600000,
+                    'Usaha Budi Daya Cabe Merah': 700000,
+                    'Usaha Budi Daya Padi/Gabah': 800000,
+                    'Usaha Budi Daya Jagung': 500000,
+                    'Usaha Budi Daya Kedelai': 400000,
+                    'Usaha Budi Daya Umbi-Umbian': 300000,
+                    'Usaha Budi Daya Kelapa Sawit': 2000000,
+                    'Usaha Budi Daya Karet': 1500000,
+                    'Usaha Budi Daya Teh': 600000,
+                    'Usaha Budi Daya Tembakau': 500000,
+                    'Usaha Budi Daya Sayuran Organik': 700000,
+                    'Usaha Budi Daya Jamur': 400000,
+                    'Usaha Budi Daya Jahe': 300000,
+                    'Usaha Budi Daya Kunyit': 250000,
+                    'Usaha Budi Daya Lombok': 600000,
+                    'Usaha Budi Daya Bawang Merah': 500000,
+                    'Usaha Budi Daya Tomat': 400000
+                },
+
                 // ===== INPUT =====
                 input: {
                     penjualanHarian: 1500000,
@@ -3747,7 +3871,8 @@
                     biayaVariabel: '10.000',
                     biayaGaji: '0',
                     biayaJamsos: '0',
-                    pendapatanLain: '0'
+                    pendapatanLain: '0',
+                    biayaBahanBaku: '0'
                 },
 
                 // ===== ASET =====
@@ -4322,6 +4447,19 @@
                     return result;
                 },
 
+                // ===== REKOMENDASI BAHAN BAKU =====
+                getRekomendasiBahanBaku() {
+                    return this.rekomendasiBahanBaku[this.jenisUsahaTerpilih] || 0;
+                },
+                rekomendasiBahanBaku() {
+                    const nilai = this.getRekomendasiBahanBaku();
+                    if (nilai > 0) {
+                        this.input.biayaBahanBaku = nilai;
+                        this.inputDisplay.biayaBahanBaku = nilai.toLocaleString('id-ID');
+                        this.hitung();
+                    }
+                },
+
                 // ===== ASET METHODS =====
                 onInputAset(field, event) {
                     let raw = event.target.value.replace(/[^0-9]/g, '');
@@ -4731,6 +4869,9 @@
                                 isRekomendasi: true }
                         ];
                     }
+
+                    // Auto-fill bahan baku
+                    this.rekomendasiBahanBaku();
 
                     if (this.asetLainnya.length === 0) {
                         this.setDefaultAsetLainnya();
@@ -5304,7 +5445,8 @@
                         biayaVariabel: '0',
                         biayaGaji: '0',
                         biayaJamsos: '0',
-                        pendapatanLain: '0'
+                        pendapatanLain: '0',
+                        biayaBahanBaku: '0'
                     };
                     this.applyRecommendations();
                     this.hitung();
