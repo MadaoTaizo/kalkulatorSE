@@ -1603,6 +1603,31 @@
                         </div>
                     </div>
 
+                    <!-- Unit Terjual per Bulan -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Unit Terjual per Bulan <span>terhitung otomatis</span></label>
+                            <div class="input-suffix" style="flex:1;">
+                                <input type="text" :value="getUnitTerjualPerBulan().toLocaleString()" disabled />
+                                <span class="suffix">unit</span>
+                            </div>
+                            <div class="question-helper">
+                                <span class="q-icon">📦</span>
+                                Unit terjual per bulan (dihitung dari omzet ÷ harga jual)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Periode <span>per bulan</span></label>
+                            <div class="calculated-value">
+                                {{ getPenjualanPerBulan().toLocaleString() }} unit
+                            </div>
+                            <div class="question-helper">
+                                <span class="q-icon">💵</span>
+                                Total omzet per bulan: {{ formatRupiah(input.penjualanHarian || 0) }} × {{ input.hariBuka || 0 }} hari = {{ formatRupiah(getPenjualanPerBulan()) }}
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label>Biaya Variabel per Unit <span>untuk perhitungan BEP</span></label>
                         <div class="input-prefix">
@@ -5107,6 +5132,15 @@
                 },
                 getPenjualanExample() {
                     return this.inputDisplay.penjualanHarian || '1.500.000';
+                },
+                // ===== UNIT TERJUAR PER BULAN =====
+                getUnitTerjualPerBulan() {
+                    const hargaJual = this.input.hargaJual || 0;
+                    if (hargaJual <= 0) return 0;
+                    return Math.floor(this.getPenjualanPerBulan() / hargaJual);
+                },
+                getPenjualanPerBulan() {
+                    return (this.input.penjualanHarian || 0) * (this.input.hariBuka || 0);
                 },
                 getHargaJualQuestion() {
                     const kategori = this.getKategoriClass(this.jenisUsahaTerpilih);
