@@ -1460,6 +1460,11 @@
             background: #d4e8f0;
             color: #1a4a6a;
         }
+
+        /* ========== UNIQUE ID TRACKING ========== */
+        .used-ids {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -2338,6 +2343,10 @@
                             <td class="label">Total Pengeluaran (26.f)</td>
                             <td class="value">{{ formatRupiah(hasil.totalPengeluaran || 0) }}</td>
                         </tr>
+                        <tr>
+                            <td class="label">HPP (26.b + 26.c)</td>
+                            <td class="value">{{ formatRupiah((hasil.biayaBahanBaku || 0) + (hasil.biayaBarangJual || 0)) }}</td>
+                        </tr>
                         <tr class="highlight-row">
                             <td class="label">Laba Kotor (27.c - 26.b - 26.c)</td>
                             <td class="value profit profit-lg" :class="{'loss': (hasil.labaKotor || 0) < 0}">
@@ -2349,16 +2358,38 @@
                                 Rumus: Laba Kotor = Total Penjualan - Biaya Produksi - Biaya Pembelian Barang = {{ formatRupiah(hasil.totalPenjualan || 0) }} - {{ formatRupiah(hasil.biayaBahanBaku || 0) }} - {{ formatRupiah(hasil.biayaBarangJual || 0) }}
                             </td>
                         </tr>
+                        <tr>
+                            <td class="label">Biaya Operasional (26.d)</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaOperasional || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Biaya Non-Operasional (26.e)</td>
+                            <td class="value">{{ formatRupiah(hasil.biayaNonOperasional || 0) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Penyusutan Aset</td>
+                            <td class="value">{{ formatRupiah(totalPenyusutanAsetTahunan) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Pajak (terpisah, dihitung dari omzet)</td>
+                            <td class="value">{{ formatRupiah(perhitunganPajak.totalPajak) }}</td>
+                        </tr>
                         <tr class="highlight-row">
-                            <td class="label">Laba Bersih (27.c - 26.f - Penyusutan - Pajak)</td>
-                            <td class="value profit profit-xl" :class="{'loss': (hasil.labaBersihTahunan || 0) < 0}">
-                                {{ formatRupiah(hasil.labaBersihTahunan || 0) }}
+                            <td class="label">Laba Bersih (27.c - 26.f - Penyusutan) <span style="font-weight:400;font-size:11px;color:var(--text-muted);">(sebelum pajak)</span></td>
+                            <td class="value profit profit-xl" :class="{'loss': (hasil.labaBersihSebelumPajak || 0) < 0}">
+                                {{ formatRupiah(hasil.labaBersihSebelumPajak || 0) }}
                             </td>
                         </tr>
                         <tr class="note-row">
                             <td colspan="2" class="note">
-                                Rumus: Laba Bersih = Total Penjualan - Total Pengeluaran - Penyusutan Aset - Pajak = {{ formatRupiah(hasil.totalPenjualan || 0) }} - {{ formatRupiah(hasil.totalPengeluaran || 0) }} - {{ formatRupiah(totalPenyusutanAsetTahunan) }} - {{ formatRupiah(perhitunganPajak.totalPajak) }}
+                                <strong>✅ Laba Bersih TIDAK dikurangi Pajak</strong><br/>
+                                Rumus: Laba Bersih = Total Penjualan - Total Pengeluaran - Penyusutan Aset<br/>
+                                = {{ formatRupiah(hasil.totalPenjualan || 0) }} - {{ formatRupiah(hasil.totalPengeluaran || 0) }} - {{ formatRupiah(totalPenyusutanAsetTahunan) }}
                             </td>
+                        </tr>
+                        <tr>
+                            <td class="label">Pajak (dihitung terpisah)</td>
+                            <td class="value">{{ formatRupiah(perhitunganPajak.totalPajak) }}</td>
                         </tr>
                         <tr>
                             <td class="label">Laba Bersih / Bulan</td>
@@ -3928,7 +3959,7 @@
                     'Toko Kelontong / Sembako': {
                         operasional: [
                             { nama: 'Listrik', nilai: 200000, frekuensi: 1, jenis: 'bulanan' },
-                            { nome: 'Internet', nilai: 120000, frekuensi: 1, jenis: 'bulanan' },
+                            { nama: 'Internet', nilai: 120000, frekuensi: 1, jenis: 'bulanan' },
                             { nama: 'Sewa Tempat', nilai: 350000, frekuensi: 1, jenis: 'bulanan' },
                             { nama: 'Transportasi', nilai: 100000, frekuensi: 2, jenis: 'mingguan' }
                         ],
@@ -4144,6 +4175,20 @@
                     'Usaha Budi Daya Tomat': 400000
                 },
 
+                // ===== DATA ASET DEFAULT PER JENIS USAHA =====
+                dataAsetDefault: {
+                    'Pembuatan Makanan & Minuman': { tanah: 150000000, bangunan: 200000000, lainnya: [{ nama: 'Mesin Produksi', nilai: 80000000 }, { nama: 'Peralatan Dapur', nilai: 30000000 }, { nama: 'Kendaraan Operasional', nilai: 50000000 }] },
+                    'Restoran / Rumah Makan': { tanah: 100000000, bangunan: 150000000, lainnya: [{ nama: 'Peralatan Dapur', nilai: 40000000 }, { nama: 'Furnitur', nilai: 25000000 }, { nama: 'Kendaraan Operasional', nilai: 40000000 }] },
+                    'Toko Kelontong / Sembako': { tanah: 80000000, bangunan: 100000000, lainnya: [{ nama: 'Rak & Display', nilai: 20000000 }, { nama: 'Kendaraan Operasional', nilai: 35000000 }, { nama: 'Kasir & Peralatan', nilai: 10000000 }] },
+                    'Konstruksi Gedung': { tanah: 120000000, bangunan: 180000000, lainnya: [{ nama: 'Alat Berat', nilai: 100000000 }, { nama: 'Kendaraan Proyek', nilai: 60000000 }, { nama: 'Peralatan Kerja', nilai: 30000000 }] },
+                    'Perdagangan Besar (Grosir)': { tanah: 200000000, bangunan: 250000000, lainnya: [{ nama: 'Kendaraan Pengiriman', nilai: 80000000 }, { nama: 'Peralatan Gudang', nilai: 40000000 }, { nama: 'Sistem Kasir', nilai: 15000000 }] },
+                    'Hotel / Penginapan': { tanah: 250000000, bangunan: 400000000, lainnya: [{ nama: 'Furnitur Kamar', nilai: 100000000 }, { nama: 'Peralatan Hotel', nilai: 50000000 }, { nama: 'Kendaraan Operasional', nilai: 60000000 }] },
+                    'Jasa Akuntansi & Pajak': { tanah: 50000000, bangunan: 80000000, lainnya: [{ nama: 'Komputer & Printer', nilai: 30000000 }, { nama: 'Furnitur Kantor', nilai: 20000000 }, { nama: 'Software Akuntansi', nilai: 15000000 }] },
+                    'Lembaga Kursus & Bimbingan Belajar': { tanah: 60000000, bangunan: 90000000, lainnya: [{ nama: 'Meja & Kursi Belajar', nilai: 25000000 }, { nama: 'Komputer & Proyektor', nilai: 35000000 }, { nama: 'Buku & Materi', nilai: 15000000 }] },
+                    'Usaha Ojek / Motor Taxi': { tanah: 20000000, bangunan: 30000000, lainnya: [{ nama: 'Sepeda Motor', nilai: 25000000 }, { nama: 'Helm & Perlengkapan', nilai: 5000000 }, { nama: 'HP & GPS', nilai: 5000000 }] },
+                    'Usaha Budi Daya Sayuran': { tanah: 100000000, bangunan: 50000000, lainnya: [{ nama: 'Alat Pertanian', nilai: 30000000 }, { nama: 'Sistem Irigasi', nilai: 20000000 }, { nama: 'Kendaraan', nilai: 40000000 }] }
+                },
+
                 // ===== INPUT =====
                 input: {
                     penjualanHarian: 1500000,
@@ -4212,6 +4257,7 @@
                     biayaJamsos: 0,
                     totalBiayaTK: 0,
                     totalPengeluaran: 0,
+                    labaBersihSebelumPajak: 0,
                     labaBersihTahunan: 0,
                     labaBersihBulanan: 0,
                     labaBersihHarian: 0,
@@ -4220,7 +4266,7 @@
                 },
 
                 hppTerpilih: 85,
-                jenisUsahaTerpilih: 'Warung Makan',
+                jenisUsahaTerpilih: 'Restoran / Rumah Makan',
                 uidCounter: 0,
                 currentView: 'se2026',
                 namaPengusaha: '',
@@ -4724,8 +4770,7 @@
                     const hitungLaba = (penjualan) => {
                         const hpp = penjualan * (this.hppTerpilih / 100);
                         const labaKotor = penjualan - hpp;
-                        const pajak = penjualan * 0.005;
-                        return labaKotor - biayaTetap - pajak;
+                        return labaKotor - biayaTetap;
                     };
 
                     return {
@@ -4753,6 +4798,28 @@
                     if (this.input.hariPiutang < 0) errors.push('Hari piutang tidak boleh negatif');
                     if (this.input.hariPersediaan < 0) errors.push('Hari persediaan tidak boleh negatif');
                     if (this.input.hariUtang < 0) errors.push('Hari utang tidak boleh negatif');
+
+                    // Cek duplicate ID pada biayaOperasional
+                    const idsOp = this.biayaOperasional.map(item => item._uid);
+                    const duplicateIdsOp = idsOp.filter((id, index) => idsOp.indexOf(id) !== index);
+                    if (duplicateIdsOp.length > 0) {
+                        errors.push('Terdapat duplicate ID pada biaya operasional');
+                    }
+
+                    // Cek duplicate ID pada biayaNonOperasional
+                    const idsNon = this.biayaNonOperasional.map(item => item._uid);
+                    const duplicateIdsNon = idsNon.filter((id, index) => idsNon.indexOf(id) !== index);
+                    if (duplicateIdsNon.length > 0) {
+                        errors.push('Terdapat duplicate ID pada biaya non-operasional');
+                    }
+
+                    // Cek duplicate ID pada asetLainnya
+                    const idsAset = this.asetLainnya.map(item => item._uid);
+                    const duplicateIdsAset = idsAset.filter((id, index) => idsAset.indexOf(id) !== index);
+                    if (duplicateIdsAset.length > 0) {
+                        errors.push('Terdapat duplicate ID pada aset lainnya');
+                    }
+
                     return errors;
                 }
             },
@@ -4942,8 +5009,14 @@
                     this.hitung();
                 },
                 addAsetLainnya() {
+                    // Generate unique ID
+                    let newUid = this.uidCounter++;
+                    // Pastikan tidak ada duplicate
+                    while (this.asetLainnya.some(item => item._uid === newUid)) {
+                        newUid = this.uidCounter++;
+                    }
                     this.asetLainnya.push({
-                        _uid: this.uidCounter++,
+                        _uid: newUid,
                         nama: 'Aset Lainnya',
                         nilai: 0,
                         displayNilai: '0',
@@ -4979,14 +5052,15 @@
                     const defaultAset = this.dataAsetDefault[jenis];
 
                     if (defaultAset && defaultAset.lainnya) {
-                        this.asetLainnya = defaultAset.lainnya.map(item => ({
-                            _uid: this.uidCounter++,
+                        this.asetLainnya = defaultAset.lainnya.map((item, index) => ({
+                            _uid: this.uidCounter++ + index,
                             nama: item.nama,
                             nilai: item.nilai,
                             displayNilai: item.nilai.toLocaleString('id-ID'),
                             isRekomendasi: true
                         }));
                     } else {
+                        // Default aset lainnya
                         this.asetLainnya = [
                             { _uid: this.uidCounter++, nama: 'Peralatan Usaha', nilai: 50000000,
                                 displayNilai: '50.000.000', isRekomendasi: true },
@@ -5268,8 +5342,8 @@
                     const rekom = this.rekomendasiBiaya[jenis];
 
                     if (rekom) {
-                        this.biayaOperasional = rekom.operasional.map(item => ({
-                            _uid: this.uidCounter++,
+                        this.biayaOperasional = rekom.operasional.map((item, index) => ({
+                            _uid: this.uidCounter++ + index,
                             nama: item.nama,
                             nilai: item.nilai,
                             frekuensi: item.frekuensi || 1,
@@ -5277,8 +5351,8 @@
                             displayNilai: (item.nilai || 0).toLocaleString('id-ID'),
                             isRekomendasi: true
                         }));
-                        this.biayaNonOperasional = rekom.nonOperasional.map(item => ({
-                            _uid: this.uidCounter++,
+                        this.biayaNonOperasional = rekom.nonOperasional.map((item, index) => ({
+                            _uid: this.uidCounter++ + index,
                             nama: item.nama,
                             nilai: item.nilai || 0,
                             displayNilai: (item.nilai || 0).toLocaleString('id-ID'),
@@ -5316,8 +5390,8 @@
                     const jenis = this.jenisUsahaTerpilih;
                     const rekom = this.rekomendasiBiaya[jenis];
                     if (rekom && rekom.operasional) {
-                        this.biayaOperasional = rekom.operasional.map(item => ({
-                            _uid: this.uidCounter++,
+                        this.biayaOperasional = rekom.operasional.map((item, index) => ({
+                            _uid: this.uidCounter++ + index,
                             nama: item.nama,
                             nilai: item.nilai,
                             frekuensi: item.frekuensi || 1,
@@ -5332,8 +5406,8 @@
                     const jenis = this.jenisUsahaTerpilih;
                     const rekom = this.rekomendasiBiaya[jenis];
                     if (rekom && rekom.nonOperasional) {
-                        this.biayaNonOperasional = rekom.nonOperasional.map(item => ({
-                            _uid: this.uidCounter++,
+                        this.biayaNonOperasional = rekom.nonOperasional.map((item, index) => ({
+                            _uid: this.uidCounter++ + index,
                             nama: item.nama,
                             nilai: item.nilai || 0,
                             displayNilai: (item.nilai || 0).toLocaleString('id-ID'),
@@ -5356,8 +5430,14 @@
                     }
                 },
                 addBiayaOperasional() {
+                    // Generate unique ID
+                    let newUid = this.uidCounter++;
+                    // Pastikan tidak ada duplicate
+                    while (this.biayaOperasional.some(item => item._uid === newUid)) {
+                        newUid = this.uidCounter++;
+                    }
                     this.biayaOperasional.push({
-                        _uid: this.uidCounter++,
+                        _uid: newUid,
                         nama: 'Biaya Lainnya',
                         nilai: 0,
                         frekuensi: 1,
@@ -5374,8 +5454,14 @@
                     }
                 },
                 addBiayaNonOperasional() {
+                    // Generate unique ID
+                    let newUid = this.uidCounter++;
+                    // Pastikan tidak ada duplicate
+                    while (this.biayaNonOperasional.some(item => item._uid === newUid)) {
+                        newUid = this.uidCounter++;
+                    }
                     this.biayaNonOperasional.push({
-                        _uid: this.uidCounter++,
+                        _uid: newUid,
                         nama: 'Biaya Lainnya',
                         nilai: 0,
                         displayNilai: '0',
@@ -5475,15 +5561,15 @@
                     const biayaJamsos = (p.biayaJamsos || 0) * 12;
                     const totalBiayaTK = biayaGaji + biayaJamsos;
 
-                    // ===== G. PENYUSUTAN & PAJAK =====
+                    // ===== G. PENYUSUTAN =====
                     const penyusutan = this.totalPenyusutanAsetTahunan;
-                    const pajak = this.perhitunganPajak.totalPajak;
 
                     // ===== H. TOTAL PENGELUARAN (26.f) =====
                     const totalPengeluaran = totalBiayaTK + biayaBahanBaku + biayaBarangJual + totalBiayaOperasional + totalBiayaNonOperasional;
 
-                    // ===== I. LABA BERSIH =====
-                    const labaBersihTahunan = totalPendapatan - totalPengeluaran - penyusutan - pajak;
+                    // ===== I. LABA BERSIH (TIDAK DIKURANGI PAJAK) =====
+                    const labaBersihSebelumPajak = totalPendapatan - totalPengeluaran - penyusutan;
+                    const labaBersihTahunan = labaBersihSebelumPajak;
                     const labaBersihBulanan = labaBersihTahunan / 12;
                     const labaBersihHarian = labaBersihTahunan / 365;
 
@@ -5506,6 +5592,7 @@
                         biayaJamsos,
                         totalBiayaTK, // 26.a
                         totalPengeluaran, // 26.f (a+b+c+d+e)
+                        labaBersihSebelumPajak,
                         labaBersihTahunan,
                         labaBersihBulanan,
                         labaBersihHarian,
@@ -5958,9 +6045,9 @@ Produksi: ${this.formatRupiah(hsl.hpp)}
 Operasional: ${this.formatRupiah(hsl.biayaOperasional)}
 Non Operasional: ${this.formatRupiah(hsl.biayaNonOperasional)}
 Penyusutan: ${this.formatRupiah(this.totalPenyusutanAsetTahunan)}
-Pajak: ${this.formatRupiah(pajak.totalPajak)}
+Pajak (terpisah): ${this.formatRupiah(pajak.totalPajak)}
 
-🎯 LABA BERSIH
+🎯 LABA BERSIH (SEBELUM PAJAK)
 Tahunan: ${this.formatRupiah(hsl.labaBersihTahunan)}
 Bulanan: ${this.formatRupiah(hsl.labaBersihBulanan)}
 Harian: ${this.formatRupiah(hsl.labaBersihHarian)}
@@ -5993,9 +6080,9 @@ ROA: ${this.roa}%
                         ['Biaya Operasional', this.hasil.biayaOperasional],
                         ['Biaya Non Operasional', this.hasil.biayaNonOperasional],
                         ['Penyusutan', this.totalPenyusutanAsetTahunan],
-                        ['Pajak', this.perhitunganPajak.totalPajak],
+                        ['Pajak (terpisah)', this.perhitunganPajak.totalPajak],
                         [''],
-                        ['LABA BERSIH'],
+                        ['LABA BERSIH (SEBELUM PAJAK)'],
                         ['Tahunan', this.hasil.labaBersihTahunan],
                         ['Bulanan', this.hasil.labaBersihBulanan],
                         ['Harian', this.hasil.labaBersihHarian],
@@ -6039,7 +6126,8 @@ ROA: ${this.roa}%
                             input: this.input,
                             jenisUsahaTerpilih: this.jenisUsahaTerpilih,
                             namaPengusaha: this.namaPengusaha,
-                            luasTanahUsaha: this.luasTanahUsaha
+                            luasTanahUsaha: this.luasTanahUsaha,
+                            uidCounter: this.uidCounter
                         };
                         localStorage.setItem('se2026_data', JSON.stringify(data));
                     } catch (e) {
@@ -6071,6 +6159,7 @@ ROA: ${this.roa}%
                             }
                             if (data.umurEkonomisAset) this.umurEkonomisAset = data.umurEkonomisAset;
                             if (data.luasTanahUsaha !== undefined) this.luasTanahUsaha = data.luasTanahUsaha;
+                            if (data.uidCounter) this.uidCounter = data.uidCounter;
                             if (data.input) {
                                 Object.assign(this.input, data.input);
                                 for (const key of Object.keys(this.inputDisplay)) {
@@ -6089,6 +6178,53 @@ ROA: ${this.roa}%
                     } catch (e) {
                         // Ignore
                     }
+                }
+            },
+
+            // ===== WATCH =====
+            watch: {
+                // Auto-save every 2 seconds
+                'biayaOperasional': {
+                    deep: true,
+                    handler() {
+                        this.saveToStorage();
+                    }
+                },
+                'biayaNonOperasional': {
+                    deep: true,
+                    handler() {
+                        this.saveToStorage();
+                    }
+                },
+                'asetLainnya': {
+                    deep: true,
+                    handler() {
+                        this.saveToStorage();
+                    }
+                },
+                'input': {
+                    deep: true,
+                    handler() {
+                        this.saveToStorage();
+                    }
+                },
+                'jenisUsahaTerpilih'() {
+                    this.saveToStorage();
+                },
+                'namaPengusaha'() {
+                    this.saveToStorage();
+                },
+                'luasTanahUsaha'() {
+                    this.saveToStorage();
+                },
+                'asetTanah'() {
+                    this.saveToStorage();
+                },
+                'asetBangunan'() {
+                    this.saveToStorage();
+                },
+                'umurEkonomisAset'() {
+                    this.saveToStorage();
                 }
             }
         });
